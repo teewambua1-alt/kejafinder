@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.role == "admin"; }
+    function isOwner(ownerId) { return signedIn() && request.auth.uid == ownerId; }
+
+    match /users/{userId} {
+      allow get: if true; // Public read may be restricted later
+      allow list: if false; 
+      allow create: if signedIn() && request.auth.uid == userId;
+      allow update: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+      
+      match /savedListings/{listingId} {
+        allow read, write: if signedIn() && request.auth.uid == userId;
+      }
+    }
+
+    match /listings/{listingId} {
+      function isApprovedAvailableListing() {
+        return resource.data.moderationStatus == 'approved' && resource.data.availabilityStatus == 'available' && resource.data.isAvailable == true;
+      }
+
+      allow get, list: if isApprovedAvailableListing() || isOwner(resource.data.ownerId) || isAdmin();
+      
+      allow create: if signedIn() && 
+                    request.auth.uid == request.resource.data.ownerId && 
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['landlord', 'caretaker', 'agent', 'scout'];
+      
+      allow update: if signedIn() && 
+                    (isOwner(resource.data.ownerId) && request.resource.data.ownerId == resource.data.ownerId && (resource.data.moderationStatus == 'draft' || resource.data.moderationStatus == 'pending_review')) || 
+                    isAdmin();
+                    
+      allow delete: if isAdmin();
+      
+      match /photos/{photoId} {
+        allow read: if isApprovedAvailableListing() || isOwner(get(/databases/$(database)/documents/listings/$(listingId)).data.ownerId) || isAdmin();
+        allow write: if isOwner(get(/databases/$(database)/documents/listings/$(listingId)).data.ownerId) || isAdmin();
+      }
+    }
+
+    match /listingReports/{reportId} {
+      allow create: if signedIn();
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

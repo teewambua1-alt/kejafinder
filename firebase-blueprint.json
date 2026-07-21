@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Profile": {
+      "title": "Profile",
+      "description": "User profile and role assignments",
+      "type": "object",
+      "properties": {
+        "full_name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["tenant", "landlord", "caretaker", "agent", "scout", "admin"] },
+        "avatar_url": { "type": "string" },
+        "county": { "type": "string" },
+        "town": { "type": "string" },
+        "estate": { "type": "string" },
+        "is_phone_verified": { "type": "boolean" },
+        "is_id_verified": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["full_name", "role", "created_at", "updated_at"]
+    },
+    "Listing": {
+      "title": "Listing",
+      "description": "Rental property listing",
+      "type": "object",
+      "properties": {
+        "owner_id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "house_type": { "type": "string", "enum": ["single_room", "bedsitter", "mabati", "studio", "one_bedroom", "two_bedroom", "three_bedroom", "student_room", "other"] },
+        "monthly_rent": { "type": "number" },
+        "deposit_amount": { "type": "number" },
+        "water_charge": { "type": "string" },
+        "electricity_type": { "type": "string" },
+        "agent_fee": { "type": "number" },
+        "viewing_fee": { "type": "number" },
+        "county": { "type": "string" },
+        "town": { "type": "string" },
+        "estate": { "type": "string" },
+        "landmark": { "type": "string" },
+        "contact_name": { "type": "string" },
+        "contact_role": { "type": "string", "enum": ["landlord", "caretaker", "agent", "scout"] },
+        "contact_phone": { "type": "string" },
+        "whatsapp_phone": { "type": "string" },
+        "availability_status": { "type": "string", "enum": ["available", "taken", "pending", "expired"] },
+        "moderation_status": { "type": "string", "enum": ["draft", "pending_review", "approved", "rejected", "reported"] },
+        "verification_level": { "type": "string", "enum": ["none", "phone", "location", "scout", "trusted"] },
+        "is_featured": { "type": "boolean" },
+        "is_available": { "type": "boolean" },
+        "views_count": { "type": "number" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["owner_id", "title", "monthly_rent", "created_at", "updated_at", "availability_status", "moderation_status", "is_available"]
+    },
+    "ListingPhoto": {
+      "title": "ListingPhoto",
+      "description": "Photos for a listing",
+      "type": "object",
+      "properties": {
+        "listing_id": { "type": "string" },
+        "url": { "type": "string" },
+        "label": { "type": "string" },
+        "is_cover": { "type": "boolean" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["listing_id", "url", "created_at"]
+    },
+    "SavedListing": {
+      "title": "SavedListing",
+      "description": "Listings bookmarked by users",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "listing_id": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "listing_id", "created_at"]
+    },
+    "ListingReport": {
+      "title": "ListingReport",
+      "description": "Reports about bad listings",
+      "type": "object",
+      "properties": {
+        "listing_id": { "type": "string" },
+        "reporter_id": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "reviewing", "resolved", "dismissed"] },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["listing_id", "reason", "status", "created_at"]
+    }
+  },
+  "firestore": {
+    "/profiles/{userId}": {
+      "schema": { "$ref": "#/entities/Profile" },
+      "description": "Stores user profiles"
+    },
+    "/listings/{listingId}": {
+      "schema": { "$ref": "#/entities/Listing" },
+      "description": "Stores rental listings"
+    },
+    "/listings/{listingId}/photos/{photoId}": {
+      "schema": { "$ref": "#/entities/ListingPhoto" },
+      "description": "Photos inside a listing subcollection"
+    },
+    "/saved_listings/{savedId}": {
+      "schema": { "$ref": "#/entities/SavedListing" },
+      "description": "Stores users' saved listings"
+    },
+    "/listing_reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ListingReport" },
+      "description": "Stores flags/reports for listings"
+    }
+  }
+}

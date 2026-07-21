@@ -1,0 +1,6 @@
+{
+  "name": "KejaFinder",
+  "description": "Mobile-first affordable rental vacancy discovery platform for Kenya, helping tenants find single rooms, bedsitters, and studio rentals easily.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
