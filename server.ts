@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import rateLimit from "express-rate-limit";
 
 async function startServer() {
   const app = express();
@@ -9,8 +10,19 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Both routes proxy to a paid, per-request-billed Gemini API with no
+  // per-user auth in front of them, so an IP-based cap is the backstop
+  // against a runaway bill from a script (or a bug) hammering the endpoint.
+  const aiRateLimit = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Too many AI requests from this device. Please try again in a few minutes." },
+  });
+
   // API routes FIRST
-  app.post("/api/chat", async (req, res) => {
+  app.post("/api/chat", aiRateLimit, async (req, res) => {
     try {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
@@ -48,7 +60,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/insights", async (req, res) => {
+  app.post("/api/insights", aiRateLimit, async (req, res) => {
     try {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey) {
