@@ -75,10 +75,16 @@ export function useFCM() {
 
   // Listen for foreground messages
   useEffect(() => {
+    // Without this flag, a cleanup that runs while setupMessaging() is still
+    // awaiting firebaseMessaging would call the original no-op `unsubscribe`,
+    // and the real onMessage subscription created moments later would never
+    // get torn down — it would keep firing indefinitely.
+    let cancelled = false;
     let unsubscribe = () => {};
-    
+
     const setupMessaging = async () => {
       const messaging = await firebaseMessaging;
+      if (cancelled) return;
       if (messaging && notificationPermission === 'granted') {
         unsubscribe = onMessage(messaging, (payload) => {
           console.log('Foreground Message received. ', payload);
@@ -93,10 +99,11 @@ export function useFCM() {
         });
       }
     };
-    
+
     setupMessaging();
-    
+
     return () => {
+      cancelled = true;
       unsubscribe();
     };
   }, [notificationPermission]);

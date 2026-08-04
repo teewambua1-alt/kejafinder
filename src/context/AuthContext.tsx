@@ -127,6 +127,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
 
       await setDoc(profileRef, newProfile);
+      // Set the profile from what we just wrote instead of waiting for the
+      // onAuthStateChanged listener's own getDoc — that listener fires from
+      // the same sign-up call and can resolve before this setDoc finishes,
+      // which would otherwise leave `profile` stuck on its tenant fallback.
+      setProfile(newProfile as FirebaseUserProfile);
     } catch (error) {
       setAuthError(getFirebaseErrorMessage(error));
       throw error; // Re-throw to inform caller 

@@ -12,27 +12,37 @@ export function useFirestoreListing(listingId: string | undefined) {
   const [source, setSource] = useState<'firestore' | 'local_fallback'>('local_fallback');
 
   useEffect(() => {
+    // Guards against rapid listing-to-listing navigation: if listingId
+    // changes again before this fetch resolves, its result must not
+    // overwrite the newer listing's data.
+    let cancelled = false;
+
     async function fetchListing() {
       if (!listingId) {
-        setListing(null);
-        setIsLoading(false);
+        if (!cancelled) {
+          setListing(null);
+          setIsLoading(false);
+        }
         return;
       }
 
       setIsLoading(true);
       setError(null);
-      
+
       if (!isFirebaseConfigured) {
         const local = sampleListings.find(l => l.id === listingId) || null;
-        setListing(local);
-        setSource('local_fallback');
-        if (!local) setError('Listing not found');
-        setIsLoading(false);
+        if (!cancelled) {
+          setListing(local);
+          setSource('local_fallback');
+          if (!local) setError('Listing not found');
+          setIsLoading(false);
+        }
         return;
       }
 
       try {
         const fbListing = await getApprovedListingById(listingId);
+        if (cancelled) return;
         if (fbListing) {
           setListing(mapFirebaseListingToListing(fbListing));
           setSource('firestore');
@@ -45,17 +55,22 @@ export function useFirestoreListing(listingId: string | undefined) {
         }
       } catch (err) {
         console.error('Error fetching listing in hook:', err);
+        if (cancelled) return;
         // Fallback
         const local = sampleListings.find(l => l.id === listingId) || null;
         setListing(local);
         setSource('local_fallback');
         if (!local) setError('Could not load Firestore listing. Showing sample listings.');
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
 
     fetchListing();
+
+    return () => {
+      cancelled = true;
+    };
   }, [listingId]);
 
   return {

@@ -12,6 +12,7 @@ interface ListingCardProps {
 export default function ListingCard({ listing, onSelectListing }: ListingCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
   const [localSaved, setLocalSaved] = useState(false);
+  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const saved = source === 'firestore' ? fbIsSaved(listing.id) : localSaved;
 
@@ -19,6 +20,12 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
     e.stopPropagation();
     if (source === 'firestore') {
       await toggleSavedListing(listing);
+    } else if (source === 'signed_out') {
+      // Firebase is configured but no one is logged in — flipping localSaved
+      // here would look like a real save that then silently vanishes, since
+      // it never reaches Firestore and never shows up on the Saved page.
+      setShowLoginHint(true);
+      setTimeout(() => setShowLoginHint(false), 2000);
     } else {
       setLocalSaved(!saved);
     }
@@ -62,6 +69,12 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
               }`} 
             />
           </motion.button>
+
+          {showLoginHint && (
+            <div className="absolute top-12 right-2.5 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
+              Log in to save homes
+            </div>
+          )}
         </div>
 
         {/* 2. Listing Price Row */}

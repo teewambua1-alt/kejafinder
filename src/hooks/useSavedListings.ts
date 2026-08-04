@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { isFirebaseConfigured } from '../lib/firebase';
 import { 
@@ -18,14 +18,22 @@ export function useSavedListings() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<SavedSource>('not_configured');
+  // Tracks the most recently started fetch so a slower, stale request (e.g.
+  // from signing in then out again quickly) can't overwrite a newer one's
+  // result after both resolve out of order.
+  const requestIdRef = useRef(0);
 
   const fetchSavedListings = useCallback(async () => {
     if (!isFirebaseReady) return;
-    
+
+    const requestId = ++requestIdRef.current;
+    const isStale = () => requestId !== requestIdRef.current;
+
     setIsLoading(true);
     setError(null);
 
     if (!isFirebaseConfigured) {
+      if (isStale()) return;
       setSavedListings(initialSavedListings);
       setSource('not_configured');
       setIsLoading(false);
@@ -33,6 +41,7 @@ export function useSavedListings() {
     }
 
     if (!firebaseUser) {
+      if (isStale()) return;
       setSavedListings([]); // We use an empty list for signed out users, prototype fallback will be managed per view
       setSource('signed_out');
       setIsLoading(false);
@@ -41,6 +50,7 @@ export function useSavedListings() {
 
     try {
       const fbSaved = await getUserSavedListings(firebaseUser.uid);
+      if (isStale()) return;
       if (fbSaved) {
         setSavedListings(fbSaved.map(mapFirebaseSavedListingToListing));
         setSource('firestore');
@@ -51,10 +61,11 @@ export function useSavedListings() {
       }
     } catch (err) {
       console.error('Error in useSavedListings fetch:', err);
+      if (isStale()) return;
       setSavedListings([]);
       setError('Error loading saved listings.');
     } finally {
-      setIsLoading(false);
+      if (!isStale()) setIsLoading(false);
     }
   }, [firebaseUser, isFirebaseReady]);
 

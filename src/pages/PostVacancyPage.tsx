@@ -113,6 +113,8 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
     if (!draft.rent.trim()) {
       newErrors.rent = 'Rent is required.';
+    } else if (Number(draft.rent) <= 0) {
+      newErrors.rent = 'Enter a rent amount greater than 0.';
     }
     if (!draft.deposit.trim()) {
       newErrors.deposit = 'Deposit is required.';
@@ -291,6 +293,18 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
   };
 
   const headerInfo = getHeaderInfo();
+
+  // Why this can't be null when canUseFirestorePosting is false: PostReviewSummary
+  // only shows its "Listing submitted for review" screen when onSubmitReview
+  // resolves truthy, so every path that returns false below must pair with a
+  // reason here — otherwise the button would look like it silently did nothing.
+  const notSubmittableReason = !isFirebaseConfigured
+    ? 'Firebase is not configured, so this was only kept locally — nothing was actually submitted.'
+    : !currentUser
+    ? 'You are not logged in, so nothing was actually submitted. Log in to submit this listing for review.'
+    : userProfile?.role === 'tenant'
+    ? 'Tenant accounts cannot submit vacancies, so nothing was actually submitted.'
+    : 'Could not submit this listing right now. Please try again in a moment.';
 
   return (
     <motion.div
@@ -605,17 +619,17 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 if (canUseFirestorePosting) {
                   return await saveDraft(mapPostVacancyFormToFirebaseListing(draft));
                 }
-                return true;
+                return false;
               }}
               onSubmitReview={async () => {
                 if (canUseFirestorePosting) {
                   return await submitForReview(mapPostVacancyFormToFirebaseListing(draft));
                 }
-                return true;
+                return false;
               }}
               isSaving={isSaving}
               isSubmitting={isSubmitting}
-              error={submitError}
+              error={submitError || (!canUseFirestorePosting ? notSubmittableReason : null)}
               feedback={submitFeedback}
             />
           </motion.div>

@@ -13,13 +13,21 @@ interface SimilarHomeCardProps {
 export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHomeCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
   const [localSaved, setLocalSaved] = useState(listing.isSaved || false);
+  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const isSaved = source === 'firestore' ? fbIsSaved(listing.id) : localSaved;
-  
+
   const handleSaveClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (source === 'firestore') {
       await toggleSavedListing(listing);
+    } else if (source === 'signed_out') {
+      // Firebase is configured but no one is logged in — flipping localSaved
+      // here would look like a real save that then silently vanishes, since
+      // it never reaches Firestore and never shows up on the Saved page.
+      setShowLoginHint(true);
+      setTimeout(() => setShowLoginHint(false), 2000);
+      return;
     } else {
       setLocalSaved(!localSaved);
     }
@@ -57,6 +65,12 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
             <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : 'fill-transparent'}`} />
           </motion.div>
         </button>
+
+        {showLoginHint && (
+          <div className="absolute top-12 right-3 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
+            Log in to save homes
+          </div>
+        )}
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">

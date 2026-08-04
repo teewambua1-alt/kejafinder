@@ -25,6 +25,7 @@ export interface SearchResultCardProps {
 export default function SearchResultCard({ listing, onSelectListing, viewMode = 'list' }: SearchResultCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
   const [localSaved, setLocalSaved] = useState(listing.isSaved || false);
+  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const isSaved = source === 'firestore' ? fbIsSaved(listing.id) : localSaved;
 
@@ -32,6 +33,12 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
     e.stopPropagation();
     if (source === 'firestore') {
       await toggleSavedListing(listing);
+    } else if (source === 'signed_out') {
+      // Firebase is configured but no one is logged in — flipping localSaved
+      // here would look like a real save that then silently vanishes, since
+      // it never reaches Firestore and never shows up on the Saved page.
+      setShowLoginHint(true);
+      setTimeout(() => setShowLoginHint(false), 2000);
     } else {
       setLocalSaved(!isSaved);
     }
@@ -126,6 +133,12 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
             />
           </motion.div>
         </button>
+
+        {showLoginHint && (
+          <div className="absolute top-12 right-2.5 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
+            Log in to save homes
+          </div>
+        )}
 
         {/* Image index counter indicator */}
         <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-3xs text-[9px] text-white font-mono font-bold tracking-wider z-10">

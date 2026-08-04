@@ -11,6 +11,7 @@ interface FeaturedListingProps {
 export default function FeaturedListing({ onSelectListing }: FeaturedListingProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
   const [localSaved, setLocalSaved] = useState(false);
+  const [showLoginHint, setShowLoginHint] = useState(false);
 
   // High-quality cozy studio interior representing a spacious bedsitter in Kenya
   const imageUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=600";
@@ -42,6 +43,12 @@ export default function FeaturedListing({ onSelectListing }: FeaturedListingProp
     e.stopPropagation();
     if (source === 'firestore') {
       await toggleSavedListing(mockListing);
+    } else if (source === 'signed_out') {
+      // Firebase is configured but no one is logged in — flipping localSaved
+      // here would look like a real save that then silently vanishes, since
+      // it never reaches Firestore and never shows up on the Saved page.
+      setShowLoginHint(true);
+      setTimeout(() => setShowLoginHint(false), 2000);
     } else {
       setLocalSaved(!isSaved);
     }
@@ -93,6 +100,12 @@ export default function FeaturedListing({ onSelectListing }: FeaturedListingProp
             }`} 
           />
         </motion.button>
+
+        {showLoginHint && (
+          <div className="absolute top-14 right-4 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
+            Log in to save homes
+          </div>
+        )}
 
         {/* 3. Dynamic Text details overlaid at the bottom parameters */}
         <div className="absolute bottom-4 left-5 right-5 z-10 flex flex-col justify-end text-white">
