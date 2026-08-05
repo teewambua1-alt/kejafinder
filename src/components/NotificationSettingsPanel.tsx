@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { X, Bell, Moon, MessageSquare, ShieldCheck, Mail, Save } from 'lucide-react';
-import { useFCM } from '../hooks/useFCM';
 
 interface NotificationSettingsPanelProps {
   isOpen: boolean;
@@ -14,17 +13,12 @@ export default function NotificationSettingsPanel({
   onClose,
   onSave
 }: NotificationSettingsPanelProps) {
-  const { requestPermission, notificationPermission } = useFCM();
-  
-  // Local settings states
+  // Local settings states. All channels here are prototype toggles (local
+  // state only, not wired to a real delivery mechanism) until WhatsApp/SMS
+  // providers and browser push are implemented for real.
   const [whatsappAlerts, setWhatsappAlerts] = useState(true);
   const [smsBroadcasts, setSmsBroadcasts] = useState(false);
-  const [pushNotifs, setPushNotifs] = useState(notificationPermission === 'granted');
-  
-  // Sync pushNotifs with actual browser permission
-  useEffect(() => {
-    setPushNotifs(notificationPermission === 'granted');
-  }, [notificationPermission]);
+  const [pushNotifs, setPushNotifs] = useState(false);
 
   // Frequency state
   const [emailDigest, setEmailDigest] = useState<'instant' | 'daily' | 'weekly'>('daily');
@@ -35,18 +29,6 @@ export default function NotificationSettingsPanel({
   const [quietEnd, setQuietEnd] = useState('07:00');
 
   if (!isOpen) return null;
-
-  const handlePushNotifsToggle = async () => {
-    if (!pushNotifs) {
-      // Toggle ON -> request real permission
-      const success = await requestPermission();
-      setPushNotifs(success);
-    } else {
-      // Toggle OFF -> It's a prototype since browser APIs don't let you programmatically deny after granting
-      // But we show it toggled off visually.
-      setPushNotifs(false);
-    }
-  };
 
   const handleSaveAndClose = () => {
     onSave("Alert preferences saved successfully.");
@@ -174,13 +156,13 @@ export default function NotificationSettingsPanel({
                     Push Notifications
                   </h3>
                   <p className="text-[10px] text-neutral-500 dark:text-stone-400 font-semibold leading-relaxed mt-0.5">
-                    Real-time sound and banner alerts inside the KejaFinder app.
+                    Real-time sound and banner alerts inside the KejaFinder app. Coming soon.
                   </p>
                 </div>
               </div>
               <motion.button
                 whileTap={{ scale: 0.94 }}
-                onClick={handlePushNotifsToggle}
+                onClick={() => setPushNotifs(!pushNotifs)}
                 role="switch"
                 aria-checked={pushNotifs}
                 aria-label="Toggle Push Alerts"

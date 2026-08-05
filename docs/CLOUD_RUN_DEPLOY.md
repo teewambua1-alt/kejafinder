@@ -1,9 +1,10 @@
 # Deploying to Google Cloud Run
 
 KejaFinder's `server.ts` is a single Express process that serves the built
-SPA (`dist/`) and the two Gemini-backed API routes (`/api/chat`,
-`/api/insights`). Cloud Run runs that process unchanged in a container — no
-serverless-function rewrite needed.
+SPA (`dist/`), the two Gemini-backed API routes (`/api/chat`,
+`/api/insights`), and the Supabase listing-photo sync webhook
+(`/webhooks/listing-moderation`). Cloud Run runs that process unchanged in a
+container — no serverless-function rewrite needed.
 
 ## Prerequisites
 
@@ -24,32 +25,40 @@ gcloud services enable run.googleapis.com artifactregistry.googleapis.com
 
 From the repo root (the `Dockerfile` added here is picked up automatically):
 
+`server.ts` needs both the Gemini key and the Supabase server-side
+credentials at runtime. Prefer Secret Manager for all of them rather than
+plain `--set-env-vars`, since `SUPABASE_SERVICE_ROLE_KEY` bypasses RLS
+entirely and `SUPABASE_WEBHOOK_SECRET` authenticates the webhook route:
+
 ```bash
+echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets create gemini-api-key --data-file=-
+echo -n "YOUR_SUPABASE_SERVICE_ROLE_KEY" | gcloud secrets create supabase-service-role-key --data-file=-
+echo -n "YOUR_SUPABASE_WEBHOOK_SECRET" | gcloud secrets create supabase-webhook-secret --data-file=-
+
 gcloud run deploy kejafinder \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \
   --set-env-vars NODE_ENV=production \
-  --set-env-vars GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+  --set-env-vars SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co \
+  --set-secrets GEMINI_API_KEY=gemini-api-key:latest \
+  --set-secrets SUPABASE_SERVICE_ROLE_KEY=supabase-service-role-key:latest \
+  --set-secrets SUPABASE_WEBHOOK_SECRET=supabase-webhook-secret:latest
 ```
 
 - `--source .` builds the `Dockerfile` in this directory via Cloud Build and
   deploys the result — no separate `docker build`/`docker push` step needed.
-- `--allow-unauthenticated` is required for a public tenant-facing site.
-- Prefer a Secret Manager reference over a plain `--set-env-vars` for
-  `GEMINI_API_KEY` once this goes beyond testing:
-  ```bash
-  echo -n "YOUR_GEMINI_API_KEY" | gcloud secrets create gemini-api-key --data-file=-
-  gcloud run deploy kejafinder --source . --region us-central1 \
-    --allow-unauthenticated \
-    --set-env-vars NODE_ENV=production \
-    --set-secrets GEMINI_API_KEY=gemini-api-key:latest
-  ```
+- `--allow-unauthenticated` is required for a public tenant-facing site (the
+  webhook route protects itself separately via the `x-webhook-secret` header
+  check, not Cloud Run's own auth).
+- `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` are client-side and get baked
+  into the static bundle at *build* time (`npm run build`), not passed as
+  Cloud Run runtime env vars — set them in the environment `npm run build`
+  runs in (e.g. a Cloud Build substitution or `.env.production`) before
+  deploying.
 
-The command prints a `*.run.app` URL when it finishes — that URL serves both
-the app and the API routes correctly, which is the thing this deploy target
-was chosen to fix (see the production readiness audit's Stage 3 finding:
-neither Firebase Hosting nor a default Vercel import could run these routes).
+The command prints a `*.run.app` URL when it finishes — that URL serves the
+app, the AI routes, and the webhook route.
 
 ## Verifying the deploy
 
@@ -62,32 +71,29 @@ curl -s -o /dev/null -w "%{http_code}\n" -X POST -H "Content-Type: application/j
 
 Both should return `200`.
 
-## Firestore/Storage/Auth
+## Supabase Auth/Storage/Postgres
 
-Unaffected by this change — those are still called directly from the client
-via the Firebase Web SDK, independent of where `server.ts` runs.
+Called directly from the client via `@supabase/supabase-js`, independent of
+where `server.ts` runs — RLS policies are the security boundary, not this
+server. `server.ts` only touches Supabase for one thing: the
+`/webhooks/listing-moderation` route uses the service-role key to move
+listing photos between the private `listing-photos-pending` bucket and the
+public `listing-photos` bucket when a listing's moderation/availability
+status changes.
 
-## Firebase Hosting (optional, later)
+## Configuring the Database Webhook
 
-`firebase.json` still points Firebase Hosting at the static `dist/` folder,
-which is now redundant as a deployment target (it would serve stale static
-files without the API routes if you ran `firebase deploy --only hosting`).
-Once the Cloud Run service above is live and you want a custom domain / CDN in
-front of it, replace `firebase.json`'s `hosting.public` static config with a
-`run` rewrite instead, e.g.:
+In the Supabase Dashboard → Database → Webhooks, create a webhook on
+`public.listings` firing on `UPDATE` of `moderation_status` and
+`availability_status`, pointed at:
 
-```json
-{
-  "hosting": {
-    "rewrites": [
-      { "source": "**", "run": { "serviceId": "kejafinder", "region": "us-central1" } }
-    ]
-  }
-}
+```
+https://YOUR-SERVICE-URL/webhooks/listing-moderation
 ```
 
-This is optional — the plain `*.run.app` URL from `gcloud run deploy` above is
-a fully working production URL on its own.
+with an HTTP header `x-webhook-secret: YOUR_SUPABASE_WEBHOOK_SECRET` matching
+the `SUPABASE_WEBHOOK_SECRET` secret configured on the Cloud Run service
+above. See `docs/SUPABASE_ARCHITECTURE.md` for the full storage-sync design.
 
 ## Redeploying after code changes
 

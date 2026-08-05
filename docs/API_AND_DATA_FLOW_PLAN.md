@@ -1,4 +1,4 @@
-> Note: Supabase/PostgreSQL was considered for the MVP backend, but Firebase is now selected for the test backend stage because of Google AI Studio integration. Keep this document as future migration/reference material.
+> Note: this is a product-level flow sketch predating the Supabase implementation. Flows A (search), B (posting), and parts of G (image upload) are now implemented — see `docs/SUPABASE_ARCHITECTURE.md`. Flows C (landlord dashboard) and D (admin moderation UI) are still not built; moderation happens manually via Supabase Studio today.
 
 # API and Data Flow Plan
 

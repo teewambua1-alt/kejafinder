@@ -135,7 +135,7 @@ export function usePostListingDraft() {
     isSubmitting,
     error,
     feedback,
-    canUseFirestorePosting: canSubmitListing,
+    canSubmitListing,
     saveDraft,
     submitForReview,
     clearPostError,

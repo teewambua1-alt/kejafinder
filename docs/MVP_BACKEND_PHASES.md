@@ -1,4 +1,4 @@
-> Note: Supabase/PostgreSQL was considered for the MVP backend, but Firebase is now selected for the test backend stage because of Google AI Studio integration. Keep this document as future migration/reference material.
+> Note: Phases 1-3 are done on Supabase (see `docs/SUPABASE_ARCHITECTURE.md`). Phase 4 (admin dashboard UI) is not built — moderation is manual via Supabase Studio. Phase 5 is partial (view/click counters exist; expiry/renewal logic does not). Phase 6 has not started.
 
 # Phased MVP Backend Rollout Plan
 

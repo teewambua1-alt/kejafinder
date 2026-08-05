@@ -10,7 +10,7 @@ export default function TestIssueBoard() {
       icon: PlusCircle,
       color: 'blue',
       items: [
-        "Post Vacancy Firestore writes",
+        "Post Vacancy Supabase writes",
         "Saved Listings persistence",
         "Support reports backend",
         "Landlord dashboard listings management",

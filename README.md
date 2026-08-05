@@ -15,9 +15,8 @@ KejaFinder is a highly-optimized, mobile-first rental vacancy discovery platform
 
 This project uses React 19, Vite, Tailwind CSS v4, and Framer Motion (`motion/react`).
 
-### Firebase backend direction
-Backend planning documents are available in the `/docs` directory. They outline the database schema, security rules, and data flows using Firebase.
-**Note:** The backend is not yet implemented. The application remains a local prototype. Firebase is selected for the test backend stage and setup files now exist, but Firebase is not connected to user flows yet. Setup docs are in `docs/FIREBASE_LOCAL_SETUP.md`. Firebase implementation will happen in phases. Supabase/PostgreSQL remains a future migration/reference option if relational complexity becomes a blocker.
+### Supabase backend
+The backend runs on Supabase (Postgres, Auth, Storage, RLS). Architecture and schema docs are in `docs/SUPABASE_ARCHITECTURE.md` and `docs/SUPABASE_SCHEMA.md`. Auth, listings, saved listings, and photo uploads are wired to real Supabase data; admin moderation and the dashboard are still prototype/manual (via Supabase Studio) until an admin UI exists. Copy `.env.example` to `.env.local` and fill in `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` to run the app locally — Supabase is a hard requirement, there is no local-sample-data fallback.
 
 ### Development Server
 ```bash

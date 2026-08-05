@@ -1,4 +1,4 @@
-> Note: Supabase/PostgreSQL was considered for the MVP backend, but Firebase is now selected for the test backend stage because of Google AI Studio integration. Keep this document as future migration/reference material.
+> Note: this was the original pre-implementation recommendation. It was shelved in favor of Firebase for a test stage, then the project migrated to Supabase for real before launch — see `docs/SUPABASE_ARCHITECTURE.md` and `docs/SUPABASE_SCHEMA.md` for what's actually implemented today.
 
 # MVP Backend Architecture
 

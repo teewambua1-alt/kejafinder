@@ -10,7 +10,6 @@ import FreshVacancies from './components/FreshVacancies';
 import RecommendedForYou from './components/RecommendedForYou';
 import SafetyBanner from './components/SafetyBanner';
 import { useListings } from './hooks/useListings';
-import { useFCM } from './hooks/useFCM';
 
 const SearchResultsPage = lazy(() => import('./pages/SearchResultsPage'));
 const PostVacancyPage = lazy(() => import('./pages/PostVacancyPage'));
@@ -26,9 +25,6 @@ const LandlordDashboardPage = lazy(() => import('./pages/LandlordDashboardPage')
 const TestModePage = lazy(() => import('./pages/TestModePage'));
 
 export default function App() {
-  // Initialize FCM listener at the top level
-  useFCM();
-
   const { listings: allListings, isLoading } = useListings();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [searchQuery, setSearchQuery] = useState('');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, ArrowLeft, ChevronLeft, MapPin, ShieldCheck, Sparkles, AlertTriangle, UserCircle } from 'lucide-react';
 import PostHeader from '../components/PostHeader';
@@ -33,7 +33,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     isSubmitting,
     error: submitError,
     feedback: submitFeedback,
-    canUseFirestorePosting
+    canSubmitListing
   } = usePostListingDraft();
 
   const [currentStep, setCurrentStep] = useState<PostStep>(1);
@@ -293,10 +293,10 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
   const headerInfo = getHeaderInfo();
 
-  // Why this can't be null when canUseFirestorePosting is false: PostReviewSummary
+  // Why this can't be null when canSubmitListing is false: PostReviewSummary
   // only shows its "Listing submitted for review" screen when onSubmitReview
   // resolves truthy, so every path that returns false below must pair with a
-  // reason here — otherwise the button would look like it silently did nothing.
+  // reason here â€” otherwise the button would look like it silently did nothing.
   const notSubmittableReason = !currentUser
     ? 'You are not logged in, so nothing was actually submitted. Log in to submit this listing for review.'
     : userProfile?.role === 'tenant'
@@ -520,7 +520,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             <div className="flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-850 dark:text-blue-400 font-sans shadow-3xs">
               <Sparkles className="w-5 h-5 text-blue-500 shrink-0 stroke-[2] mt-0.5" />
               <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
-                Photos upload when you save or submit this listing — they aren't public until an admin approves it.
+                Photos upload when you save or submit this listing â€” they aren't public until an admin approves it.
               </span>
             </div>
 
@@ -604,20 +604,20 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               }}
               onReset={handleReset}
               onSaveDraft={async () => {
-                if (canUseFirestorePosting) {
+                if (canSubmitListing) {
                   return await saveDraft(mapPostVacancyFormToSupabaseListing(draft), photoPreviews);
                 }
                 return false;
               }}
               onSubmitReview={async () => {
-                if (canUseFirestorePosting) {
+                if (canSubmitListing) {
                   return await submitForReview(mapPostVacancyFormToSupabaseListing(draft), photoPreviews);
                 }
                 return false;
               }}
               isSaving={isSaving}
               isSubmitting={isSubmitting}
-              error={submitError || (!canUseFirestorePosting ? notSubmittableReason : null)}
+              error={submitError || (!canSubmitListing ? notSubmittableReason : null)}
               feedback={submitFeedback}
             />
           </motion.div>

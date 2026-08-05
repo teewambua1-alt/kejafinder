@@ -44,7 +44,7 @@ export const initialTestItems: TestItem[] = [
   { id: "p5", title: "Photos mock upload works locally", description: "Placeholders can be added.", status: "prototype_only", area: "poster" },
   { id: "p6", title: "Contact details entered", description: "Phone and email fields editable.", status: "working", area: "poster" },
   { id: "p7", title: "Review step appears", description: "Summary before posting.", status: "working", area: "poster" },
-  { id: "p8", title: "Post Vacancy writes to Firestore", description: "Saves draft and pending_review docs for signed-in poster roles.", status: "working", area: "poster" },
+  { id: "p8", title: "Post Vacancy writes to Supabase", description: "Saves draft and pending_review listings for signed-in poster roles.", status: "working", area: "poster" },
 
   // Trust and safety
   { id: "ts1", title: "Safety warning appears in key flows", description: "Warnings visible before contacting or posting.", status: "working", area: "trust" },
@@ -55,14 +55,14 @@ export const initialTestItems: TestItem[] = [
   { id: "ts6", title: "No payment/M-Pesa is active", description: "Safe from real money transaction.", status: "working", area: "trust" },
 
   // Prototype-only systems
-  { id: "pr1", title: "Auth uses Firebase test mode", description: "Email/password Firebase Auth is active if env variables are present.", status: "working", area: "support", actionLabel: "Go Auth", actionKey: "auth" },
+  { id: "pr1", title: "Auth uses Supabase Auth", description: "Email/password Supabase Auth is active; signup requires email confirmation.", status: "working", area: "support", actionLabel: "Go Auth", actionKey: "auth" },
   { id: "pr2", title: "OTP is bypassed", description: "Phone verification is skipped or bypassed in test mode.", status: "prototype_only", area: "support" },
   { id: "pr3", title: "Dashboard is mock only", description: "Landlord dashboard has no real stats.", status: "prototype_only", area: "support" },
   { id: "pr4", title: "Support is mock only", description: "No real tickets created.", status: "prototype_only", area: "support" },
-  { id: "pr5", title: "Firestore listing reads are integrated", description: "Home, Search, and Listing Details can use approved Firestore listings when configured.", status: "working", area: "support" },
-  { id: "pr6", title: "Saved listings persistence", description: "Saved homes persist to Firebase for signed-in users.", status: "working", area: "support" },
-  { id: "pr7", title: "Storage uploads", description: "Storage uploads remain prototype-only/local.", status: "prototype_only", area: "support" },
-  { id: "pr8", title: "Admin approval missing", description: "Listings must be manually approved in Firestore.", status: "missing", area: "support" },
+  { id: "pr5", title: "Supabase listing reads are integrated", description: "Home, Search, and Listing Details load approved listings from Supabase.", status: "working", area: "support" },
+  { id: "pr6", title: "Saved listings persistence", description: "Saved homes persist to Supabase for signed-in users.", status: "working", area: "support" },
+  { id: "pr7", title: "Storage uploads", description: "Listing photos upload to Supabase Storage; sync to public bucket happens on admin approval.", status: "working", area: "support" },
+  { id: "pr8", title: "Admin approval missing", description: "Listings must be manually approved via Supabase (no admin UI yet).", status: "missing", area: "support" },
 
   // UX and performance
   { id: "ux1", title: "Mobile bottom nav works", description: "Tab switching functions properly.", status: "working", area: "ux" },
