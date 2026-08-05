@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { createListingDraft, updateListingDraft, submitListingForReview } from '../services/postListingService';
+import { uploadListingPhoto, saveListingImages } from '../services/photoUploadService';
+import type { PostPhotoPreview } from '../components/PostPhotoUploader';
+
+// Matches PostPhotoUploader's SLOT_LABELS order and the listing_images
+// category CHECK constraint (supabase/migrations/20260805000001_schema.sql).
+const SLOT_CATEGORIES = ['room', 'outside', 'toilet', 'kitchen', 'compound', 'other', 'other', 'other'] as const;
 
 export function usePostListingDraft() {
   const { user, profile } = useAuth();
@@ -15,7 +21,22 @@ export function usePostListingDraft() {
   const clearPostError = () => setError(null);
   const clearFeedback = () => setFeedback(null);
 
-  const saveDraft = async (params: any) => {
+  // Photos only ever get uploaded once, right when the draft is first
+  // created — by the time a second saveDraft/submitForReview call happens,
+  // draftId is already set, so this never re-runs and never duplicates
+  // uploads or listing_images rows for the same wizard session.
+  const uploadDraftPhotos = async (listingId: string, photos: PostPhotoPreview[]) => {
+    const uploaded = [];
+    for (let i = 0; i < photos.length; i++) {
+      const result = await uploadListingPhoto(listingId, photos[i].file, SLOT_CATEGORIES[i] ?? 'other');
+      if (result) uploaded.push(result);
+    }
+    if (uploaded.length > 0) {
+      await saveListingImages(listingId, uploaded);
+    }
+  };
+
+  const saveDraft = async (params: any, photos?: PostPhotoPreview[]) => {
     if (!user || !profile) {
       setError("Log in to submit vacancies.");
       return false;
@@ -46,6 +67,9 @@ export function usePostListingDraft() {
         const newDraft = await createListingDraft(user.id, profile.role, params);
         if (newDraft) {
           setDraftId(newDraft.id);
+          if (photos && photos.length > 0) {
+            await uploadDraftPhotos(newDraft.id, photos);
+          }
           setFeedback("Draft saved.");
           return true;
         } else {
@@ -62,7 +86,7 @@ export function usePostListingDraft() {
     }
   };
 
-  const submitForReview = async (params: any) => {
+  const submitForReview = async (params: any, photos?: PostPhotoPreview[]) => {
     if (!canSubmitListing || !user || !profile) return false;
 
     setIsSubmitting(true);
@@ -72,14 +96,20 @@ export function usePostListingDraft() {
     try {
       // Always save draft first to ensure latest details are recorded
       let currentDraftId = draftId;
+      let isNewDraft = false;
       if (!currentDraftId) {
         const newDraft = await createListingDraft(user.id, profile.role, params);
         if (!newDraft) throw new Error("Draft creation failed.");
         currentDraftId = newDraft.id;
+        isNewDraft = true;
         setDraftId(currentDraftId);
       } else {
         const updateSuccess = await updateListingDraft(currentDraftId, params);
         if (!updateSuccess) throw new Error("Draft update failed.");
+      }
+
+      if (isNewDraft && photos && photos.length > 0) {
+        await uploadDraftPhotos(currentDraftId, photos);
       }
 
       // Submit for review

@@ -2,6 +2,55 @@ import express from "express";
 import path from "path";
 import { GoogleGenAI } from "@google/genai";
 import rateLimit from "express-rate-limit";
+import { createClient } from "@supabase/supabase-js";
+
+// Two buckets keep draft/pending listing photos private and approved-listing
+// photos genuinely public and CDN-cacheable (see supabase/migrations/
+// ..._storage.sql). This server — already deployed on Cloud Run — is the
+// trusted process that moves files between them in response to a Supabase
+// Database Webhook fired on listings moderation/availability changes, using
+// the service role key (never exposed to the client).
+const PENDING_BUCKET = "listing-photos-pending";
+const PUBLIC_BUCKET = "listing-photos";
+
+const supabaseAdmin = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : null;
+
+async function moveListingPhotos(listingId: string, fromBucket: string, toBucket: string) {
+  if (!supabaseAdmin) return;
+
+  const { data: files, error: listError } = await supabaseAdmin.storage.from(fromBucket).list(listingId);
+  if (listError) {
+    console.error(`Error listing photos for ${listingId} in ${fromBucket}:`, listError);
+    return;
+  }
+  if (!files || files.length === 0) return;
+
+  for (const file of files) {
+    const path = `${listingId}/${file.name}`;
+
+    const { data: blob, error: downloadError } = await supabaseAdmin.storage.from(fromBucket).download(path);
+    if (downloadError || !blob) {
+      console.error(`Error downloading ${path} from ${fromBucket}:`, downloadError);
+      continue;
+    }
+
+    const { error: uploadError } = await supabaseAdmin.storage.from(toBucket).upload(path, blob, {
+      contentType: blob.type || "image/jpeg",
+      upsert: true,
+    });
+    if (uploadError) {
+      console.error(`Error uploading ${path} to ${toBucket}:`, uploadError);
+      continue;
+    }
+
+    const { error: removeError } = await supabaseAdmin.storage.from(fromBucket).remove([path]);
+    if (removeError) {
+      console.error(`Error removing ${path} from ${fromBucket} after copy:`, removeError);
+    }
+  }
+}
 
 async function startServer() {
   const app = express();
@@ -99,6 +148,38 @@ async function startServer() {
     } catch (error: any) {
       console.error("Gemini API Error:", error);
       res.status(500).json({ error: error.message || "An error occurred during insights generation." });
+    }
+  });
+
+  app.post("/webhooks/listing-moderation", async (req, res) => {
+    try {
+      const secret = process.env.SUPABASE_WEBHOOK_SECRET;
+      if (!secret || req.header("x-webhook-secret") !== secret) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+      if (!supabaseAdmin) {
+        return res.status(500).json({ error: "Supabase admin client is not configured on this server." });
+      }
+
+      const record = req.body?.record;
+      if (!record || !record.id) {
+        return res.status(400).json({ error: "Missing listing record in webhook payload." });
+      }
+
+      const isPublic = record.moderation_status === "approved"
+        && record.availability_status === "available"
+        && record.is_available === true;
+
+      if (isPublic) {
+        await moveListingPhotos(record.id, PENDING_BUCKET, PUBLIC_BUCKET);
+      } else {
+        await moveListingPhotos(record.id, PUBLIC_BUCKET, PENDING_BUCKET);
+      }
+
+      res.json({ ok: true });
+    } catch (error: any) {
+      console.error("Listing moderation webhook error:", error);
+      res.status(500).json({ error: error.message || "Webhook processing failed." });
     }
   });
 

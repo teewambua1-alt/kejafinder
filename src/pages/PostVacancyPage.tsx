@@ -520,7 +520,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             <div className="flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-850 dark:text-blue-400 font-sans shadow-3xs">
               <Sparkles className="w-5 h-5 text-blue-500 shrink-0 stroke-[2] mt-0.5" />
               <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
-                Photo previews are local in this version. Firebase Storage upload will be added next.
+                Photos upload when you save or submit this listing — they aren't public until an admin approves it.
               </span>
             </div>
 
@@ -605,13 +605,13 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               onReset={handleReset}
               onSaveDraft={async () => {
                 if (canUseFirestorePosting) {
-                  return await saveDraft(mapPostVacancyFormToSupabaseListing(draft));
+                  return await saveDraft(mapPostVacancyFormToSupabaseListing(draft), photoPreviews);
                 }
                 return false;
               }}
               onSubmitReview={async () => {
                 if (canUseFirestorePosting) {
-                  return await submitForReview(mapPostVacancyFormToSupabaseListing(draft));
+                  return await submitForReview(mapPostVacancyFormToSupabaseListing(draft), photoPreviews);
                 }
                 return false;
               }}
