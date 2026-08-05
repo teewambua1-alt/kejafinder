@@ -31,7 +31,7 @@ export default function FreshVacancies({
       {/* 1. Header Action Row */}
       <div className="flex items-center justify-between px-0.5">
         <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
-          Fresh vacancies
+          Recently added
         </h2>
         
         <button 

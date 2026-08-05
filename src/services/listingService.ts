@@ -31,6 +31,24 @@ export async function getApprovedAvailableListings(limitCount = 60): Promise<Sup
   return data;
 }
 
+export async function getFeaturedListings(limitCount = 10): Promise<SupabaseListingWithImages[] | null> {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('is_featured', true)
+    .eq('moderation_status', 'approved')
+    .eq('availability_status', 'available')
+    .eq('is_available', true)
+    .order('updated_at', { ascending: false })
+    .limit(limitCount);
+
+  if (error) {
+    console.error('Error fetching featured listings:', error);
+    return null;
+  }
+  return data;
+}
+
 export async function getApprovedListingById(listingId: string): Promise<SupabaseListingWithImages | null> {
   const { data, error } = await supabase
     .from('listings')

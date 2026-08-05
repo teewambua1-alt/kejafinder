@@ -32,16 +32,19 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
   };
 
   return (
-    <div 
+    <motion.div
       onClick={() => onSelectListing?.(listing.id)}
-      className="w-[250px] shrink-0 bg-white dark:bg-stone-850 border border-neutral-100/80 dark:border-neutral-800/65 rounded-2xl shadow-2xs p-3 flex flex-col justify-between hover:border-emerald-100 dark:hover:border-emerald-900/50 transition-colors cursor-pointer"
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      className="w-[268px] shrink-0 bg-white dark:bg-stone-850 border border-neutral-100/80 dark:border-neutral-800/65 rounded-2xl shadow-2xs hover:shadow-md p-3 flex flex-col justify-between hover:border-emerald-100 dark:hover:border-emerald-900/50 transition-[border-color,box-shadow] cursor-pointer"
     >
       <div>
         {/* 1. Card Image Container */}
-        <div className="w-full h-32 rounded-xl overflow-hidden relative mb-2.5 bg-neutral-100 dark:bg-stone-900">
-          <img 
-            src={listing.image} 
-            alt={listing.title} 
+        <div className="w-full h-44 rounded-xl overflow-hidden relative mb-2.5 bg-neutral-100 dark:bg-stone-900">
+          <img
+            src={listing.image}
+            alt={listing.title}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
@@ -176,6 +179,6 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
           <span>WhatsApp</span>
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 }

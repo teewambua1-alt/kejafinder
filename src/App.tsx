@@ -5,9 +5,10 @@ import Header from './components/Header';
 import HeroSearch from './components/HeroSearch';
 import FilterChips from './components/FilterChips';
 import CategoryScroller from './components/CategoryScroller';
-import FeaturedListing from './components/FeaturedListing';
+import NearbyListings from './components/NearbyListings';
+import FeaturedListings from './components/FeaturedListings';
 import FreshVacancies from './components/FreshVacancies';
-import RecommendedForYou from './components/RecommendedForYou';
+import PopularLocations from './components/PopularLocations';
 import SafetyBanner from './components/SafetyBanner';
 import { useListings } from './hooks/useListings';
 
@@ -164,6 +165,22 @@ export default function App() {
     setActiveFilterChip(null);
   };
 
+  // Real aggregation of already-loaded approved listings by estate -- never
+  // a curated/fake list. PopularLocations itself renders nothing when this
+  // is empty.
+  const popularLocations = useMemo(() => {
+    const counts = new Map<string, number>();
+    allListings.forEach((listing) => {
+      const name = listing.estate?.trim();
+      if (!name) return;
+      counts.set(name, (counts.get(name) || 0) + 1);
+    });
+    return Array.from(counts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 6);
+  }, [allListings]);
+
   return (
     <AppShell
       activeTab={activeTab === 'listing-details' || activeTab === 'about' ? previousTab : activeTab}
@@ -189,53 +206,55 @@ export default function App() {
       >
       {activeTab === 'home' ? (
         /* Container holding the progression of elements */
-        <div className="flex-1 flex flex-col py-2 space-y-5 animate-fadeIn">
-          
-          {/* Header Section (v0.1.1) -- hidden at md+, DesktopNavbar covers that role there */}
+        <div className="flex-1 flex flex-col py-2 space-y-8 animate-fadeIn">
+
+          {/* Header -- hidden at md+, DesktopNavbar covers that role there */}
           <div className="md:hidden">
             <Header onNotificationsClick={() => setActiveTab('notifications')} onProfileClick={() => setActiveTab('profile')} />
           </div>
 
-          {/* Hero & Search Section (v0.1.2) - Controlled */}
+          {/* 1. Hero Search */}
           <HeroSearch
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onSearchSubmit={handleSearchSubmit}
           />
 
-          {/* Quick Filter Chips (v0.1.3) - Controlled */}
-          <FilterChips 
-            activeChip={activeFilterChip} 
-            onChipClick={setActiveFilterChip} 
-          />
+          {/* 2. Nearby Listings */}
+          <NearbyListings onSelectListing={openListingDetails} />
 
-          {/* House Type Category Scroller (v0.1.4) - Controlled */}
-          <CategoryScroller 
-            selectedCategory={selectedCategory} 
-            onCategoryChange={setSelectedCategory} 
-          />
+          {/* 3. Featured Listings */}
+          <FeaturedListings onSelectListing={openListingDetails} />
 
-          {/* Large Featured Listing Card (v0.1.5) */}
-          <FeaturedListing onSelectListing={openListingDetails} />
-
-          {/* Fresh Vacancies Section (v0.1.6) - Controlled */}
-          <FreshVacancies 
-            listings={filteredListings} 
+          {/* 4. Recently Added */}
+          <FreshVacancies
+            listings={filteredListings}
             searchQuery={searchQuery}
             selectedCategory={selectedCategory}
-            onClearFilters={handleClearFilters} 
+            onClearFilters={handleClearFilters}
             onSelectListing={openListingDetails}
             isLoading={isLoading}
           />
 
-          <RecommendedForYou
-            allListings={allListings}
-            searchQuery={searchQuery}
-            onSelectListing={openListingDetails}
-            isLoading={isLoading}
-          />
+          {/* 5. Popular Locations */}
+          <PopularLocations locations={popularLocations} onSelectLocation={handleSearchSubmit} />
 
-          {/* Safety & Trust Banner (v0.1.7) */}
+          {/* 6. Quick Filters */}
+          <div className="flex flex-col space-y-3.5">
+            <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight px-0.5">
+              Quick filters
+            </h2>
+            <FilterChips
+              activeChip={activeFilterChip}
+              onChipClick={setActiveFilterChip}
+            />
+            <CategoryScroller
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+          </div>
+
+          {/* 7. Safety Tips */}
           <SafetyBanner />
 
         </div>
