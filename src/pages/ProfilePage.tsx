@@ -181,6 +181,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
         onTypeChange={(newType) => setActiveSettingsPanel(newType)}
         onOpenAbout={onOpenAbout}
         onOpenSupport={onOpenSupport}
+        onLogout={handleLogout}
       />
 
       {/* Feedback toast message notifications */}

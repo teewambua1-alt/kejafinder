@@ -79,7 +79,7 @@ export default function ProfileActionList({ onOpenPanel, onLogout }: ProfileActi
         variants={itemVariants}
         whileTap={{ scale: 0.98 }}
         onClick={() => {
-          if (action.id === 'log-out' && onLogout) {
+          if (action.id === 'logout' && onLogout) {
             onLogout();
             return;
           }

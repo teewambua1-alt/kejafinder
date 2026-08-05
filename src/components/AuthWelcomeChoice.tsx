@@ -97,7 +97,6 @@ export default function AuthWelcomeChoice({
           whileTap={{ scale: 0.97 }}
           onClick={() => {
             onSetAuthMode('login');
-            onShowFeedback('Email login form coming next.');
           }}
           className="w-full flex items-center justify-center space-x-2 bg-emerald-600 dark:bg-emerald-500 text-white rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all"
           aria-label="Continue with email"
@@ -111,7 +110,6 @@ export default function AuthWelcomeChoice({
             whileTap={{ scale: 0.97 }}
             onClick={() => {
               onSetAuthMode('signup');
-              onShowFeedback('Signup form coming soon.');
             }}
             className="flex-1 flex items-center justify-center space-x-2 bg-white dark:bg-stone-900 text-neutral-700 dark:text-stone-200 border border-neutral-200 dark:border-stone-700 rounded-2xl py-3 px-3 hover:bg-neutral-50 dark:hover:bg-stone-800 transition-colors shadow-sm"
             aria-label="Create KejaFinder account"
@@ -138,7 +136,6 @@ export default function AuthWelcomeChoice({
           whileTap={{ scale: 0.97 }}
           onClick={() => {
             onGoPost();
-            onShowFeedback('Post vacancy flow coming soon.');
           }}
           className="w-full flex items-center justify-center space-x-2 bg-orange-50/50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border border-orange-200/50 dark:border-orange-900/30 rounded-2xl py-3 px-4 hover:bg-orange-100/50 dark:hover:bg-orange-900/40 transition-colors"
           aria-label="Post a vacancy"

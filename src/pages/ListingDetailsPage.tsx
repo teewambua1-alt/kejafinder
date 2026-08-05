@@ -138,6 +138,11 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     if (source === 'supabase') {
       await toggleSavedListing(currentListing);
       showFeedback(isSaved(currentListing.id) ? "Removed from saved homes." : "Saved to your account.");
+    } else if (source === 'signed_out') {
+      // Flipping localSaved here would look like a real save that then
+      // silently vanishes, since it never reaches the database and never
+      // shows up on the Saved page.
+      showFeedback("Log in to save homes.");
     } else {
       setLocalSaved(!currentlySaved);
       showFeedback(!currentlySaved ? "Saved locally for this prototype." : "Removed from temporary saved list.");
@@ -169,12 +174,48 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     }
   };
 
+  // Real listings only reach this page with an ID that should resolve. While
+  // that fetch is in flight, or if it comes back empty (bad/stale/removed
+  // ID), show that honestly instead of silently rendering fake sample data
+  // as if it were the listing the user actually clicked on.
+  if (internalListingId && isLoading) {
+    return (
+      <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
+        <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
+        <div className="flex-1 flex flex-col items-center justify-center space-y-3 py-24">
+          <div className="w-8 h-8 border-3 border-emerald-500/30 border-t-emerald-600 rounded-full animate-spin" />
+          <p className="text-xs font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Loading listing…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (internalListingId && !isLoading && !fbListing) {
+    return (
+      <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
+        <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
+        <div className="flex-1 flex flex-col items-center justify-center space-y-3 py-24 px-6 text-center">
+          <h2 className="text-sm font-black text-neutral-800 dark:text-neutral-100 uppercase tracking-tight">Listing not found</h2>
+          <p className="text-xs font-medium text-neutral-500 dark:text-stone-400 max-w-[240px]">
+            This listing may have been removed, taken, or is no longer available.
+          </p>
+          <button
+            onClick={onBack}
+            className="mt-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider"
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
       {/* 1. Header component */}
-      <ListingDetailsHeader 
-        onBack={onBack} 
-        isInitialSaved={currentlySaved} 
+      <ListingDetailsHeader
+        onBack={onBack}
+        isInitialSaved={currentlySaved}
         onShare={handleShare}
         onSaveToggle={handleSaveToggleClick}
         onReport={() => setIsReportPanelOpen(true)}

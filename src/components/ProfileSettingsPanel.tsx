@@ -47,9 +47,10 @@ interface ProfileSettingsPanelProps {
   onTypeChange?: (type: ProfileSettingsPanelType) => void;
   onOpenAbout?: () => void;
   onOpenSupport?: () => void;
+  onLogout?: () => void;
 }
 
-export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, onTypeChange, onOpenAbout, onOpenSupport }: ProfileSettingsPanelProps) {
+export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, onTypeChange, onOpenAbout, onOpenSupport, onLogout }: ProfileSettingsPanelProps) {
   // Direct redirect when about_page selected: closes bottom-sheet and opens the custom view
   React.useEffect(() => {
     if (isOpen && type === 'about_page') {
@@ -659,7 +660,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
             <div className="space-y-1.5 max-w-xs mx-auto">
               <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Sign Out</h2>
               <p className="text-[11.5px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
-                Sign-out actions are locked in the KejaFinder preview environment.
+                You'll need to log in again to access your account.
               </p>
             </div>
 
@@ -671,10 +672,13 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 Cancel Action
               </button>
               <button
-                onClick={() => showEditingToast('Sign-out state locked in development mode.')}
+                onClick={() => {
+                  onClose();
+                  onLogout?.();
+                }}
                 className="flex-1 py-3 text-xs font-black uppercase tracking-wider rounded-xl bg-orange-550 text-white hover:bg-orange-600 transition-all cursor-pointer outline-none"
               >
-                Log Out Later
+                Log Out
               </button>
             </div>
           </div>
