@@ -14,17 +14,41 @@ L.Icon.Default.mergeOptions({
 interface SearchFullMapProps {
   listings: Listing[];
   onSelectListing?: (id: string) => void;
+  /** 'fullscreen' (default): mobile/tablet FAB takeover, absolutely positioned
+   *  over the whole page. 'panel': in-flow, fills its parent container --
+   *  used for the desktop sticky list+map split view. */
+  variant?: 'fullscreen' | 'panel';
 }
 
-export default function SearchFullMap({ listings, onSelectListing }: SearchFullMapProps) {
-  // Determine center from first listing or fallback
-  const center: [number, number] = [-1.2921, 36.8219];
+const NAIROBI_CENTER: [number, number] = [-1.2921, 36.8219];
+
+// No listing has real geocoded coordinates yet (Post Vacancy doesn't
+// capture them at creation) -- this deterministically derives a stable
+// approximate pin per listing id so markers don't jump around on every
+// re-render the way Math.random() did. Real lat/lng (once present) always
+// takes priority below.
+function approximateCoordinates(id: string): [number, number] {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash << 5) - hash + id.charCodeAt(i);
+    hash |= 0;
+  }
+  const offsetLat = ((hash % 1000) / 1000 - 0.5) * 0.1;
+  const offsetLng = (((hash >> 8) % 1000) / 1000 - 0.5) * 0.1;
+  return [NAIROBI_CENTER[0] + offsetLat, NAIROBI_CENTER[1] + offsetLng];
+}
+
+export default function SearchFullMap({ listings, onSelectListing, variant = 'fullscreen' }: SearchFullMapProps) {
+  const containerClassName =
+    variant === 'fullscreen'
+      ? 'absolute inset-0 z-[40] bg-neutral-100 dark:bg-stone-900 overflow-hidden'
+      : 'relative w-full h-full bg-neutral-100 dark:bg-stone-900 overflow-hidden rounded-2xl';
 
   return (
-    <div className="absolute inset-0 z-[40] bg-neutral-100 dark:bg-stone-900 overflow-hidden" style={{ top: '64px', bottom: '64px' }}>
-      <MapContainer 
-        center={center} 
-        zoom={12} 
+    <div className={containerClassName} style={variant === 'fullscreen' ? { top: '64px', bottom: '64px' } : undefined}>
+      <MapContainer
+        center={NAIROBI_CENTER}
+        zoom={12}
         scrollWheelZoom={true}
         className="w-full h-full z-0"
       >
@@ -33,15 +57,15 @@ export default function SearchFullMap({ listings, onSelectListing }: SearchFullM
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
         {listings.map((listing) => {
-          // Fallback coordinate generation for prototype
-          // Real apps would use the listing.coordinates
-          const lat = -1.2921 + (Math.random() - 0.5) * 0.1;
-          const lng = 36.8219 + (Math.random() - 0.5) * 0.1;
-          
+          const hasRealCoordinates = typeof listing.lat === 'number' && typeof listing.lng === 'number';
+          const position: [number, number] = hasRealCoordinates
+            ? [listing.lat as number, listing.lng as number]
+            : approximateCoordinates(listing.id);
+
           return (
-            <Marker key={listing.id} position={[lat, lng]}>
+            <Marker key={listing.id} position={position}>
               <Popup>
-                <div 
+                <div
                   className="cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();

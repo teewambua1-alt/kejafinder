@@ -9,6 +9,7 @@ import SearchResultsList from '../components/SearchResultsList';
 import SearchFilterSheet, { SearchFilters, defaultSearchFilters } from '../components/SearchFilterSheet';
 import { SortOption } from '../components/SortDropdown';
 import { useListings } from '../hooks/useListings';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import SearchFullMap from '../components/SearchFullMap';
 import { Map, List } from 'lucide-react';
 
@@ -16,15 +17,24 @@ interface SearchResultsPageProps {
   onBackToHome?: () => void;
   onTabChange?: (tab: string) => void;
   onSelectListing?: (id: string) => void;
+  initialQuery?: string;
 }
 
-export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing }: SearchResultsPageProps) {
+export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery }: SearchResultsPageProps) {
   const { listings: baseListings, isLoading } = useListings();
-  const [searchQuery, setSearchQuery] = useState('Syokimau');
+  const [searchQuery, setSearchQuery] = useState(initialQuery || 'Syokimau');
   const [selectedSort, setSelectedSort] = useState<SortOption>('Most relevant');
   const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'map'>('list');
+  // At xl+ (1280px) there's room for Airbnb-style side-by-side list+map, so
+  // the map is always visible there instead of behind the FAB toggle. Below
+  // xl (mobile+tablet), behavior is unchanged. Gated by a real media query
+  // (not just CSS visibility) so the Leaflet map only ever mounts into a
+  // container that already has real size -- mounting into a display:none
+  // box and revealing it later is a known source of broken/blank tiles.
+  const isDesktopSplit = useMediaQuery('(min-width: 1280px)');
+  const effectiveViewMode = isDesktopSplit && viewMode === 'map' ? 'list' : viewMode;
 
   // 1. Filtering pipeline combining searchQuery and advanced filters
   const filteredListings = baseListings.filter((listing) => {
@@ -255,10 +265,53 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
       animate="show"
       className="flex-1 flex flex-col pt-1 space-y-5"
     >
-      {/* Real Shared Header Component */}
-      <Header onNotificationsClick={() => onTabChange?.('notifications')} />
+      {/* Real Shared Header Component -- hidden at md+, DesktopNavbar covers that role there */}
+      <div className="md:hidden">
+        <Header onNotificationsClick={() => onTabChange?.('notifications')} />
+      </div>
 
-      {viewMode === 'map' ? (
+      {isDesktopSplit ? (
+        /* Desktop (xl+): Airbnb-style side-by-side list + sticky map, no FAB needed */
+        <div className="flex-1 flex gap-6 min-h-0 items-start">
+          <div className="flex-1 min-w-0 flex flex-col space-y-5">
+            <motion.div variants={itemVariants} className="w-full">
+              <SearchTopBar
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                onOpenFilters={() => setIsFilterSheetOpen(true)}
+              />
+            </motion.div>
+            <motion.div variants={itemVariants} className="w-full">
+              <SearchFilterChips
+                searchQuery={searchQuery}
+                filters={filters}
+                onOpenFilters={() => setIsFilterSheetOpen(true)}
+              />
+            </motion.div>
+            <motion.div variants={itemVariants} className="w-full">
+              <ResultsSummary
+                count={sortedListings.length}
+                searchQuery={searchQuery}
+                selectedSort={selectedSort}
+                onSortChange={setSelectedSort}
+                viewMode={effectiveViewMode}
+                onViewModeChange={setViewMode as any}
+              />
+            </motion.div>
+            <motion.div variants={itemVariants} className="w-full">
+              <SearchResultsList
+                listings={sortedListings}
+                onClearSearch={handleClearSearch}
+                onSelectListing={onSelectListing}
+                viewMode={effectiveViewMode === 'map' ? 'list' : effectiveViewMode}
+              />
+            </motion.div>
+          </div>
+          <div className="w-[420px] shrink-0 sticky top-6 h-[calc(100vh-7rem)]">
+            <SearchFullMap listings={sortedListings} onSelectListing={onSelectListing} variant="panel" />
+          </div>
+        </div>
+      ) : viewMode === 'map' ? (
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}
@@ -273,16 +326,16 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
         <>
           {/* Real Controlled Search top bar */}
           <motion.div variants={itemVariants} className="w-full">
-            <SearchTopBar 
-              searchQuery={searchQuery} 
-              onSearchChange={setSearchQuery} 
+            <SearchTopBar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
               onOpenFilters={() => setIsFilterSheetOpen(true)}
             />
           </motion.div>
 
           {/* 2. Filter Chips Row */}
           <motion.div variants={itemVariants} className="w-full">
-            <SearchFilterChips 
+            <SearchFilterChips
               searchQuery={searchQuery}
               filters={filters}
               onOpenFilters={() => setIsFilterSheetOpen(true)}
@@ -296,8 +349,8 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
 
           {/* 4. Results Summary Row */}
           <motion.div variants={itemVariants} className="w-full">
-            <ResultsSummary 
-              count={sortedListings.length} 
+            <ResultsSummary
+              count={sortedListings.length}
               searchQuery={searchQuery}
               selectedSort={selectedSort}
               onSortChange={setSelectedSort}
@@ -308,8 +361,8 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
 
           {/* 5. Listing Results Card Area */}
           <motion.div variants={itemVariants} className="w-full">
-            <SearchResultsList 
-              listings={sortedListings} 
+            <SearchResultsList
+              listings={sortedListings}
               onClearSearch={handleClearSearch}
               onSelectListing={onSelectListing}
               viewMode={viewMode}
@@ -318,25 +371,27 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
         </>
       )}
 
-      {/* Floating Action Button for Map/List Toggle */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
-        className="absolute bottom-6 right-6 z-50 bg-neutral-900 dark:bg-emerald-600 text-white rounded-full px-5 py-3.5 flex items-center space-x-2 shadow-lg border border-neutral-800 dark:border-emerald-500"
-      >
-        {viewMode === 'map' ? (
-          <>
-            <List className="w-5 h-5" />
-            <span className="font-bold tracking-wide text-sm">List View</span>
-          </>
-        ) : (
-          <>
-            <Map className="w-5 h-5" />
-            <span className="font-bold tracking-wide text-sm">Map View</span>
-          </>
-        )}
-      </motion.button>
+      {/* Floating Action Button for Map/List Toggle -- mobile/tablet only, desktop split shows both already */}
+      {!isDesktopSplit && (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
+          className="absolute bottom-6 right-6 z-50 bg-neutral-900 dark:bg-emerald-600 text-white rounded-full px-5 py-3.5 flex items-center space-x-2 shadow-lg border border-neutral-800 dark:border-emerald-500"
+        >
+          {viewMode === 'map' ? (
+            <>
+              <List className="w-5 h-5" />
+              <span className="font-bold tracking-wide text-sm">List View</span>
+            </>
+          ) : (
+            <>
+              <Map className="w-5 h-5" />
+              <span className="font-bold tracking-wide text-sm">Map View</span>
+            </>
+          )}
+        </motion.button>
+      )}
 
       {/* 6. Advanced Filters Drawer Bottom Sheet Modal (Version 0.3.8) */}
       <SearchFilterSheet

@@ -32,6 +32,8 @@ export type Listing = {
   distanceFromRoad?: string;
   county?: string;
   panoramaUrl?: string;
+  lat?: number | null;
+  lng?: number | null;
 };
 
 export function getListingTypeLabel(type: ListingType): string {

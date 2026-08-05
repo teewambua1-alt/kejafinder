@@ -5,11 +5,13 @@ import { motion } from 'motion/react';
 interface HeroSearchProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  onSearchSubmit?: (query: string) => void;
 }
 
-export default function HeroSearch({ searchQuery, onSearchChange }: HeroSearchProps) {
+export default function HeroSearch({ searchQuery, onSearchChange, onSearchSubmit }: HeroSearchProps) {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    onSearchSubmit?.(searchQuery);
   };
 
   return (

@@ -92,6 +92,8 @@ export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Lis
     updatedAt: row.updated_at || new Date().toISOString(),
     distanceFromRoad: row.distance_from_road ?? undefined,
     county: row.county,
+    lat: row.lat,
+    lng: row.lng,
   };
 }
 

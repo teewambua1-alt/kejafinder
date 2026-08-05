@@ -63,11 +63,11 @@ export default function SearchResultsList({ listings, onClearSearch, onSelectLis
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className={`w-full pb-28 ${
-        viewMode === 'grid' 
-          ? 'grid grid-cols-2 gap-3' 
+      className={`w-full pb-28 md:pb-4 ${
+        viewMode === 'grid'
+          ? 'grid grid-cols-2 md:grid-cols-3 gap-3'
           : 'flex flex-col gap-4'
-      }`} // Safe bottom margin/padding to prevent bottom navigation overlaps on mobile screens
+      }`} // Safe bottom margin/padding to prevent bottom navigation overlaps on mobile screens (not needed at md+, no bottom nav there)
     >
       {listings.map((listing) => (
         <SearchResultCard key={listing.id} listing={listing} onSelectListing={onSelectListing} viewMode={viewMode} />

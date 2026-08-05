@@ -220,7 +220,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         animate="show"
         className="flex flex-col space-y-5 w-full pb-6 animate-fadeIn"
       >
-        <motion.div variants={itemVariants}>
+        <motion.div variants={itemVariants} className="md:hidden">
           <Header onNotificationsClick={() => onTabChange?.('notifications')} />
         </motion.div>
         
@@ -265,7 +265,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
       className="flex flex-col space-y-5 w-full pb-6 animate-fadeIn"
     >
       {/* Brand Header Row (Reused from global component) */}
-      <motion.div variants={itemVariants}>
+      <motion.div variants={itemVariants} className="md:hidden">
         <Header onNotificationsClick={() => onTabChange?.('notifications')} />
       </motion.div>
 

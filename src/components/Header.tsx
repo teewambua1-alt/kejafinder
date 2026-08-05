@@ -1,13 +1,17 @@
 import { Bell, MapPinHouse, Sun, Moon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTheme } from './ThemeContext';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   onNotificationsClick?: () => void;
+  onProfileClick?: () => void;
 }
 
-export default function Header({ onNotificationsClick }: HeaderProps = {}) {
+export default function Header({ onNotificationsClick, onProfileClick }: HeaderProps = {}) {
   const { isDark, toggleTheme } = useTheme();
+  const { user, profile } = useAuth();
+  const initial = profile?.full_name?.trim()?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase();
 
   return (
     <motion.header 
@@ -66,26 +70,34 @@ export default function Header({ onNotificationsClick }: HeaderProps = {}) {
         </button>
  
         {/* User Profile Avatar with thin green ring */}
-        <button 
+        <button
           type="button"
+          onClick={onProfileClick}
           className="relative w-10 h-10 rounded-full p-[2px] bg-emerald-600/10 border border-emerald-500/35 shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer outline-none"
           aria-label="Profile"
         >
-          <div className="w-full h-full rounded-full overflow-hidden bg-neutral-200 dark:bg-stone-700 border border-white dark:border-stone-800">
-            {/* Highly detailed stylized Kenyan representation visual or placeholder fallback */}
-            <svg 
-              viewBox="0 0 32 32" 
-              fill="none" 
-              xmlns="http://www.w3.org/2055/svg"
-              className="w-full h-full text-neutral-500 dark:text-stone-400"
-            >
-              <rect width="32" height="32" className="fill-neutral-200 dark:fill-stone-800" />
-              <circle cx="16" cy="11" r="5" className="fill-neutral-600 dark:fill-stone-400" />
-              <path d="M6 26.5C6 21.2533 10.2533 17 15.5 17H16.5C21.7467 17 26 21.2533 26 26.5V28H6V26.5Z" className="fill-neutral-600 dark:fill-stone-400" />
-            </svg>
+          <div className="w-full h-full rounded-full overflow-hidden bg-neutral-200 dark:bg-stone-700 border border-white dark:border-stone-800 flex items-center justify-center">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            ) : user && initial ? (
+              <span className="text-sm font-black text-emerald-700 dark:text-emerald-400">{initial}</span>
+            ) : (
+              <svg
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-full h-full text-neutral-500 dark:text-stone-400"
+              >
+                <rect width="32" height="32" className="fill-neutral-200 dark:fill-stone-800" />
+                <circle cx="16" cy="11" r="5" className="fill-neutral-600 dark:fill-stone-400" />
+                <path d="M6 26.5C6 21.2533 10.2533 17 15.5 17H16.5C21.7467 17 26 21.2533 26 26.5V28H6V26.5Z" className="fill-neutral-600 dark:fill-stone-400" />
+              </svg>
+            )}
           </div>
-          {/* Small online green status indicator */}
-          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-stone-800" />
+          {/* Online status indicator -- only meaningful when actually signed in */}
+          {user && (
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-stone-800" />
+          )}
         </button>
       </div>
     </motion.header>

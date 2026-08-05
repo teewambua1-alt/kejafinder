@@ -1,5 +1,5 @@
 import React, { useState, useMemo, Suspense, lazy, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import AppShell from './components/AppShell';
 import Header from './components/Header';
 import HeroSearch from './components/HeroSearch';
@@ -34,6 +34,12 @@ export default function App() {
   
   const [selectedListingId, setSelectedListingId] = useState<string | null>(null);
   const [previousTab, setPreviousTab] = useState<string>('home');
+  const [pendingSearchQuery, setPendingSearchQuery] = useState<string | undefined>(undefined);
+
+  const handleSearchSubmit = (query: string) => {
+    setPendingSearchQuery(query);
+    setActiveTab('search');
+  };
 
   const openListingDetails = (listingId: string) => {
     setPreviousTab(activeTab);
@@ -159,25 +165,42 @@ export default function App() {
   };
 
   return (
-    <AppShell 
-      activeTab={activeTab === 'listing-details' || activeTab === 'about' ? previousTab : activeTab} 
+    <AppShell
+      activeTab={activeTab === 'listing-details' || activeTab === 'about' ? previousTab : activeTab}
       onTabChange={(tab) => {
         setSelectedListingId(null);
         setActiveTab(tab);
       }}
+      onNotificationsClick={() => setActiveTab('notifications')}
+      onOpenAuth={openAuthPage}
+      onOpenTestMode={openTestMode}
+      onOpenDesignSystem={openDesignSystem}
+      onSearchSubmit={handleSearchSubmit}
     >
       <Suspense fallback={null}>
+      <AnimatePresence mode="wait">
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -6 }}
+        transition={{ duration: 0.18, ease: 'easeInOut' }}
+        className="flex-1 flex flex-col w-full min-h-0"
+      >
       {activeTab === 'home' ? (
         /* Container holding the progression of elements */
         <div className="flex-1 flex flex-col py-2 space-y-5 animate-fadeIn">
           
-          {/* Header Section (v0.1.1) */}
-          <Header onNotificationsClick={() => setActiveTab('notifications')} />
+          {/* Header Section (v0.1.1) -- hidden at md+, DesktopNavbar covers that role there */}
+          <div className="md:hidden">
+            <Header onNotificationsClick={() => setActiveTab('notifications')} onProfileClick={() => setActiveTab('profile')} />
+          </div>
 
           {/* Hero & Search Section (v0.1.2) - Controlled */}
-          <HeroSearch 
-            searchQuery={searchQuery} 
-            onSearchChange={setSearchQuery} 
+          <HeroSearch
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onSearchSubmit={handleSearchSubmit}
           />
 
           {/* Quick Filter Chips (v0.1.3) - Controlled */}
@@ -217,10 +240,11 @@ export default function App() {
 
         </div>
       ) : activeTab === 'search' ? (
-        <SearchResultsPage 
-          onBackToHome={() => setActiveTab('home')} 
-          onTabChange={setActiveTab} 
+        <SearchResultsPage
+          onBackToHome={() => setActiveTab('home')}
+          onTabChange={setActiveTab}
           onSelectListing={openListingDetails}
+          initialQuery={pendingSearchQuery}
         />
       ) : activeTab === 'post' ? (
         <PostVacancyPage onTabChange={setActiveTab} />
@@ -317,6 +341,8 @@ export default function App() {
           </motion.button>
         </div>
       )}
+      </motion.div>
+      </AnimatePresence>
       </Suspense>
     </AppShell>
   );
