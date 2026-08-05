@@ -1,9 +1,28 @@
-import { FirebaseListing, FirebaseSavedListing } from '../types/firebase';
+import { supabase } from './supabase/client';
+import type { SupabaseListingWithImages } from '../services/listingService';
+import type { Database } from '../types/database';
 import { Listing, ListingType } from '../types/listing';
 import { PostListingDraft } from '../types/postListing';
 
-export function mapPostVacancyFormToFirebaseListing(draft: PostListingDraft): Partial<FirebaseListing> {
-  const houseTypeMap: Record<string, string> = {
+type ListingInsert = Database['public']['Tables']['listings']['Insert'];
+
+const VALID_LISTING_TYPES: ListingType[] = ['single_room', 'bedsitter', 'studio', 'one_bedroom', 'two_bedroom', 'mabati'];
+
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+function publicImageUrl(storagePath: string): string {
+  return supabase.storage.from('listing-photos').getPublicUrl(storagePath).data.publicUrl;
+}
+
+// house_type is a `text` column with a CHECK constraint, not a native Postgres
+// enum, so Supabase's type generator has no Enums entry for it — the
+// generated Row/Insert type is plain `string`. This union documents the
+// actual allowed values (must stay in sync with the CHECK constraint in
+// supabase/migrations/20260805000001_schema.sql).
+type HouseType = 'single_room' | 'bedsitter' | 'mabati' | 'studio' | 'one_bedroom' | 'two_bedroom' | 'three_bedroom' | 'student_room' | 'other';
+
+export function mapPostVacancyFormToSupabaseListing(draft: PostListingDraft): Partial<ListingInsert> {
+  const houseTypeMap: Record<string, HouseType> = {
     'single_room': 'single_room',
     'bedsitter': 'bedsitter',
     'studio': 'studio',
@@ -16,110 +35,66 @@ export function mapPostVacancyFormToFirebaseListing(draft: PostListingDraft): Pa
   const depositAmount = parseInt(draft.deposit.replace(/\D/g, ''), 10) || 0;
 
   return {
-    houseType: (houseTypeMap[draft.houseType] || 'other') as any,
-    monthlyRent: rentAmount,
-    depositAmount: depositAmount,
-    agentFee: 0,
-    viewingFee: 0,
+    house_type: houseTypeMap[draft.houseType] || 'other',
+    monthly_rent: rentAmount,
+    deposit_amount: depositAmount,
+    agent_fee: 0,
+    viewing_fee: 0,
     description: draft.description || '',
     county: draft.county || '',
     town: draft.town || '',
     estate: draft.estate || '',
     landmark: draft.landmark || '',
-    distanceFromRoad: draft.distanceFromRoad || '',
-    contactName: draft.contactName || '',
-    contactRole: draft.contactRole,
-    contactPhone: draft.allowCalls ? draft.contactPhone : '',
-    whatsappPhone: draft.allowWhatsApp ? draft.whatsappPhone : '',
+    distance_from_road: draft.distanceFromRoad || '',
+    contact_name: draft.contactName || '',
+    contact_role: draft.contactRole,
+    contact_phone: draft.allowCalls ? draft.contactPhone : '',
+    whatsapp_phone: draft.allowWhatsApp ? draft.whatsappPhone : '',
     amenities: draft.amenities || [],
-    photoUrls: [], // do not persist local blobs
-    coverPhotoUrl: undefined, // do not persist local blobs
-    verificationLevel: 'none',
   };
 }
 
-export function mapFirebaseListingToListing(fbListing: FirebaseListing): Listing {
-  const images = fbListing.photoUrls || [];
-  if (fbListing.coverPhotoUrl && !images.includes(fbListing.coverPhotoUrl)) {
-    images.unshift(fbListing.coverPhotoUrl);
-  }
+export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Listing {
+  const sortedImages = [...(row.listing_images || [])].sort((a, b) => a.position - b.position);
+  const imageUrls = sortedImages.map((img) => publicImageUrl(img.storage_path));
 
-  // Derive simple type
-  let type: ListingType = 'other' as ListingType;
-  if (['single_room', 'bedsitter', 'studio', 'one_bedroom', 'two_bedroom', 'mabati'].includes(fbListing.houseType)) {
-    type = fbListing.houseType as ListingType;
-  }
+  const type: ListingType = (VALID_LISTING_TYPES as string[]).includes(row.house_type)
+    ? (row.house_type as ListingType)
+    : ('other' as ListingType);
 
-  // Build badges
   const badges: string[] = [];
-  if (fbListing.verificationLevel && fbListing.verificationLevel !== 'none') {
-    badges.push(`${fbListing.verificationLevel} Verified`);
+  if (row.verification_level && row.verification_level !== 'none') {
+    badges.push(`${row.verification_level} Verified`);
   }
-  if (fbListing.isFeatured) {
-    badges.push("Featured");
+  if (row.is_featured) {
+    badges.push('Featured');
   }
 
   return {
-    id: fbListing.id,
-    title: fbListing.title || `${fbListing.houseType.replace('_', ' ')} in ${fbListing.town || 'Kenya'}`,
-    type: type,
-    rent: fbListing.monthlyRent || 0,
-    deposit: fbListing.depositAmount || 0,
-    // Prefer landmark/estate for general location display
-    location: fbListing.estate || fbListing.landmark || fbListing.town,
-    town: fbListing.town,
-    estate: fbListing.estate,
-    landmark: fbListing.landmark,
-    image: fbListing.coverPhotoUrl || (images.length > 0 ? images[0] : 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
-    imagesCount: images.length,
-    amenities: fbListing.amenities || [],
+    id: row.id,
+    title: row.title || `${row.house_type.replace('_', ' ')} in ${row.town || 'Kenya'}`,
+    type,
+    rent: row.monthly_rent || 0,
+    deposit: row.deposit_amount || 0,
+    location: row.estate || row.landmark || row.town,
+    town: row.town,
+    estate: row.estate,
+    landmark: row.landmark ?? undefined,
+    image: imageUrls[0] || PLACEHOLDER_IMAGE,
+    imagesCount: imageUrls.length,
+    amenities: row.amenities || [],
     badges,
-    isFeatured: fbListing.isFeatured || false,
-    isAvailable: fbListing.isAvailable && fbListing.availabilityStatus === 'available',
-    // Not mapping views immediately unless needed, but can map viewsCount to views
-    views: fbListing.viewsCount || 0,
-    contactPhone: fbListing.contactPhone || '',
-    whatsappPhone: fbListing.whatsappPhone || fbListing.contactPhone || '',
-    updatedAt: fbListing.updatedAt ? new Date(fbListing.updatedAt.toMillis ? fbListing.updatedAt.toMillis() : fbListing.updatedAt).toISOString() : new Date().toISOString(),
-    distanceFromRoad: fbListing.distanceFromRoad,
-    county: fbListing.county,
+    isFeatured: row.is_featured || false,
+    isAvailable: row.is_available && row.availability_status === 'available',
+    views: row.views_count || 0,
+    contactPhone: row.contact_phone || '',
+    whatsappPhone: row.whatsapp_phone || row.contact_phone || '',
+    updatedAt: row.updated_at || new Date().toISOString(),
+    distanceFromRoad: row.distance_from_road ?? undefined,
+    county: row.county,
   };
 }
 
-export function mapFirebaseListingsToListings(fbListings: FirebaseListing[]): Listing[] {
-  return fbListings.map(mapFirebaseListingToListing);
-}
-
-export function mapFirebaseSavedListingToListing(fbSaved: FirebaseSavedListing): Listing {
-  let type: ListingType = 'other' as ListingType;
-  if (['single_room', 'bedsitter', 'studio', 'one_bedroom', 'two_bedroom', 'mabati'].includes(fbSaved.houseType)) {
-    type = fbSaved.houseType as ListingType;
-  }
-
-  const badges: string[] = [];
-  if (fbSaved.verificationLevel && fbSaved.verificationLevel !== 'none') {
-    badges.push(`${fbSaved.verificationLevel} Verified`);
-  }
-
-  return {
-    id: fbSaved.listingId,
-    title: fbSaved.title || `${fbSaved.houseType.replace('_', ' ')} in ${fbSaved.town || 'Kenya'}`,
-    type: type,
-    rent: fbSaved.monthlyRent || 0,
-    deposit: fbSaved.depositAmount || 0,
-    location: fbSaved.estate || fbSaved.landmark || fbSaved.town,
-    town: fbSaved.town,
-    estate: fbSaved.estate,
-    landmark: fbSaved.landmark || undefined,
-    image: fbSaved.coverPhotoUrl || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    imagesCount: 1, // Safe default since we only store cover photo
-    amenities: [], // Safe default
-    badges,
-    isFeatured: false,
-    isAvailable: fbSaved.isAvailable && fbSaved.availabilityStatus === 'available',
-    views: 0,
-    contactPhone: fbSaved.contactPhone || '',
-    whatsappPhone: fbSaved.whatsappPhone || fbSaved.contactPhone || '',
-    updatedAt: fbSaved.savedAt ? new Date(fbSaved.savedAt.toMillis ? fbSaved.savedAt.toMillis() : fbSaved.savedAt).toISOString() : new Date().toISOString(),
-  };
+export function mapSupabaseListingsToListings(rows: SupabaseListingWithImages[]): Listing[] {
+  return rows.map(mapSupabaseListingToListing);
 }

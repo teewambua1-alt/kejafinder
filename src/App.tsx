@@ -9,7 +9,7 @@ import FeaturedListing from './components/FeaturedListing';
 import FreshVacancies from './components/FreshVacancies';
 import RecommendedForYou from './components/RecommendedForYou';
 import SafetyBanner from './components/SafetyBanner';
-import { useFirestoreListings } from './hooks/useFirestoreListings';
+import { useListings } from './hooks/useListings';
 import { useFCM } from './hooks/useFCM';
 
 const SearchResultsPage = lazy(() => import('./pages/SearchResultsPage'));
@@ -29,7 +29,7 @@ export default function App() {
   // Initialize FCM listener at the top level
   useFCM();
 
-  const { listings: allListings, isLoading, source } = useFirestoreListings();
+  const { listings: allListings, isLoading } = useListings();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');

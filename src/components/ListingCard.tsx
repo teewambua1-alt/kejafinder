@@ -14,16 +14,16 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
   const [localSaved, setLocalSaved] = useState(false);
   const [showLoginHint, setShowLoginHint] = useState(false);
 
-  const saved = source === 'firestore' ? fbIsSaved(listing.id) : localSaved;
+  const saved = source === 'supabase' ? fbIsSaved(listing.id) : localSaved;
 
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (source === 'firestore') {
+    if (source === 'supabase') {
       await toggleSavedListing(listing);
     } else if (source === 'signed_out') {
-      // Firebase is configured but no one is logged in — flipping localSaved
+      // Supabase is configured but no one is logged in — flipping localSaved
       // here would look like a real save that then silently vanishes, since
-      // it never reaches Firestore and never shows up on the Saved page.
+      // it never reaches the database and never shows up on the Saved page.
       setShowLoginHint(true);
       setTimeout(() => setShowLoginHint(false), 2000);
     } else {

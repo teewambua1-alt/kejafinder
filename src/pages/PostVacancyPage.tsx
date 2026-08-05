@@ -17,9 +17,8 @@ import PostPhotoUploader, { PostPhotoPreview } from '../components/PostPhotoUplo
 import PostReviewSummary from '../components/PostReviewSummary';
 import { PostListingDraft, PostStep } from '../types/postListing';
 import { usePostListingDraft } from '../hooks/usePostListingDraft';
-import { mapPostVacancyFormToFirebaseListing } from '../lib/listingMappers';
+import { mapPostVacancyFormToSupabaseListing } from '../lib/listingMappers';
 import { useAuth } from '../context/AuthContext';
-import { isFirebaseConfigured } from '../lib/firebase';
 
 interface PostVacancyPageProps {
   onTabChange?: (tab: string) => void;
@@ -298,9 +297,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
   // only shows its "Listing submitted for review" screen when onSubmitReview
   // resolves truthy, so every path that returns false below must pair with a
   // reason here — otherwise the button would look like it silently did nothing.
-  const notSubmittableReason = !isFirebaseConfigured
-    ? 'Firebase is not configured, so this was only kept locally — nothing was actually submitted.'
-    : !currentUser
+  const notSubmittableReason = !currentUser
     ? 'You are not logged in, so nothing was actually submitted. Log in to submit this listing for review.'
     : userProfile?.role === 'tenant'
     ? 'Tenant accounts cannot submit vacancies, so nothing was actually submitted.'
@@ -560,7 +557,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.35 }}
           >
-            {isFirebaseConfigured && !currentUser && (
+            {!currentUser && (
               <div className="mb-4 flex flex-col items-center justify-center p-6 space-y-4 text-center bg-white dark:bg-stone-850 rounded-2xl border border-neutral-100 dark:border-stone-800 shadow-sm">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
                   <UserCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -583,20 +580,11 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               </div>
             )}
             
-            {isFirebaseConfigured && currentUser && userProfile?.role === 'tenant' && (
+            {currentUser && userProfile?.role === 'tenant' && (
               <div className="mb-4 flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans">
                 <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2]" />
                 <span className="text-[11px] font-bold tracking-tight leading-relaxed">
                   Tenant accounts can browse and save homes. To post vacancies, switch to landlord, caretaker, agent, or scout role later.
-                </span>
-              </div>
-            )}
-
-            {!isFirebaseConfigured && (
-              <div className="mb-4 flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-850 dark:text-blue-400 font-sans">
-                <ShieldCheck className="w-5 h-5 text-blue-500 shrink-0 stroke-[2.2]" />
-                <span className="text-[11px] font-bold tracking-tight leading-relaxed">
-                  Firebase is not configured. This form is running in local prototype mode.
                 </span>
               </div>
             )}
@@ -617,13 +605,13 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               onReset={handleReset}
               onSaveDraft={async () => {
                 if (canUseFirestorePosting) {
-                  return await saveDraft(mapPostVacancyFormToFirebaseListing(draft));
+                  return await saveDraft(mapPostVacancyFormToSupabaseListing(draft));
                 }
                 return false;
               }}
               onSubmitReview={async () => {
                 if (canUseFirestorePosting) {
-                  return await submitForReview(mapPostVacancyFormToFirebaseListing(draft));
+                  return await submitForReview(mapPostVacancyFormToSupabaseListing(draft));
                 }
                 return false;
               }}

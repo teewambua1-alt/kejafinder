@@ -9,8 +9,8 @@ import ListingAmenitiesCondition from '../components/ListingAmenitiesCondition';
 import ListingContactCard from '../components/ListingContactCard';
 import ListingTrustSafety from '../components/ListingTrustSafety';
 import SimilarHomesSection from '../components/SimilarHomesSection';
-import { useFirestoreListing } from '../hooks/useFirestoreListing';
-import { useFirestoreListings } from '../hooks/useFirestoreListings';
+import { useListing } from '../hooks/useListing';
+import { useListings } from '../hooks/useListings';
 import { useSavedListings } from '../hooks/useSavedListings';
 import { sampleKejaListing } from '../data/listingsData';
 import { KejaListing } from '../types/listings';
@@ -26,8 +26,8 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   const [listingFeedback, setListingFeedback] = useState<string | null>(null);
   const [isReportPanelOpen, setIsReportPanelOpen] = useState(false);
 
-  const { listing: fbListing, isLoading } = useFirestoreListing(internalListingId || undefined);
-  const { listings: allListings } = useFirestoreListings();
+  const { listing: fbListing, isLoading } = useListing(internalListingId || undefined);
+  const { listings: allListings } = useListings();
   const { isSaved, toggleSavedListing, source } = useSavedListings();
 
   // Sync internal ID when prop changes
@@ -132,10 +132,10 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   };
 
   const [localSaved, setLocalSaved] = useState(currentListing.isSaved || false);
-  const currentlySaved = source === 'firestore' ? isSaved(currentListing.id) : localSaved;
+  const currentlySaved = source === 'supabase' ? isSaved(currentListing.id) : localSaved;
 
   const handleSaveToggleClick = async () => {
-    if (source === 'firestore') {
+    if (source === 'supabase') {
       await toggleSavedListing(currentListing);
       showFeedback(isSaved(currentListing.id) ? "Removed from saved homes." : "Saved to your account.");
     } else {

@@ -1,148 +1,150 @@
-import { collection, query, where, orderBy, limit, getDocs, doc, getDoc } from 'firebase/firestore';
-import { firebaseDb, isFirebaseConfigured } from '../lib/firebase';
-import { FirebaseListing } from '../types/firebase';
+import { supabase } from '../lib/supabase/client';
+import type { Database } from '../types/database';
 
-export async function getApprovedAvailableListings(): Promise<FirebaseListing[] | null> {
-  if (!isFirebaseConfigured || !firebaseDb) return null;
+export type SupabaseListing = Database['public']['Tables']['listings']['Row'];
+export type SupabaseListingImage = Database['public']['Tables']['listing_images']['Row'];
+// Matches the trimmed column list actually requested in LISTING_SELECT below,
+// not the full listing_images row.
+export type SupabaseListingImagePick = Pick<SupabaseListingImage, 'id' | 'storage_path' | 'category' | 'position'>;
+export type SupabaseListingWithImages = SupabaseListing & {
+  listing_images: SupabaseListingImagePick[];
+};
 
-  try {
-    const listingsRef = collection(firebaseDb, 'listings');
-    const q = query(
-      listingsRef,
-      where('moderationStatus', '==', 'approved'),
-      where('isAvailable', '==', true),
-      where('availabilityStatus', '==', 'available'),
-      orderBy('updatedAt', 'desc'),
-      limit(30)
-    );
+// Embeds listing_images in the same round trip via the FK relationship,
+// rather than a separate query per listing.
+const LISTING_SELECT = '*, listing_images(id, storage_path, category, position)';
 
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as FirebaseListing[];
-  } catch (error: any) {
+export async function getApprovedAvailableListings(limitCount = 60): Promise<SupabaseListingWithImages[] | null> {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('moderation_status', 'approved')
+    .eq('availability_status', 'available')
+    .eq('is_available', true)
+    .order('updated_at', { ascending: false })
+    .limit(limitCount);
+
+  if (error) {
     console.error('Error fetching approved available listings:', error);
-    // If composite index fails, handle gracefully by falling back
-    if (error.code === 'failed-precondition' || error.message?.includes('index')) {
-      console.warn('Index missing, trying without orderBy...');
-      try {
-        const listingsRef = collection(firebaseDb, 'listings');
-        const qFallback = query(
-          listingsRef,
-          where('moderationStatus', '==', 'approved'),
-          where('isAvailable', '==', true),
-          where('availabilityStatus', '==', 'available'),
-          limit(30)
-        );
-        const querySnapshotFallback = await getDocs(qFallback);
-        return querySnapshotFallback.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as FirebaseListing[];
-      } catch (fallbackError) {
-        console.error('Fallback query also failed:', fallbackError);
-        return null;
-      }
-    }
-    return null; // Force fallback to local data
+    return null;
   }
+  return data;
 }
 
-export async function getApprovedListingById(listingId: string): Promise<FirebaseListing | null> {
-  if (!isFirebaseConfigured || !firebaseDb) return null;
+export async function getApprovedListingById(listingId: string): Promise<SupabaseListingWithImages | null> {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('id', listingId)
+    .eq('moderation_status', 'approved')
+    .eq('availability_status', 'available')
+    .eq('is_available', true)
+    .maybeSingle();
 
-  try {
-    const docRef = doc(firebaseDb, 'listings', listingId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data() as FirebaseListing;
-      // Only return if it's approved and available
-      if (
-        data.moderationStatus === 'approved' &&
-        data.isAvailable === true &&
-        data.availabilityStatus === 'available'
-      ) {
-        return {
-          id: docSnap.id,
-          ...data
-        };
-      }
-    }
-    return null;
-  } catch (error) {
+  if (error) {
     console.error('Error fetching listing by id:', error);
     return null;
   }
+  return data;
 }
 
-interface SearchParams {
+// For an owner/admin viewing their own listing regardless of status — RLS
+// (not this filter) is what actually restricts visibility.
+export async function getOwnerDraftListing(listingId: string): Promise<SupabaseListingWithImages | null> {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('id', listingId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching owner draft:', error);
+    return null;
+  }
+  return data;
+}
+
+export interface SearchParams {
   locationQuery?: string;
   houseType?: string;
   minRent?: number;
   maxRent?: number;
   verifiedOnly?: boolean;
+  amenities?: string[];
+  sortBy?: 'newest' | 'cheapest' | 'verified' | 'recent' | 'nearest';
+  near?: { lat: number; lng: number; radiusKm?: number };
+  page?: number;
+  pageSize?: number;
 }
 
-export async function searchApprovedListings(params: SearchParams): Promise<FirebaseListing[] | null> {
-  if (!isFirebaseConfigured || !firebaseDb) return null;
+export async function searchApprovedListings(params: SearchParams): Promise<SupabaseListingWithImages[] | null> {
+  // Distance ordering isn't expressible via the query builder — nearby_listings
+  // does it in the database via the earthdistance/cube extensions.
+  if (params.sortBy === 'nearest' && params.near) {
+    const { data, error } = await supabase.rpc('nearby_listings', {
+      p_lat: params.near.lat,
+      p_lng: params.near.lng,
+      p_radius_km: params.near.radiusKm ?? 10,
+    });
+    if (error) {
+      console.error('Error fetching nearby listings:', error);
+      return null;
+    }
+    // The RPC returns bare listing rows (no embedded images) since it can't
+    // express the same embed as the query builder — callers/mappers must
+    // treat listing_images as possibly absent for this one path.
+    return (data ?? []).map((row) => ({ ...row, listing_images: [] })) as SupabaseListingWithImages[];
+  }
 
-  try {
-    // Start with the basic query
-    const listingsRef = collection(firebaseDb, 'listings');
-    let q = query(
-      listingsRef,
-      where('moderationStatus', '==', 'approved'),
-      where('isAvailable', '==', true),
-      where('availabilityStatus', '==', 'available'),
-      limit(50) 
-    );
-    
-    // We can only reliably apply filters that don't conflict with composite index needs easily here
-    // For specific `houseType`, we could add a where clause if safe
-    if (params.houseType && params.houseType !== 'All') {
-        const queryWithHouseType = query(q, where('houseType', '==', params.houseType));
-        try {
-            // Test if composite index exists for houseType
-            const snap = await getDocs(queryWithHouseType);
-            q = queryWithHouseType;
-        } catch(e) {
-            console.warn('Index missing for houseType search, dropping to basic query');
-        }
-    }
+  const pageSize = params.pageSize ?? 30;
+  const page = params.page ?? 0;
 
-    const querySnapshot = await getDocs(q);
-    let results = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as FirebaseListing[];
+  let query = supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('moderation_status', 'approved')
+    .eq('availability_status', 'available')
+    .eq('is_available', true);
 
-    // Second level client-side secondary filter
-    if (params.minRent) {
-      results = results.filter(l => l.monthlyRent >= params.minRent!);
-    }
-    if (params.maxRent) {
-      results = results.filter(l => l.monthlyRent <= params.maxRent!);
-    }
-    if (params.verifiedOnly) {
-      results = results.filter(l => l.verificationLevel !== 'none');
-    }
-    if (params.locationQuery) {
-        const qLower = params.locationQuery.toLowerCase();
-        results = results.filter(l => 
-            l.county?.toLowerCase().includes(qLower) || 
-            l.town?.toLowerCase().includes(qLower) || 
-            l.estate?.toLowerCase().includes(qLower) || 
-            l.landmark?.toLowerCase().includes(qLower) ||
-            l.title?.toLowerCase().includes(qLower)
-        );
-    }
-    
-    return results;
+  if (params.houseType && params.houseType !== 'All') {
+    query = query.eq('house_type', params.houseType as SupabaseListing['house_type']);
+  }
+  if (params.minRent) {
+    query = query.gte('monthly_rent', params.minRent);
+  }
+  if (params.maxRent) {
+    query = query.lte('monthly_rent', params.maxRent);
+  }
+  if (params.verifiedOnly) {
+    query = query.neq('verification_level', 'none');
+  }
+  if (params.amenities && params.amenities.length > 0) {
+    query = query.overlaps('amenities', params.amenities);
+  }
+  if (params.locationQuery && params.locationQuery.trim()) {
+    query = query.textSearch('search_vector', params.locationQuery.trim(), { type: 'websearch' });
+  }
 
-  } catch (error) {
+  switch (params.sortBy) {
+    case 'cheapest':
+      query = query.order('monthly_rent', { ascending: true });
+      break;
+    case 'verified':
+      query = query.order('verification_level', { ascending: false });
+      break;
+    case 'newest':
+    case 'recent':
+    default:
+      query = query.order('updated_at', { ascending: false });
+      break;
+  }
+
+  query = query.range(page * pageSize, page * pageSize + pageSize - 1);
+
+  const { data, error } = await query;
+  if (error) {
     console.error('Error searching listings:', error);
     return null;
   }
+  return data;
 }

@@ -8,7 +8,7 @@ import ResultsSummary from '../components/ResultsSummary';
 import SearchResultsList from '../components/SearchResultsList';
 import SearchFilterSheet, { SearchFilters, defaultSearchFilters } from '../components/SearchFilterSheet';
 import { SortOption } from '../components/SortDropdown';
-import { useFirestoreListings } from '../hooks/useFirestoreListings';
+import { useListings } from '../hooks/useListings';
 import SearchFullMap from '../components/SearchFullMap';
 import { Map, List } from 'lucide-react';
 
@@ -19,7 +19,7 @@ interface SearchResultsPageProps {
 }
 
 export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing }: SearchResultsPageProps) {
-  const { listings: baseListings, isLoading } = useFirestoreListings();
+  const { listings: baseListings, isLoading } = useListings();
   const [searchQuery, setSearchQuery] = useState('Syokimau');
   const [selectedSort, setSelectedSort] = useState<SortOption>('Most relevant');
   const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);

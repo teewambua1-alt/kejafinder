@@ -278,14 +278,9 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           Your shortlisted houses in one place.
         </p>
         
-        {source === 'not_configured' && (
-          <p className="text-[10px] font-bold text-orange-600 dark:text-orange-400 mt-1">
-            Firebase is not configured. Saved listings are local only.
-          </p>
-        )}
-        {source === 'firestore' && (
+        {source === 'supabase' && (
           <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-            Saved from your Firebase test account
+            Synced to your account
           </p>
         )}
       </motion.div>

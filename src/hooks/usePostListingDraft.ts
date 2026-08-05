@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { isFirebaseConfigured } from '../lib/firebase';
 import { createListingDraft, updateListingDraft, submitListingForReview } from '../services/postListingService';
-import { getFirebaseErrorMessage } from '../lib/firebase-errors';
 
 export function usePostListingDraft() {
   const { user, profile } = useAuth();
@@ -12,17 +10,12 @@ export function usePostListingDraft() {
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const canUseFirestorePosting = isFirebaseConfigured && user && profile && profile.role !== 'tenant';
+  const canSubmitListing = Boolean(user && profile && profile.role !== 'tenant');
 
   const clearPostError = () => setError(null);
   const clearFeedback = () => setFeedback(null);
 
   const saveDraft = async (params: any) => {
-    if (!isFirebaseConfigured) {
-      setError("Firebase is not configured. This form is running in local prototype mode.");
-      return false;
-    }
-
     if (!user || !profile) {
       setError("Log in to submit vacancies.");
       return false;
@@ -40,9 +33,9 @@ export function usePostListingDraft() {
     try {
       if (draftId) {
         // Update existing draft
-        const success = await updateListingDraft(draftId, user.id, params);
+        const success = await updateListingDraft(draftId, params);
         if (success) {
-          setFeedback("Draft saved to Firebase.");
+          setFeedback("Draft saved.");
           return true;
         } else {
           setError("Could not save listing. Your form is still available locally.");
@@ -53,7 +46,7 @@ export function usePostListingDraft() {
         const newDraft = await createListingDraft(user.id, profile.role, params);
         if (newDraft) {
           setDraftId(newDraft.id);
-          setFeedback("Draft saved to Firebase.");
+          setFeedback("Draft saved.");
           return true;
         } else {
           setError("Could not save listing. Your form is still available locally.");
@@ -62,7 +55,7 @@ export function usePostListingDraft() {
       }
     } catch (err: any) {
       console.error("Draft save error:", err);
-      setError(getFirebaseErrorMessage(err) || "Could not save listing. Your form is still available locally.");
+      setError(err?.message || "Could not save listing. Your form is still available locally.");
       return false;
     } finally {
       setIsSaving(false);
@@ -70,7 +63,7 @@ export function usePostListingDraft() {
   };
 
   const submitForReview = async (params: any) => {
-    if (!canUseFirestorePosting) return false;
+    if (!canSubmitListing || !user || !profile) return false;
 
     setIsSubmitting(true);
     setError(null);
@@ -85,12 +78,12 @@ export function usePostListingDraft() {
         currentDraftId = newDraft.id;
         setDraftId(currentDraftId);
       } else {
-        const updateSuccess = await updateListingDraft(currentDraftId, user.id, params);
+        const updateSuccess = await updateListingDraft(currentDraftId, params);
         if (!updateSuccess) throw new Error("Draft update failed.");
       }
 
       // Submit for review
-      const submitSuccess = await submitListingForReview(currentDraftId, user.id);
+      const submitSuccess = await submitListingForReview(currentDraftId);
       if (submitSuccess) {
         setFeedback("Listing submitted for review.");
         return true;
@@ -112,7 +105,7 @@ export function usePostListingDraft() {
     isSubmitting,
     error,
     feedback,
-    canUseFirestorePosting,
+    canUseFirestorePosting: canSubmitListing,
     saveDraft,
     submitForReview,
     clearPostError,
