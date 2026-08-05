@@ -21,9 +21,10 @@ interface ProfilePageProps {
   onOpenSupport?: () => void;
   onOpenLandlordDashboard?: () => void;
   onOpenTestMode?: () => void;
+  onOpenDesignSystem?: () => void;
 }
 
-export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenLandlordDashboard, onOpenTestMode }: ProfilePageProps) {
+export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenLandlordDashboard, onOpenTestMode, onOpenDesignSystem }: ProfilePageProps) {
   const { user: currentUser, signOut } = useAuth();
   const [profileMode, setProfileMode] = useState<"renter" | "poster">("renter");
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
@@ -143,7 +144,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
 
       {/* 4. Real Profile Shortcuts */}
       <motion.div variants={itemVariants} className="w-full">
-        <ProfileShortcuts onTabChange={onTabChange} onOpenSettings={() => setActiveSettingsPanel('settings_home')} onOpenSafety={onOpenSafety} onOpenLandlordDashboard={onOpenLandlordDashboard} onOpenTestMode={onOpenTestMode} />
+        <ProfileShortcuts onTabChange={onTabChange} onOpenSettings={() => setActiveSettingsPanel('settings_home')} onOpenSafety={onOpenSafety} onOpenLandlordDashboard={onOpenLandlordDashboard} onOpenTestMode={onOpenTestMode} onOpenDesignSystem={onOpenDesignSystem} />
       </motion.div>
 
       {/* 5. Recently Interacted listings */}

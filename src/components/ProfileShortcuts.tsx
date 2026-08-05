@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Bookmark, 
-  PlusCircle, 
-  ShieldCheck, 
-  LifeBuoy, 
-  ChevronRight, 
+import {
+  Bookmark,
+  PlusCircle,
+  ShieldCheck,
+  LifeBuoy,
+  ChevronRight,
   AlertCircle,
   Settings,
   Building2,
-  Bug
+  Bug,
+  Palette
 } from 'lucide-react';
 
 interface ProfileShortcutsProps {
@@ -18,9 +19,10 @@ interface ProfileShortcutsProps {
   onOpenSafety?: () => void;
   onOpenLandlordDashboard?: () => void;
   onOpenTestMode?: () => void;
+  onOpenDesignSystem?: () => void;
 }
 
-export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenLandlordDashboard, onOpenTestMode }: ProfileShortcutsProps) {
+export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenLandlordDashboard, onOpenTestMode, onOpenDesignSystem }: ProfileShortcutsProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (message: string) => {
@@ -122,6 +124,20 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
           onOpenTestMode();
         } else {
           showToast('Test mode not available');
+        }
+      }
+    },
+    {
+      id: 'design_system',
+      title: 'Design System',
+      subtitle: 'Tokens, buttons, inputs, and states.',
+      icon: Palette,
+      ariaLabel: 'Open design system reference',
+      onClick: () => {
+        if (onOpenDesignSystem) {
+          onOpenDesignSystem();
+        } else {
+          showToast('Design system reference not available');
         }
       }
     }

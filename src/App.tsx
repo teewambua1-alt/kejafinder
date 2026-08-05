@@ -23,6 +23,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactSupportPage = lazy(() => import('./pages/ContactSupportPage'));
 const LandlordDashboardPage = lazy(() => import('./pages/LandlordDashboardPage'));
 const TestModePage = lazy(() => import('./pages/TestModePage'));
+const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage'));
 
 export default function App() {
   const { listings: allListings, isLoading } = useListings();
@@ -95,6 +96,15 @@ export default function App() {
   };
 
   const closeTestMode = () => {
+    setActiveTab(previousTab || 'profile');
+  };
+
+  const openDesignSystem = () => {
+    setPreviousTab(activeTab);
+    setActiveTab('design-system');
+  };
+
+  const closeDesignSystem = () => {
     setActiveTab(previousTab || 'profile');
   };
 
@@ -229,6 +239,7 @@ export default function App() {
           onOpenSupport={openSupportPage}
           onOpenLandlordDashboard={openLandlordDashboard}
           onOpenTestMode={openTestMode}
+          onOpenDesignSystem={openDesignSystem}
         />
       ) : activeTab === 'auth' ? (
         <AuthPage onBack={closeAuthPage} onTabChange={setActiveTab} />
@@ -274,6 +285,8 @@ export default function App() {
           onGoSupport={() => setActiveTab('support')}
           onGoLandlordDashboard={() => setActiveTab('landlord-dashboard')}
         />
+      ) : activeTab === 'design-system' ? (
+        <DesignSystemPage onBack={closeDesignSystem} />
       ) : activeTab === 'notifications' ? (
         <NotificationsPage onBackToHome={() => setActiveTab('home')} onOpenSafety={openSafetyPage} />
       ) : activeTab === 'listing-details' ? (

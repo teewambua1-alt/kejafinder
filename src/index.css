@@ -8,14 +8,44 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  
+
   --breakpoint-xs: 380px;
-  
+
+  /* ---------------------------------------------------------------------
+   * Brand colors -- Emerald (primary), Warm Orange (accent). These map to
+   * the shades already dominant across the app (emerald-600 / orange-500)
+   * rather than introducing new hues. Use the semantic names below in new
+   * work instead of reaching for emerald-600/orange-500 directly, so the
+   * brand color can move in one place later without a find-and-replace.
+   * --------------------------------------------------------------------- */
   --color-brand-primary: var(--color-emerald-600);
   --color-brand-primary-hover: var(--color-emerald-700);
+  --color-brand-primary-active: var(--color-emerald-800);
+  --color-brand-primary-light: var(--color-emerald-50);
+  --color-brand-primary-border: var(--color-emerald-500);
   --color-brand-accent: var(--color-orange-500);
   --color-brand-accent-hover: var(--color-orange-600);
-  
+  --color-brand-accent-light: var(--color-orange-50);
+
+  /* Semantic status colors (feedback, validation, badges) */
+  --color-success: var(--color-emerald-600);
+  --color-success-light: var(--color-emerald-50);
+  --color-warning: var(--color-orange-500);
+  --color-warning-light: var(--color-orange-50);
+  --color-danger: var(--color-red-500);
+  --color-danger-light: var(--color-red-50);
+  --color-info: var(--color-blue-500);
+  --color-info-light: var(--color-blue-50);
+
+  /* Surfaces and text -- "white/off-white background, charcoal text" */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f7fee7; /* existing light-lime off-white app background */
+  --color-surface-dark: #0c0a09; /* stone-950, existing dark app background */
+  --color-surface-dark-muted: var(--color-stone-920);
+  --color-text-charcoal: #1c1917; /* neutral-850, primary text on light surfaces */
+  --color-text-charcoal-muted: var(--color-neutral-550);
+  --color-text-inverse: #f5f5f7; /* primary text on dark surfaces */
+
   --color-neutral-850: #1c1917;
   --color-neutral-805: #21201f;
   --color-neutral-550: #737373;
@@ -23,17 +53,103 @@
   --color-stone-920: #100f0e;
   --color-stone-850: #22201e;
   --color-stone-805: #2d2a28;
-  
-  --radius-2.5xl: 1.25rem;
-  
-  --shadow-3xs: 0 1.5px 6px rgba(0, 0, 0, 0.03);
-  --shadow-2xs: 0 3px 10px rgba(0, 0, 0, 0.05);
-  
+
+  /* ---------------------------------------------------------------------
+   * In-between shade fills. Individual screens have long reached for
+   * fine-grained shades like orange-550, emerald-650, or neutral-355 for
+   * subtle contrast tweaks -- Tailwind only generates CSS for shades it
+   * knows about, so every one of these was silently resolving to a fully
+   * transparent color (found while building this system: a Button variant
+   * using bg-orange-550 rendered with no background at all). Each is
+   * defined here as an interpolation between its two real neighboring
+   * stops, so every existing screen using one of these classes gets its
+   * intended color instead of invisible ones -- no component changes.
+   * --------------------------------------------------------------------- */
+  --color-emerald-150: color-mix(in oklch, var(--color-emerald-100), var(--color-emerald-200) 50%);
+  --color-emerald-250: color-mix(in oklch, var(--color-emerald-200), var(--color-emerald-300) 50%);
+  --color-emerald-450: color-mix(in oklch, var(--color-emerald-400), var(--color-emerald-500) 50%);
+  --color-emerald-550: color-mix(in oklch, var(--color-emerald-500), var(--color-emerald-600) 50%);
+  --color-emerald-555: color-mix(in oklch, var(--color-emerald-500), var(--color-emerald-600) 55%);
+  --color-emerald-605: color-mix(in oklch, var(--color-emerald-600), var(--color-emerald-700) 5%);
+  --color-emerald-650: color-mix(in oklch, var(--color-emerald-600), var(--color-emerald-700) 50%);
+  --color-emerald-850: color-mix(in oklch, var(--color-emerald-800), var(--color-emerald-900) 50%);
+
+  --color-orange-450: color-mix(in oklch, var(--color-orange-400), var(--color-orange-500) 50%);
+  --color-orange-550: color-mix(in oklch, var(--color-orange-500), var(--color-orange-600) 50%);
+  --color-orange-603: color-mix(in oklch, var(--color-orange-600), var(--color-orange-700) 3%);
+  --color-orange-650: color-mix(in oklch, var(--color-orange-600), var(--color-orange-700) 50%);
+  --color-orange-850: color-mix(in oklch, var(--color-orange-800), var(--color-orange-900) 50%);
+
+  --color-neutral-105: color-mix(in oklch, var(--color-neutral-100), var(--color-neutral-200) 5%);
+  --color-neutral-150: color-mix(in oklch, var(--color-neutral-100), var(--color-neutral-200) 50%);
+  --color-neutral-205: color-mix(in oklch, var(--color-neutral-200), var(--color-neutral-300) 5%);
+  --color-neutral-250: color-mix(in oklch, var(--color-neutral-200), var(--color-neutral-300) 50%);
+  --color-neutral-255: color-mix(in oklch, var(--color-neutral-200), var(--color-neutral-300) 55%);
+  --color-neutral-350: color-mix(in oklch, var(--color-neutral-300), var(--color-neutral-400) 50%);
+  --color-neutral-355: color-mix(in oklch, var(--color-neutral-300), var(--color-neutral-400) 55%);
+  --color-neutral-405: color-mix(in oklch, var(--color-neutral-400), var(--color-neutral-500) 5%);
+  --color-neutral-510: color-mix(in oklch, var(--color-neutral-500), var(--color-neutral-600) 10%);
+  --color-neutral-605: color-mix(in oklch, var(--color-neutral-600), var(--color-neutral-700) 5%);
+  --color-neutral-650: color-mix(in oklch, var(--color-neutral-600), var(--color-neutral-700) 50%);
+  --color-neutral-705: color-mix(in oklch, var(--color-neutral-700), var(--color-neutral-800) 5%);
+  --color-neutral-750: color-mix(in oklch, var(--color-neutral-700), var(--color-neutral-800) 50%);
+  --color-neutral-855: color-mix(in oklch, var(--color-neutral-800), var(--color-neutral-900) 55%);
+  --color-neutral-955: var(--color-neutral-950);
+
+  --color-stone-105: color-mix(in oklch, var(--color-stone-100), var(--color-stone-200) 5%);
+  --color-stone-150: color-mix(in oklch, var(--color-stone-100), var(--color-stone-200) 50%);
+  --color-stone-250: color-mix(in oklch, var(--color-stone-200), var(--color-stone-300) 50%);
+  --color-stone-255: color-mix(in oklch, var(--color-stone-200), var(--color-stone-300) 55%);
+  --color-stone-305: color-mix(in oklch, var(--color-stone-300), var(--color-stone-400) 5%);
+  --color-stone-350: color-mix(in oklch, var(--color-stone-300), var(--color-stone-400) 50%);
+  --color-stone-405: color-mix(in oklch, var(--color-stone-400), var(--color-stone-500) 5%);
+  --color-stone-450: color-mix(in oklch, var(--color-stone-400), var(--color-stone-500) 50%);
+  --color-stone-505: color-mix(in oklch, var(--color-stone-500), var(--color-stone-600) 5%);
+  --color-stone-550: color-mix(in oklch, var(--color-stone-500), var(--color-stone-600) 50%);
+  --color-stone-605: color-mix(in oklch, var(--color-stone-600), var(--color-stone-700) 5%);
+  --color-stone-750: color-mix(in oklch, var(--color-stone-700), var(--color-stone-800) 50%);
+  --color-stone-880: color-mix(in oklch, var(--color-stone-800), var(--color-stone-900) 80%);
+
+  /* ---------------------------------------------------------------------
+   * Typography scale. Tailwind's default named sizes (text-xs=12px through
+   * text-4xl) are left untouched on purpose -- redefining them would
+   * instantly change every existing screen. These fill the gap below
+   * text-xs, where ~1,500 arbitrary text-[Npx] values (7px-11.5px) have
+   * accumulated across the app organically. New and updated components
+   * should reach for text-3xs/text-2xs instead of a one-off text-[10px].
+   * --------------------------------------------------------------------- */
+  --text-3xs: 0.5rem; /* 8px */
+  --text-3xs--line-height: 0.75rem;
+  --text-2xs: 0.625rem; /* 10px */
+  --text-2xs--line-height: 0.875rem;
+
+  /* ---------------------------------------------------------------------
+   * Spacing. Tailwind's default scale is already 4px-based (spacing-2 =
+   * 8px, spacing-4 = 16px, ...), so an "8px system" going forward just
+   * means: prefer the even, default numeric steps (2/4/6/8/10/12/16) over
+   * new fractional additions. The fractional tokens below (4.5/5.5/8.5/13)
+   * already have ~280 call sites across the app -- kept as-is, not removed,
+   * but no more should be added.
+   * --------------------------------------------------------------------- */
   --spacing-4.5: 1.125rem;
   --spacing-8.5: 2.125rem;
   --spacing-5.5: 1.375rem;
   --spacing-13: 3.25rem;
-  
+
+  /* Border radius -- codifies the scale already in wide use. */
+  --radius-2.5xl: 1.25rem;
+
+  /* ---------------------------------------------------------------------
+   * Shadows. 3xs/2xs already existed; 4xs and 5xs are added here because
+   * they were already referenced (shadow-4xs, shadow-5xs) in a handful of
+   * components without ever being defined, so those utilities were
+   * silently rendering no shadow at all.
+   * --------------------------------------------------------------------- */
+  --shadow-5xs: 0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-4xs: 0 1px 4px rgba(0, 0, 0, 0.025);
+  --shadow-3xs: 0 1.5px 6px rgba(0, 0, 0, 0.03);
+  --shadow-2xs: 0 3px 10px rgba(0, 0, 0, 0.05);
+
   --scale-97: 0.97;
   --rotate-185: 185deg;
 }
