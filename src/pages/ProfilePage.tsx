@@ -24,7 +24,7 @@ interface ProfilePageProps {
 }
 
 export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenLandlordDashboard, onOpenTestMode }: ProfilePageProps) {
-  const { firebaseUser: currentUser, signOutUser } = useAuth();
+  const { user: currentUser, signOut } = useAuth();
   const [profileMode, setProfileMode] = useState<"renter" | "poster">("renter");
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
 
   const handleLogout = async () => {
     try {
-      await signOutUser();
+      await signOut();
       handleSave("Logged out successfully");
     } catch (e) {
       handleSave("Failed to logout");

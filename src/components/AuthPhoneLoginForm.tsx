@@ -19,7 +19,7 @@ export default function AuthPhoneLoginForm({
   onGoHome,
   onGoSearch
 }: AuthPhoneLoginFormProps) {
-  const { signInWithEmailPassword, isAuthLoading, isFirebaseReady, authError: contextAuthError } = useAuth();
+  const { signIn, isAuthLoading, authError: contextAuthError } = useAuth();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +37,7 @@ export default function AuthPhoneLoginForm({
     }
 
     try {
-      await signInWithEmailPassword(email, password);
+      await signIn(email, password);
       onShowFeedback(`Welcome back!`);
       if (onGoHome) onGoHome();
     } catch (e: any) {
@@ -74,15 +74,6 @@ export default function AuthPhoneLoginForm({
         <p className="text-[13px] font-semibold text-neutral-600 dark:text-stone-300 mb-6">
           Log in with your email address to save homes and manage your listings.
         </p>
-
-        {!isFirebaseReady && (
-          <div className="mb-4 bg-orange-50/80 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-xl p-3 flex items-start space-x-2">
-            <AlertTriangle className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
-            <p className="text-[11px] font-semibold text-orange-800 dark:text-orange-300 leading-snug">
-              Firebase is not configured. Add Firebase variables to .env.local to test real login.
-            </p>
-          </div>
-        )}
 
         <div className="space-y-4 mb-6">
           <div className={`flex items-center bg-white dark:bg-stone-950 border ${currentError && !password ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm`}>
@@ -134,10 +125,10 @@ export default function AuthPhoneLoginForm({
         </div>
 
         <motion.button
-          whileTap={isFirebaseReady ? { scale: 0.97 } : {}}
-          disabled={!isFirebaseReady || isAuthLoading}
+          whileTap={{ scale: 0.97 }}
+          disabled={isAuthLoading}
           onClick={handleLogin}
-          className={`w-full flex items-center justify-center space-x-2 ${!isFirebaseReady || isAuthLoading ? 'bg-emerald-400 dark:bg-emerald-600/50 cursor-not-allowed' : 'bg-emerald-600 dark:bg-emerald-500 hover:shadow-lg'} text-white rounded-2xl py-3.5 px-4 shadow-md transition-all`}
+          className={`w-full flex items-center justify-center space-x-2 ${isAuthLoading ? 'bg-emerald-400 dark:bg-emerald-600/50 cursor-not-allowed' : 'bg-emerald-600 dark:bg-emerald-500 hover:shadow-lg'} text-white rounded-2xl py-3.5 px-4 shadow-md transition-all`}
           aria-label="Log in"
         >
           <span className="text-[13px] font-black uppercase tracking-wider">{isAuthLoading ? "Logging in..." : "Log in"}</span>
@@ -174,7 +165,7 @@ export default function AuthPhoneLoginForm({
        <motion.div variants={itemVariants} className="bg-neutral-100 dark:bg-stone-900 border border-neutral-200 dark:border-stone-800 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
         <ShieldCheck className="w-5 h-5 text-neutral-500 dark:text-stone-400 shrink-0 mt-0.5" />
         <p className="text-[11px] font-medium text-neutral-600 dark:text-stone-300 leading-snug">
-          Phone verification is not active yet. Firebase email login is active for test mode.
+          Phone verification is not active yet. Email login is active.
         </p>
       </motion.div>
 

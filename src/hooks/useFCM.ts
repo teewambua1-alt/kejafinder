@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 export function useFCM() {
-  const { firebaseUser } = useAuth();
+  const { user } = useAuth();
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
 
@@ -41,8 +41,8 @@ export function useFCM() {
           
           if (currentToken) {
             setFcmToken(currentToken);
-            if (firebaseUser) {
-              await saveTokenToFirestore(firebaseUser.uid, currentToken);
+            if (user) {
+              await saveTokenToFirestore(user.id, currentToken);
             }
             return true;
           } else {

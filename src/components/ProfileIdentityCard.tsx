@@ -17,7 +17,7 @@ interface ProfileIdentityCardProps {
 }
 
 export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileIdentityCardProps) {
-  const { profile, firebaseUser } = useAuth();
+  const { profile, user } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
   const handleEditClick = () => {
@@ -27,8 +27,8 @@ export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileI
     }, 2500);
   };
 
-  const fullName = profile?.fullName || firebaseUser?.displayName || "KejaFinder User";
-  const photoURL = firebaseUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
+  const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || "KejaFinder User";
+  const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
   // Show the account's real role when we have one; only fall back to the
   // generic Poster/Renter Mode label when there's no signed-in profile to
   // read a role from (e.g. local prototype mode).
@@ -98,10 +98,10 @@ export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileI
                     <span className="text-[11.5px] font-semibold tracking-tight truncate">{profile.town}</span>
                   </div>
                 )}
-                {(firebaseUser?.email || profile?.email) && (
+                {(user?.email || profile?.email) && (
                   <div className="flex items-center space-x-2 text-neutral-500 dark:text-stone-400">
                     <Mail className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500 shrink-0" />
-                    <span className="text-[11.5px] font-semibold tracking-tight truncate">{firebaseUser?.email || profile?.email}</span>
+                    <span className="text-[11.5px] font-semibold tracking-tight truncate">{user?.email || profile?.email}</span>
                   </div>
                 )}
               </div>

@@ -26,7 +26,7 @@ interface PostVacancyPageProps {
 }
 
 export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = {}) {
-  const { firebaseUser: currentUser, profile: userProfile } = useAuth();
+  const { user: currentUser, profile: userProfile } = useAuth();
   const {
     saveDraft,
     submitForReview,

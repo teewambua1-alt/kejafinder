@@ -10,12 +10,14 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "firebase:emulators": "firebase emulators:start",
     "firebase:rules:test": "firebase emulators:start --only firestore,storage"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@photo-sphere-viewer/core": "^5.14.3",
+    "@supabase/supabase-js": "^2.112.1",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "dotenv": "^17.2.3",

@@ -5,27 +5,25 @@ import { createListingDraft, updateListingDraft, submitListingForReview } from '
 import { getFirebaseErrorMessage } from '../lib/firebase-errors';
 
 export function usePostListingDraft() {
-  const { firebaseUser, profile, isFirebaseReady } = useAuth();
+  const { user, profile } = useAuth();
   const [draftId, setDraftId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
 
-  const canUseFirestorePosting = isFirebaseConfigured && firebaseUser && profile && profile.role !== 'tenant';
+  const canUseFirestorePosting = isFirebaseConfigured && user && profile && profile.role !== 'tenant';
 
   const clearPostError = () => setError(null);
   const clearFeedback = () => setFeedback(null);
 
   const saveDraft = async (params: any) => {
-    if (!isFirebaseReady) return false;
-
     if (!isFirebaseConfigured) {
       setError("Firebase is not configured. This form is running in local prototype mode.");
       return false;
     }
 
-    if (!firebaseUser || !profile) {
+    if (!user || !profile) {
       setError("Log in to submit vacancies.");
       return false;
     }
@@ -42,7 +40,7 @@ export function usePostListingDraft() {
     try {
       if (draftId) {
         // Update existing draft
-        const success = await updateListingDraft(draftId, firebaseUser.uid, params);
+        const success = await updateListingDraft(draftId, user.id, params);
         if (success) {
           setFeedback("Draft saved to Firebase.");
           return true;
@@ -52,7 +50,7 @@ export function usePostListingDraft() {
         }
       } else {
         // Create new draft
-        const newDraft = await createListingDraft(firebaseUser.uid, profile.role, params);
+        const newDraft = await createListingDraft(user.id, profile.role, params);
         if (newDraft) {
           setDraftId(newDraft.id);
           setFeedback("Draft saved to Firebase.");
@@ -72,7 +70,7 @@ export function usePostListingDraft() {
   };
 
   const submitForReview = async (params: any) => {
-    if (!isFirebaseReady || !canUseFirestorePosting) return false;
+    if (!canUseFirestorePosting) return false;
 
     setIsSubmitting(true);
     setError(null);
@@ -82,17 +80,17 @@ export function usePostListingDraft() {
       // Always save draft first to ensure latest details are recorded
       let currentDraftId = draftId;
       if (!currentDraftId) {
-        const newDraft = await createListingDraft(firebaseUser.uid, profile.role, params);
+        const newDraft = await createListingDraft(user.id, profile.role, params);
         if (!newDraft) throw new Error("Draft creation failed.");
         currentDraftId = newDraft.id;
         setDraftId(currentDraftId);
       } else {
-        const updateSuccess = await updateListingDraft(currentDraftId, firebaseUser.uid, params);
+        const updateSuccess = await updateListingDraft(currentDraftId, user.id, params);
         if (!updateSuccess) throw new Error("Draft update failed.");
       }
 
       // Submit for review
-      const submitSuccess = await submitListingForReview(currentDraftId, firebaseUser.uid);
+      const submitSuccess = await submitListingForReview(currentDraftId, user.id);
       if (submitSuccess) {
         setFeedback("Listing submitted for review.");
         return true;

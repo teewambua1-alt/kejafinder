@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { AuthMode, AuthDraftUser, AuthRole } from '../types/auth';
 import { useAuth } from '../context/AuthContext';
-import { FirebaseUserRole } from '../types/firebase';
 
 interface AuthRoleSelectionProps {
   authDraftUser: Partial<AuthDraftUser>;
@@ -29,37 +28,35 @@ export default function AuthRoleSelection({
   onSetAuthDraftUser,
   onShowFeedback
 }: AuthRoleSelectionProps) {
-  const { signUpWithEmailPassword, isAuthLoading, isFirebaseReady, authError: contextAuthError } = useAuth();
+  const { signUp, isAuthLoading, authError: contextAuthError } = useAuth();
 
   const [selectedRole, setSelectedRole] = useState<AuthRole | null>(authDraftUser?.role ?? null);
   const [error, setError] = useState<string | null>(null);
 
   const processSignUp = async (role: AuthRole) => {
-    if (!isFirebaseReady) {
-      // Prototype flow
-      onSetAuthDraftUser({ role: role });
-      onShowFeedback("Role saved locally. Prototype OTP next.");
-      onSetAuthMode("otp");
-      return;
-    }
-
     try {
       if (!authDraftUser.email || !authDraftUser.password) {
          setError("Missing email or password from previous steps.");
          return;
       }
-      await signUpWithEmailPassword({
+      const result = await signUp({
         email: authDraftUser.email,
         password: authDraftUser.password,
         fullName: authDraftUser.fullName || "Unknown",
         phone: authDraftUser.phone || "",
-        role: role as FirebaseUserRole,
+        role,
         town: authDraftUser.mainArea
       });
 
       onSetAuthDraftUser({ role: role });
-      onShowFeedback("Account created successfully!");
-      onSetAuthMode("trust");
+
+      if (result?.requiresEmailConfirmation) {
+        onShowFeedback("Account created! Check your email to confirm it, then log in.");
+        onSetAuthMode("welcome");
+      } else {
+        onShowFeedback("Account created successfully!");
+        onSetAuthMode("trust");
+      }
     } catch (e) {
       // Handled in context to authError
     }

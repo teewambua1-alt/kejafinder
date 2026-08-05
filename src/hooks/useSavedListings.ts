@@ -13,7 +13,7 @@ import { initialSavedListings } from '../data/savedListings';
 export type SavedSource = 'firestore' | 'local_fallback' | 'signed_out' | 'not_configured';
 
 export function useSavedListings() {
-  const { firebaseUser, isFirebaseReady } = useAuth();
+  const { user } = useAuth();
   const [savedListings, setSavedListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +24,6 @@ export function useSavedListings() {
   const requestIdRef = useRef(0);
 
   const fetchSavedListings = useCallback(async () => {
-    if (!isFirebaseReady) return;
-
     const requestId = ++requestIdRef.current;
     const isStale = () => requestId !== requestIdRef.current;
 
@@ -40,7 +38,7 @@ export function useSavedListings() {
       return;
     }
 
-    if (!firebaseUser) {
+    if (!user) {
       if (isStale()) return;
       setSavedListings([]); // We use an empty list for signed out users, prototype fallback will be managed per view
       setSource('signed_out');
@@ -49,7 +47,7 @@ export function useSavedListings() {
     }
 
     try {
-      const fbSaved = await getUserSavedListings(firebaseUser.uid);
+      const fbSaved = await getUserSavedListings(user.id);
       if (isStale()) return;
       if (fbSaved) {
         setSavedListings(fbSaved.map(mapFirebaseSavedListingToListing));
@@ -67,7 +65,7 @@ export function useSavedListings() {
     } finally {
       if (!isStale()) setIsLoading(false);
     }
-  }, [firebaseUser, isFirebaseReady]);
+  }, [user]);
 
   useEffect(() => {
     fetchSavedListings();
@@ -82,13 +80,13 @@ export function useSavedListings() {
       return false;
     }
     
-    if (!firebaseUser) return false;
+    if (!user) return false;
 
     // Optimistic update
     const tempListing = isFirebaseListing ? mapFirebaseSavedListingToListing(listing) : listing;
     setSavedListings(prev => [tempListing, ...prev.filter(l => l.id !== listing.id)]);
 
-    const success = await saveListingForUser(firebaseUser.uid, listing, isFirebaseListing);
+    const success = await saveListingForUser(user.id, listing, isFirebaseListing);
     if (!success) {
       // Revert optimistic update
       setSavedListings(prev => prev.filter(l => l.id !== listing.id));
@@ -100,13 +98,13 @@ export function useSavedListings() {
 
   const unsaveListing = async (listingId: string) => {
     if (!isFirebaseConfigured) return false;
-    if (!firebaseUser) return false;
+    if (!user) return false;
 
     // Optimistic update
     const previous = [...savedListings];
     setSavedListings(prev => prev.filter(l => l.id !== listingId));
 
-    const success = await removeSavedListingForUser(firebaseUser.uid, listingId);
+    const success = await removeSavedListingForUser(user.id, listingId);
     if (!success) {
       // Revert optimistic update
       setSavedListings(previous);
@@ -117,7 +115,7 @@ export function useSavedListings() {
   };
 
   const toggleSavedListing = async (listing: any, isFirebaseListing = false) => {
-    if (!isFirebaseConfigured || !firebaseUser) return false;
+    if (!isFirebaseConfigured || !user) return false;
     const isSaved = savedListingIds.has(listing.id);
     if (isSaved) {
       return await unsaveListing(listing.id);
