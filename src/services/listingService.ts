@@ -166,3 +166,48 @@ export async function searchApprovedListings(params: SearchParams): Promise<Supa
   }
   return data;
 }
+
+// Anon-callable, fire-and-forget by design (see increment_listing_view() in
+// supabase/migrations/20260805000002_rls_and_functions.sql) -- a failed view
+// count shouldn't block or error the page the user is trying to view.
+export async function incrementListingView(listingId: string): Promise<void> {
+  const { error } = await supabase.rpc('increment_listing_view', { p_listing_id: listingId });
+  if (error) {
+    console.error('Error incrementing listing view count:', error);
+  }
+}
+
+export async function incrementContactClick(listingId: string, clickType: 'call' | 'whatsapp'): Promise<void> {
+  const { error } = await supabase.rpc('increment_contact_click', { p_listing_id: listingId, p_click_type: clickType });
+  if (error) {
+    console.error('Error incrementing contact click count:', error);
+  }
+}
+
+// The report reason UI/type (src/types/listings.ts) predates the DB check
+// constraint (supabase/migrations/20260805000001_schema.sql) and the two
+// never got reconciled -- every other reason value matches exactly except
+// this one.
+const REPORT_REASON_DB_VALUE: Record<string, string> = {
+  duplicate_listing: 'duplicate',
+};
+
+export async function submitListingReport(params: {
+  listingId: string;
+  reporterId: string;
+  reason: string;
+  message?: string;
+}): Promise<boolean> {
+  const { error } = await supabase.from('listing_reports').insert({
+    listing_id: params.listingId,
+    reporter_id: params.reporterId,
+    reason: REPORT_REASON_DB_VALUE[params.reason] ?? params.reason,
+    message: params.message || null,
+  });
+
+  if (error) {
+    console.error('Error submitting listing report:', error);
+    return false;
+  }
+  return true;
+}

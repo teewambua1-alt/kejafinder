@@ -27,10 +27,20 @@ interface ListingLocationDetailsProps {
 }
 
 function MapPreview({ listing, onOpenMap }: { listing: KejaListing, onOpenMap?: () => void }) {
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(
+    typeof listing.lat === 'number' && typeof listing.lng === 'number' ? [listing.lat, listing.lng] : null
+  );
 
   useEffect(() => {
-    // Try to get coordinates from Nominatim
+    // Real per-listing coordinates take priority -- no geocoding needed or
+    // done when they're present.
+    if (typeof listing.lat === 'number' && typeof listing.lng === 'number') {
+      setCoordinates([listing.lat, listing.lng]);
+      return;
+    }
+
+    // Fallback only: no real coordinates yet, approximate via Nominatim
+    // text search against the estate/location name.
     const fetchCoords = async () => {
       try {
         const query = encodeURIComponent(`${listing.estate || listing.location}, Kenya`);
@@ -47,7 +57,7 @@ function MapPreview({ listing, onOpenMap }: { listing: KejaListing, onOpenMap?: 
       }
     };
     fetchCoords();
-  }, [listing.estate, listing.location]);
+  }, [listing.estate, listing.location, listing.lat, listing.lng]);
 
   if (!coordinates) {
     return (
@@ -180,14 +190,14 @@ export default function ListingLocationDetails({ listing, onAskDirections, onOpe
           </div>
         )}
 
-        {listing.distanceFromRoadText && (
+        {listing.distanceFromRoad && (
           <div className="flex items-center space-x-3.5">
             <div className="w-8 h-8 rounded-full bg-neutral-50 dark:bg-stone-800 flex items-center justify-center shrink-0 border border-neutral-100 dark:border-stone-700">
               <Footprints className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
               <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Main Road</p>
-              <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.distanceFromRoadText}</p>
+              <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.distanceFromRoad}</p>
             </div>
           </div>
         )}

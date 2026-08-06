@@ -34,6 +34,20 @@ export type Listing = {
   panoramaUrl?: string;
   lat?: number | null;
   lng?: number | null;
+  // Real per-listing detail fields (Postgres columns already existed;
+  // these were never mapped through until Phase 5's Listing Details fix).
+  description?: string;
+  waterStatus?: string;
+  waterCostText?: string;
+  electricityType?: string;
+  electricityText?: string;
+  toiletType?: string;
+  bathroomType?: string;
+  floorType?: string;
+  securityText?: string;
+  contactName?: string;
+  contactRole?: string;
+  images?: string[];
 };
 
 export function getListingTypeLabel(type: ListingType): string {

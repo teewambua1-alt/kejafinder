@@ -6,9 +6,11 @@ import { KejaListing } from '../types/listings';
 interface ListingContactCardProps {
   listing: KejaListing;
   onFeedback?: (message: string) => void;
+  onCallClick?: () => void;
+  onWhatsAppClick?: () => void;
 }
 
-export default function ListingContactCard({ listing, onFeedback }: ListingContactCardProps) {
+export default function ListingContactCard({ listing, onFeedback, onCallClick, onWhatsAppClick }: ListingContactCardProps) {
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
   const rowVariants = {
@@ -152,9 +154,10 @@ export default function ListingContactCard({ listing, onFeedback }: ListingConta
 
       {/* 3. Action Buttons */}
       <motion.div variants={rowVariants} className="flex gap-3">
-        <motion.a 
+        <motion.a
           whileTap={{ scale: 0.97 }}
           href={`tel:${phone.replace(/\s+/g, '')}`}
+          onClick={onCallClick}
           className="flex-1 bg-neutral-850 dark:bg-stone-100 text-white dark:text-stone-900 py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm"
           aria-label={`Call ${role} ${name}`}
         >
@@ -167,6 +170,7 @@ export default function ListingContactCard({ listing, onFeedback }: ListingConta
           href={getWhatsAppMessage('available')}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onWhatsAppClick}
           className="flex-1 bg-emerald-600 dark:bg-emerald-500 text-white py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors"
           aria-label={`WhatsApp ${role} ${name}`}
         >
@@ -181,26 +185,29 @@ export default function ListingContactCard({ listing, onFeedback }: ListingConta
           Ask quickly via WhatsApp
         </h4>
         <div className="flex flex-col gap-2">
-          <a 
+          <a
             href={getWhatsAppMessage('available')}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={onWhatsAppClick}
             className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
           >
             "Is it still available?"
           </a>
-          <a 
+          <a
             href={getWhatsAppMessage('view')}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={onWhatsAppClick}
             className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
           >
             "Can I view today?"
           </a>
-          <a 
+          <a
             href={getWhatsAppMessage('directions')}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={onWhatsAppClick}
             className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
           >
             "Send exact directions"

@@ -12,9 +12,12 @@ import SimilarHomesSection from '../components/SimilarHomesSection';
 import { useListing } from '../hooks/useListing';
 import { useListings } from '../hooks/useListings';
 import { useSavedListings } from '../hooks/useSavedListings';
+import { useAuth } from '../context/AuthContext';
 import { sampleKejaListing } from '../data/listingsData';
 import { KejaListing } from '../types/listings';
 import ReportListingPanel from '../components/ReportListingPanel';
+import ListingStickyContactBar from '../components/ListingStickyContactBar';
+import { incrementListingView, incrementContactClick, submitListingReport } from '../services/listingService';
 
 interface ListingDetailsPageProps {
   listingId: string | null;
@@ -29,11 +32,22 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   const { listing: fbListing, isLoading } = useListing(internalListingId || undefined);
   const { listings: allListings } = useListings();
   const { isSaved, toggleSavedListing, source } = useSavedListings();
+  const { user } = useAuth();
 
   // Sync internal ID when prop changes
   React.useEffect(() => {
     setInternalListingId(listingId);
   }, [listingId]);
+
+  // Real view count (increment_listing_view RPC), once per distinct listing
+  // actually loaded -- not on every re-render.
+  const trackedViewIdRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (fbListing && trackedViewIdRef.current !== fbListing.id) {
+      trackedViewIdRef.current = fbListing.id;
+      incrementListingView(fbListing.id);
+    }
+  }, [fbListing]);
 
   // Gracefully resolve listing details from data sources
   const currentListing = React.useMemo(() => {
@@ -126,9 +140,27 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     showFeedback("Availability check noted locally.");
   };
 
-  const handleReportSubmit = (reason: string, message: string) => {
+  const handleReportSubmit = async (reason: string, message: string) => {
     setIsReportPanelOpen(false);
-    showFeedback("Report submitted locally. KejaFinder review tools will be added later.");
+    if (!user) {
+      showFeedback("Log in to report a listing.");
+      return;
+    }
+    const success = await submitListingReport({
+      listingId: currentListing.id,
+      reporterId: user.id,
+      reason,
+      message,
+    });
+    showFeedback(success ? "Report submitted. Our team will review it." : "Could not submit report. Please try again.");
+  };
+
+  const handleCallClick = () => {
+    if (fbListing) incrementContactClick(fbListing.id, 'call');
+  };
+
+  const handleWhatsAppClick = () => {
+    if (fbListing) incrementContactClick(fbListing.id, 'whatsapp');
   };
 
   const [localSaved, setLocalSaved] = useState(currentListing.isSaved || false);
@@ -180,7 +212,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   // as if it were the listing the user actually clicked on.
   if (internalListingId && isLoading) {
     return (
-      <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
+      <div className="flex-1 flex flex-col pb-44 animate-fadeIn relative">
         <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
         <div className="flex-1 flex flex-col items-center justify-center space-y-3 py-24">
           <div className="w-8 h-8 border-3 border-emerald-500/30 border-t-emerald-600 rounded-full animate-spin" />
@@ -192,7 +224,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
 
   if (internalListingId && !isLoading && !fbListing) {
     return (
-      <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
+      <div className="flex-1 flex flex-col pb-44 animate-fadeIn relative">
         <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
         <div className="flex-1 flex flex-col items-center justify-center space-y-3 py-24 px-6 text-center">
           <h2 className="text-sm font-black text-neutral-800 dark:text-neutral-100 uppercase tracking-tight">Listing not found</h2>
@@ -211,7 +243,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   }
 
   return (
-    <div className="flex-1 flex flex-col pb-32 animate-fadeIn relative">
+    <div className="flex-1 flex flex-col pb-44 animate-fadeIn relative">
       {/* 1. Header component */}
       <ListingDetailsHeader
         onBack={onBack}
@@ -219,6 +251,15 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
         onShare={handleShare}
         onSaveToggle={handleSaveToggleClick}
         onReport={() => setIsReportPanelOpen(true)}
+      />
+
+      {/* Persistent quick-action bar -- always reachable while scrolling */}
+      <ListingStickyContactBar
+        rent={currentListing.rent}
+        phone={currentListing.caretakerPhone || ''}
+        whatsapp={currentListing.whatsappPhone || ''}
+        onCallClick={handleCallClick}
+        onWhatsAppClick={handleWhatsAppClick}
       />
 
       {/* Local Feedback Toast */}
@@ -284,9 +325,11 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
 
         {/* F. Contact caretaker (v1.4.5) */}
         <motion.div variants={cardVariants}>
-          <ListingContactCard 
-            listing={currentListing as any} 
+          <ListingContactCard
+            listing={currentListing as any}
             onFeedback={showFeedback}
+            onCallClick={handleCallClick}
+            onWhatsAppClick={handleWhatsAppClick}
           />
         </motion.div>
 

@@ -74,7 +74,7 @@ export default function ReportListingPanel({ isOpen, onClose, onSubmit }: Report
 
             <h2 className="text-xl font-black text-neutral-850 dark:text-stone-100 pr-10">Report listing</h2>
             <p className="text-sm font-semibold text-neutral-500 dark:text-stone-400 mt-1 mb-6">
-              Tell us what looks wrong. This is prototype-only for now.
+              Tell us what looks wrong. Our team will review your report.
             </p>
 
             {error && (

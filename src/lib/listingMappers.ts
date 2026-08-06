@@ -113,6 +113,18 @@ export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Lis
     county: row.county,
     lat: row.lat,
     lng: row.lng,
+    description: row.description ?? undefined,
+    waterStatus: row.water_charge ?? undefined,
+    waterCostText: row.water_charge ?? undefined,
+    electricityType: row.electricity_type ?? undefined,
+    electricityText: row.electricity_type ?? undefined,
+    toiletType: row.toilet_type ?? undefined,
+    bathroomType: row.bathroom_type ?? undefined,
+    floorType: row.floor_level ?? undefined,
+    securityText: row.security ?? undefined,
+    contactName: row.contact_name || undefined,
+    contactRole: row.contact_role || undefined,
+    images: imageUrls.length > 0 ? imageUrls : undefined,
   };
 }
 

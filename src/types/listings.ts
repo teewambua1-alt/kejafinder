@@ -34,6 +34,9 @@ export type KejaListing = {
   moveInDateText?: string;
   currency?: "KSh";
   distanceFromRoadText?: string;
+  distanceFromRoad?: string;
+  lat?: number | null;
+  lng?: number | null;
   nearbyStage?: string;
   roadAccessText?: string;
   directionsNote?: string;
