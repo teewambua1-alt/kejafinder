@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Home, Search, Plus, Heart, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../context/AuthContext';
 
 interface BottomNavProps {
   activeTab?: string;
@@ -9,6 +10,7 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab: propActiveTab, onTabChange }: BottomNavProps = {}) {
   const [localActiveTab, setLocalActiveTab] = useState<string>('home');
+  const { profile } = useAuth();
 
   const activeTab = propActiveTab !== undefined ? propActiveTab : localActiveTab;
 
@@ -20,10 +22,14 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
     }
   };
 
+  // Tenant accounts can't submit vacancies (see usePostListingDraft) -- a
+  // signed-out visitor still sees Post, since PostVacancyPage's own sign-in
+  // prompt is the real gate for that case.
+  const isTenant = profile?.role === 'tenant';
   const navItems = [
     { id: 'home', label: 'Explore', icon: Home },
     { id: 'search', label: 'Search', icon: Search },
-    { id: 'post', label: 'Post', icon: Plus },
+    ...(isTenant ? [] : [{ id: 'post', label: 'Post', icon: Plus }]),
     { id: 'saved', label: 'Saved', icon: Heart },
     { id: 'profile', label: 'Profile', icon: User },
   ];

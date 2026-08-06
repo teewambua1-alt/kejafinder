@@ -632,6 +632,57 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      set_listing_availability: {
+        Args: { p_available: boolean; p_listing_id: string }
+        Returns: {
+          agent_fee: number
+          amenities: string[]
+          availability_status: string
+          bathroom_type: string | null
+          call_clicks_count: number
+          contact_name: string
+          contact_phone: string
+          contact_role: string
+          county: string
+          created_at: string
+          deposit_amount: number
+          description: string | null
+          distance_from_road: string | null
+          electricity_type: string | null
+          estate: string
+          expires_at: string | null
+          floor_level: string | null
+          house_type: string
+          id: string
+          is_available: boolean
+          is_featured: boolean
+          landmark: string | null
+          lat: number | null
+          lng: number | null
+          moderation_status: string
+          monthly_rent: number
+          owner_id: string
+          report_count: number
+          search_vector: unknown
+          security: string | null
+          title: string
+          toilet_type: string | null
+          town: string
+          updated_at: string
+          verification_level: string
+          viewing_fee: number
+          views_count: number
+          water_charge: string | null
+          whatsapp_clicks_count: number
+          whatsapp_phone: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "listings"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       submit_listing_for_review: {
         Args: { p_listing_id: string }
         Returns: {

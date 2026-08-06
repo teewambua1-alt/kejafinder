@@ -24,7 +24,8 @@ import {
   Lock,
   Smartphone
 } from 'lucide-react';
-import { sampleProfileUser, profileTrustStatus } from '../data/profileData';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase/client';
 
 export type ProfileSettingsPanelType =
   | "settings_home"
@@ -51,6 +52,8 @@ interface ProfileSettingsPanelProps {
 }
 
 export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, onTypeChange, onOpenAbout, onOpenSupport, onLogout }: ProfileSettingsPanelProps) {
+  const { user, profile, refreshProfile } = useAuth();
+
   // Direct redirect when about_page selected: closes bottom-sheet and opens the custom view
   React.useEffect(() => {
     if (isOpen && type === 'about_page') {
@@ -69,12 +72,21 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
 
   // 1. Local states for various settings forms
 
-  // Personal Details
-  const [fullName, setFullName] = useState(sampleProfileUser.fullName);
-  const [phone, setPhone] = useState(sampleProfileUser.phone);
-  const [email, setEmail] = useState(sampleProfileUser.email || "");
-  const [location, setLocation] = useState(sampleProfileUser.location);
+  // Personal Details -- real data from useAuth(), re-synced whenever the
+  // panel opens so a profile that finishes loading after mount isn't missed.
+  const [fullName, setFullName] = useState(profile?.full_name || '');
+  const [phone, setPhone] = useState(profile?.phone || '');
+  const [town, setTown] = useState(profile?.town || '');
+  const [isSavingDetails, setIsSavingDetails] = useState(false);
   const [editingToast, setEditingToast] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen && type === 'personal_details') {
+      setFullName(profile?.full_name || '');
+      setPhone(profile?.phone || '');
+      setTown(profile?.town || '');
+    }
+  }, [isOpen, type, profile]);
 
   // Notifications
   const [notifs, setNotifs] = useState({
@@ -107,6 +119,12 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
   // Language settings
   const [activeLanguage, setActiveLanguage] = useState("English");
 
+  const displayName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
+  const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=10b981&color=fff`;
+  const memberSince = profile?.created_at
+    ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    : null;
+
   const showEditingToast = (message: string) => {
     setEditingToast(message);
     setTimeout(() => setEditingToast(null), 2500);
@@ -127,10 +145,33 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
   };
 
   // Handle standard Done/Save button
-  const handleDone = () => {
+  const handleDone = async () => {
+    if (type === 'personal_details') {
+      if (!user) {
+        onSave?.('Log in to save profile changes.');
+        onClose();
+        return;
+      }
+      setIsSavingDetails(true);
+      const { error } = await supabase
+        .from('profiles')
+        .update({ full_name: fullName.trim(), phone: phone.trim(), town: town.trim() || null })
+        .eq('id', user.id);
+      setIsSavingDetails(false);
+
+      if (error) {
+        console.error('Error saving personal details:', error);
+        onSave?.('Could not save your changes. Please try again.');
+        return;
+      }
+      await refreshProfile();
+      onSave?.('Personal details updated.');
+      onClose();
+      return;
+    }
+
     let successMsg = "Preferences updated successfully!";
     if (type === 'settings_home') successMsg = "Settings preference panel updated.";
-    if (type === 'personal_details') successMsg = "Profile modifications are prototype-only.";
     if (type === 'notifications') successMsg = "Notification settings saved locally.";
     if (type === 'preferred_locations') successMsg = `Preferred areas saved: ${preferredLocs.join(', ')}`;
     if (type === 'budget_range') successMsg = `Budget set locally to KSh ${minRent} - KSh ${maxRent}`;
@@ -153,19 +194,19 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
             {/* Quick Profile Summary Card in Settings Hub */}
             <div className="p-4 rounded-2.5xl bg-neutral-50/70 dark:bg-stone-920 border border-neutral-150/70 dark:border-stone-850 flex items-center space-x-3.5">
               <div className="w-11 h-11 rounded-full overflow-hidden border border-white dark:border-stone-800 shadow-3xs shrink-0 bg-neutral-200 dark:bg-stone-750">
-                <img 
-                  src={sampleProfileUser.profilePhoto} 
-                  alt={sampleProfileUser.fullName} 
+                <img
+                  src={photoURL}
+                  alt={displayName}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
               <div className="min-w-0 flex-1">
                 <h4 className="text-[13px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight leading-none">
-                  {sampleProfileUser.fullName}
+                  {displayName}
                 </h4>
                 <p className="text-[9.5px] font-semibold text-neutral-450 dark:text-stone-450 leading-none mt-1 uppercase tracking-wider">
-                  {sampleProfileUser.role} · Member since {sampleProfileUser.joinedAt}
+                  {profile?.role || 'Member'}{memberSince ? ` · Member since ${memberSince}` : ''}
                 </p>
               </div>
               <span className="text-[8px] font-black px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/35 text-emerald-600 dark:text-emerald-400 border border-emerald-100/40 dark:border-emerald-900/30 uppercase tracking-widest font-sans">
@@ -303,23 +344,23 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
 
               <div className="space-y-1">
                 <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Email Address</label>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
-                  placeholder="Enter email address"
+                <input
+                  type="email"
+                  value={user?.email || ''}
+                  disabled
+                  className="w-full bg-neutral-100 dark:bg-stone-850 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-500 dark:text-stone-400 outline-none cursor-not-allowed"
+                  placeholder="No email on this account"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Primary Area</label>
-                <input 
-                  type="text" 
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
-                  placeholder="Enter location"
+                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Town / Area</label>
+                <input
+                  type="text"
+                  value={town}
+                  onChange={(e) => setTown(e.target.value)}
+                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50"
+                  placeholder="e.g. Syokimau"
                 />
               </div>
             </div>
@@ -327,7 +368,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
             <div className="p-3 bg-neutral-50 dark:bg-stone-850 rounded-2xl border border-neutral-150/70 dark:border-stone-800 mt-2 flex items-start space-x-2.5">
               <Info className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
               <p className="text-[10px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
-                Profile editing is prototype-only for now. Values changed in inputs will be reset upon closing the page session, as no backend services are linked.
+                Email can't be changed here. Name, phone, and town are saved to your account when you tap Done.
               </p>
             </div>
           </div>

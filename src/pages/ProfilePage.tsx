@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Heart, Search, Home, Clock, CheckCircle2, Eye, MessageSquare } from 'lucide-react';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileIdentityCard from '../components/ProfileIdentityCard';
-import ProfileStats from '../components/ProfileStats';
+import ProfileStats, { ProfileStatItem } from '../components/ProfileStats';
 import ProfileShortcuts from '../components/ProfileShortcuts';
-import ProfileInteractedListings from '../components/ProfileInteractedListings';
-import ProfileRecentActivity from '../components/ProfileRecentActivity';
 import ProfileActionList from '../components/ProfileActionList';
 import ProfileTrustStatus from '../components/ProfileTrustStatus';
 import ProfileSettingsPanel, { ProfileSettingsPanelType } from '../components/ProfileSettingsPanel';
 import ProfileSafetySupport from '../components/ProfileSafetySupport';
-import ProfileModeSwitch from '../components/ProfileModeSwitch';
 import { useAuth } from '../context/AuthContext';
+import { useIsAdmin } from '../hooks/useIsAdmin';
+import { useOwnerListings } from '../hooks/useOwnerListings';
+import { useSavedListings } from '../hooks/useSavedListings';
+import { useSavedSearches } from '../hooks/useSavedSearches';
 
 interface ProfilePageProps {
   onTabChange?: (tab: string) => void;
@@ -19,16 +21,28 @@ interface ProfilePageProps {
   onOpenSafety?: () => void;
   onOpenAbout?: () => void;
   onOpenSupport?: () => void;
-  onOpenLandlordDashboard?: () => void;
+  onOpenOwnerDashboard?: () => void;
+  onOpenAdminDashboard?: () => void;
   onOpenTestMode?: () => void;
   onOpenDesignSystem?: () => void;
 }
 
-export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenLandlordDashboard, onOpenTestMode, onOpenDesignSystem }: ProfilePageProps) {
-  const { user: currentUser, signOut } = useAuth();
-  const [profileMode, setProfileMode] = useState<"renter" | "poster">("renter");
+const POSTER_ROLES = ['landlord', 'caretaker', 'agent', 'scout'];
+
+export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenOwnerDashboard, onOpenAdminDashboard, onOpenTestMode, onOpenDesignSystem }: ProfilePageProps) {
+  const { user: currentUser, profile, signOut } = useAuth();
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const isPosterRole = !!profile && POSTER_ROLES.includes(profile.role);
+  const { isAdmin } = useIsAdmin();
+
+  // Every one of these real hooks is called unconditionally (rules of
+  // hooks), but skips its own fetch internally when the account can't
+  // possibly need that data -- see the `enabled` param on each.
+  const { savedListings } = useSavedListings();
+  const { savedSearches } = useSavedSearches();
+  const { stats: ownerStats } = useOwnerListings(isPosterRole);
 
   const handleSave = (msg: string) => {
     setToastMessage(msg);
@@ -44,6 +58,25 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
     }
   };
 
+  // Real stat set for the account's own role -- admin platform-wide numbers
+  // live exclusively in the Admin Dashboard (an account can be both a
+  // poster and an admin at once, so admin-ness must never crowd out their
+  // own real listing stats here).
+  const stats: ProfileStatItem[] = !currentUser
+    ? []
+    : isPosterRole
+    ? [
+        { label: 'Total Listings', value: ownerStats.total, icon: Home },
+        { label: 'Pending Review', value: ownerStats.pendingReview, icon: Clock },
+        { label: 'Live Now', value: ownerStats.liveNow, icon: CheckCircle2 },
+        { label: 'Total Views', value: ownerStats.totalViews, icon: Eye },
+        { label: 'Total Contacts', value: ownerStats.totalContacts, icon: MessageSquare },
+      ]
+    : [
+        { label: 'Saved Homes', value: savedListings.length, icon: Heart },
+        { label: 'Saved Searches', value: savedSearches.length, icon: Search },
+      ];
+
   // Stagger scale animation for placeholders
   const containerVariants: any = {
     hidden: { opacity: 0 },
@@ -57,13 +90,13 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
 
   const itemVariants: any = {
     hidden: { opacity: 0, y: 15 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.35, 
-        ease: 'easeOut' 
-      } 
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.35,
+        ease: 'easeOut'
+      }
     }
   };
 
@@ -79,8 +112,8 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
       <div className="absolute top-20 right-1/4 w-72 h-72 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* 1. Real Profile Header */}
-      <ProfileHeader 
-        onNotificationsClick={() => onTabChange?.('notifications')} 
+      <ProfileHeader
+        onNotificationsClick={() => onTabChange?.('notifications')}
         onSettingsClick={() => setActiveSettingsPanel('settings_home')}
       />
 
@@ -106,7 +139,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
                 Sign in to save your favorite houses, post vacancies, and access more features.
               </p>
             </div>
-            <motion.button 
+            <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={onOpenAuth}
               className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-emerald-600 dark:bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-shadow"
@@ -118,46 +151,43 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
       )}
 
       {/* 2. Real Profile Identity Card - Show if logged in */}
+      {currentUser && <ProfileIdentityCard isAdmin={isAdmin} />}
+
+      {/* Trust & Verification Status - real signals only */}
       {currentUser && (
-        <ProfileIdentityCard profileMode={profileMode} />
+        <motion.div variants={itemVariants} className="w-full">
+          <ProfileTrustStatus
+            isPhoneVerified={profile?.is_phone_verified ?? false}
+            isIdVerified={profile?.is_id_verified ?? false}
+            hasEmail={!!currentUser.email}
+          />
+        </motion.div>
       )}
 
-      {/* Renter / Poster Mode Switcher Segment */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileModeSwitch 
-          profileMode={profileMode} 
-          setProfileMode={setProfileMode} 
-          onTabChange={onTabChange} 
-        />
-      </motion.div>
-
-      {/* Trust & Verification Status */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileTrustStatus />
-      </motion.div>
-
-
-      {/* 3. Real Profile Stats Row */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileStats />
-      </motion.div>
+      {/* 3. Real Profile Stats Row -- different real numbers per real role */}
+      {currentUser && (
+        <motion.div variants={itemVariants} className="w-full">
+          <ProfileStats stats={stats} />
+        </motion.div>
+      )}
 
       {/* 4. Real Profile Shortcuts */}
       <motion.div variants={itemVariants} className="w-full">
-        <ProfileShortcuts onTabChange={onTabChange} onOpenSettings={() => setActiveSettingsPanel('settings_home')} onOpenSafety={onOpenSafety} onOpenLandlordDashboard={onOpenLandlordDashboard} onOpenTestMode={onOpenTestMode} onOpenDesignSystem={onOpenDesignSystem} />
+        <ProfileShortcuts
+          onTabChange={onTabChange}
+          onOpenSettings={() => setActiveSettingsPanel('settings_home')}
+          onOpenSafety={onOpenSafety}
+          onOpenOwnerDashboard={onOpenOwnerDashboard}
+          onOpenAdminDashboard={onOpenAdminDashboard}
+          onOpenTestMode={onOpenTestMode}
+          onOpenDesignSystem={onOpenDesignSystem}
+          showPostVacancy={!profile || isPosterRole}
+          showOwnerDashboard={isPosterRole}
+          showAdminDashboard={isAdmin}
+        />
       </motion.div>
 
-      {/* 5. Recently Interacted listings */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileInteractedListings />
-      </motion.div>
-
-      {/* 6. Recent Activity Log */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileRecentActivity />
-      </motion.div>
-
-      {/* 7. Real Profile Action Preferences List */}
+      {/* 5. Real Profile Action Preferences List */}
       <motion.div variants={itemVariants} className="w-full">
         <ProfileActionList onLogout={handleLogout} onOpenPanel={(pType) => {
           if (pType as string === 'about_page') {
@@ -168,7 +198,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
         }} />
       </motion.div>
 
-      {/* 8. Safety & Support Component */}
+      {/* 6. Safety & Support Component */}
       <motion.div variants={itemVariants} className="w-full">
         <ProfileSafetySupport onOpenSafety={onOpenSafety} onOpenSupport={onOpenSupport} />
       </motion.div>

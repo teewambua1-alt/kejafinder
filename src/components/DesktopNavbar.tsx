@@ -15,11 +15,11 @@ interface DesktopNavbarProps {
   onSearchSubmit?: (query: string) => void;
 }
 
-const NAV_LINKS = [
+const BASE_NAV_LINKS = [
   { id: 'home', label: 'Explore', icon: Home },
   { id: 'saved', label: 'Saved', icon: Heart },
-  { id: 'post', label: 'Post a vacancy', icon: PlusCircle },
 ];
+const POST_NAV_LINK = { id: 'post', label: 'Post a vacancy', icon: PlusCircle };
 
 /**
  * Sticky top navbar shown at tablet/desktop widths (md: and up), replacing
@@ -41,6 +41,8 @@ export default function DesktopNavbar({
   const [query, setQuery] = useState('');
 
   const initial = profile?.full_name?.trim()?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase();
+  // Tenant accounts can't submit vacancies -- see BottomNav's identical gate.
+  const navLinks = profile?.role === 'tenant' ? BASE_NAV_LINKS : [...BASE_NAV_LINKS, POST_NAV_LINK];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +69,7 @@ export default function DesktopNavbar({
 
         {/* Nav links with active-state indicator */}
         <nav className="flex items-center space-x-1 shrink-0">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const isActive = activeTab === link.id;
             return (
               <button

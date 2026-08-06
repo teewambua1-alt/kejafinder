@@ -16,6 +16,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearAuthError: () => void;
+  refreshProfile: () => Promise<void>;
 }
 
 export interface SignUpParams {
@@ -160,6 +161,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAuthError(null);
   };
 
+  // For direct profile writes made outside this context (e.g. a settings
+  // form calling supabase.from('profiles').update() itself) -- refetches so
+  // every consumer of useAuth() sees the change without needing a full
+  // reload or re-login.
+  const refreshProfile = async () => {
+    if (!user) return;
+    await fetchProfile(user.id);
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -170,6 +180,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn,
       signOut,
       clearAuthError,
+      refreshProfile,
     }}>
       {children}
     </AuthContext.Provider>

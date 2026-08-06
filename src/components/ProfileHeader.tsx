@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Bell, MapPinHouse, Sun, Moon, AlertCircle, Settings } from 'lucide-react';
 import { useTheme } from './ThemeContext';
-import { sampleProfileUser } from '../data/profileData';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase/client';
 
 interface ProfileHeaderProps {
   onNotificationsClick?: () => void;
@@ -11,7 +12,34 @@ interface ProfileHeaderProps {
 
 export default function ProfileHeader({ onNotificationsClick, onSettingsClick }: ProfileHeaderProps = {}) {
   const { isDark, toggleTheme } = useTheme();
+  const { user, profile } = useAuth();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
+  const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
+
+  // The notifications table is real but has zero writers anywhere in the app
+  // today (confirmed: no trigger, no insert policy for anyone) -- this will
+  // honestly show no badge until a future phase actually writes rows to it.
+  useEffect(() => {
+    if (!user) {
+      setUnreadCount(0);
+      return;
+    }
+    supabase
+      .from('notifications')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('is_read', false)
+      .then(({ count, error }) => {
+        if (error) {
+          console.error('Error fetching unread notification count:', error);
+          return;
+        }
+        setUnreadCount(count ?? 0);
+      });
+  }, [user]);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -60,15 +88,17 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         </motion.button>
 
         {/* Bell Notification Button */}
-        <button 
-          onClick={onNotificationsClick ? onNotificationsClick : () => showToast("You have 2 new notifications regarding saved searches.")}
+        <button
+          onClick={onNotificationsClick ? onNotificationsClick : () => showToast("Notifications aren't wired up to real data yet.")}
           className="relative w-9 h-9 rounded-full bg-white dark:bg-stone-800/95 border border-neutral-200/50 dark:border-stone-800 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-2xs hover:bg-neutral-50 dark:hover:bg-stone-750/90 active:scale-95 transition-all cursor-pointer outline-none"
           aria-label="Open notifications"
         >
           <Bell className="w-4.5 h-4.5 text-neutral-700 dark:text-neutral-200 stroke-[2]" />
-          <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-500 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
-            2
-          </span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-500 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </button>
 
         {/* Settings Button */}
@@ -82,21 +112,21 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         </motion.button>
 
         {/* User Profile Avatar with emerald status border ring */}
-        <button 
+        <button
           type="button"
-          onClick={() => showToast(`Logged in as ${sampleProfileUser.fullName}`)}
+          onClick={() => showToast(user ? `Logged in as ${fullName}` : 'Not logged in')}
           className="relative w-9 h-9 rounded-full p-[1.5px] bg-emerald-600/10 border border-emerald-500/30 shadow-2xs flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer outline-none"
           aria-label="Open profile info"
         >
           <div className="w-full h-full rounded-full overflow-hidden bg-neutral-200 dark:bg-stone-750 border border-white dark:border-stone-800">
-            <img 
-              src={sampleProfileUser.profilePhoto} 
-              alt={`${sampleProfileUser.fullName} profile photo`} 
+            <img
+              src={photoURL}
+              alt={`${fullName} profile photo`}
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
           </div>
-          <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />
+          {user && <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />}
         </button>
       </div>
 

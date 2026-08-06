@@ -25,7 +25,8 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const SafetyPage = lazy(() => import('./pages/SafetyPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactSupportPage = lazy(() => import('./pages/ContactSupportPage'));
-const LandlordDashboardPage = lazy(() => import('./pages/LandlordDashboardPage'));
+const OwnerDashboardPage = lazy(() => import('./pages/OwnerDashboardPage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const TestModePage = lazy(() => import('./pages/TestModePage'));
 const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage'));
 
@@ -102,12 +103,21 @@ export default function App() {
     setActiveTab(previousTab || 'profile');
   };
 
-  const openLandlordDashboard = () => {
+  const openOwnerDashboard = () => {
     setPreviousTab(activeTab);
     setActiveTab('landlord-dashboard');
   };
 
-  const closeLandlordDashboard = () => {
+  const closeOwnerDashboard = () => {
+    setActiveTab(previousTab || 'profile');
+  };
+
+  const openAdminDashboard = () => {
+    setPreviousTab(activeTab);
+    setActiveTab('admin-dashboard');
+  };
+
+  const closeAdminDashboard = () => {
     setActiveTab(previousTab || 'profile');
   };
 
@@ -291,13 +301,14 @@ export default function App() {
           onApplySavedSearch={handleApplySavedSearch}
         />
       ) : activeTab === 'profile' ? (
-        <ProfilePage 
-          onTabChange={setActiveTab} 
-          onOpenAuth={openAuthPage} 
-          onOpenSafety={openSafetyPage} 
-          onOpenAbout={openAboutPage} 
+        <ProfilePage
+          onTabChange={setActiveTab}
+          onOpenAuth={openAuthPage}
+          onOpenSafety={openSafetyPage}
+          onOpenAbout={openAboutPage}
           onOpenSupport={openSupportPage}
-          onOpenLandlordDashboard={openLandlordDashboard}
+          onOpenOwnerDashboard={openOwnerDashboard}
+          onOpenAdminDashboard={openAdminDashboard}
           onOpenTestMode={openTestMode}
           onOpenDesignSystem={openDesignSystem}
         />
@@ -325,12 +336,15 @@ export default function App() {
           onGoSafety={() => setActiveTab('safety')}
         />
       ) : activeTab === 'landlord-dashboard' ? (
-        <LandlordDashboardPage 
-          onBack={closeLandlordDashboard} 
+        <OwnerDashboardPage
+          onBack={closeOwnerDashboard}
           onGoPost={() => setActiveTab('post')}
           onGoSearch={() => setActiveTab('search')}
           onGoSafety={() => setActiveTab('safety')}
+          onSelectListing={openListingDetails}
         />
+      ) : activeTab === 'admin-dashboard' ? (
+        <AdminDashboardPage onBack={closeAdminDashboard} />
       ) : activeTab === 'test-mode' ? (
         <TestModePage 
           onBack={closeTestMode}

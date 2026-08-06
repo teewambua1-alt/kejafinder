@@ -13,10 +13,10 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 interface ProfileIdentityCardProps {
-  profileMode?: "renter" | "poster";
+  isAdmin?: boolean;
 }
 
-export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileIdentityCardProps) {
+export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentityCardProps) {
   const { profile, user } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
@@ -29,12 +29,9 @@ export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileI
 
   const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || "KejaFinder User";
   const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
-  // Show the account's real role when we have one; only fall back to the
-  // generic Poster/Renter Mode label when there's no signed-in profile to
-  // read a role from (e.g. local prototype mode).
   const roleLabel = profile?.role
     ? profile.role.charAt(0).toUpperCase() + profile.role.slice(1)
-    : profileMode === "poster" ? "Poster Mode" : "Renter Mode";
+    : "Member";
 
   return (
     <div className="w-full relative">
@@ -77,11 +74,19 @@ export default function ProfileIdentityCard({ profileMode = "renter" }: ProfileI
               </div>
 
               {/* Role badge */}
-              <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                <User className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-[10px] font-black uppercase tracking-wider">
-                  {roleLabel}
-                </span>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400">
+                  <User className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-[10px] font-black uppercase tracking-wider">
+                    {roleLabel}
+                  </span>
+                </div>
+                {isAdmin && (
+                  <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-orange-500/10 dark:bg-orange-500/15 border border-orange-500/20 text-orange-700 dark:text-orange-400">
+                    <ShieldCheck className="w-3 h-3 text-orange-600 dark:text-orange-400" />
+                    <span className="text-[10px] font-black uppercase tracking-wider">Admin</span>
+                  </div>
+                )}
               </div>
 
               {/* Informational rows (Phone, Location, Email) */}

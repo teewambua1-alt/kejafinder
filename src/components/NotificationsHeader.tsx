@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Bell, MapPinHouse, Sun, Moon, AlertCircle } from 'lucide-react';
 import { useTheme } from './ThemeContext';
-import { sampleProfileUser } from '../data/profileData';
+import { useAuth } from '../context/AuthContext';
 
 interface NotificationsHeaderProps {
   onNotificationsClick?: () => void;
@@ -12,7 +12,11 @@ interface NotificationsHeaderProps {
 
 export default function NotificationsHeader({ onNotificationsClick, onProfileClick, unreadCount }: NotificationsHeaderProps) {
   const { isDark, toggleTheme } = useTheme();
+  const { user, profile } = useAuth();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
+  const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -33,7 +37,7 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
     if (onProfileClick) {
       onProfileClick();
     } else {
-      showToast(`Logged in as ${sampleProfileUser.fullName || 'User'}`);
+      showToast(user ? `Logged in as ${fullName}` : 'Not logged in');
     }
   };
 
@@ -101,9 +105,9 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
           aria-label="Open profile info"
         >
           <div className="w-full h-full rounded-full overflow-hidden bg-neutral-200 dark:bg-stone-750 border border-white dark:border-stone-800">
-            <img 
-              src={sampleProfileUser.profilePhoto} 
-              alt={`${sampleProfileUser.fullName || 'User'} profile photo`} 
+            <img
+              src={photoURL}
+              alt={`${fullName} profile photo`}
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />

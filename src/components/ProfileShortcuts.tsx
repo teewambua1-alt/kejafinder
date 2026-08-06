@@ -10,19 +10,24 @@ import {
   Settings,
   Building2,
   Bug,
-  Palette
+  Palette,
+  ShieldAlert
 } from 'lucide-react';
 
 interface ProfileShortcutsProps {
   onTabChange?: (tab: string) => void;
   onOpenSettings?: () => void;
   onOpenSafety?: () => void;
-  onOpenLandlordDashboard?: () => void;
+  onOpenOwnerDashboard?: () => void;
+  onOpenAdminDashboard?: () => void;
   onOpenTestMode?: () => void;
   onOpenDesignSystem?: () => void;
+  showOwnerDashboard?: boolean;
+  showAdminDashboard?: boolean;
+  showPostVacancy?: boolean;
 }
 
-export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenLandlordDashboard, onOpenTestMode, onOpenDesignSystem }: ProfileShortcutsProps) {
+export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenOwnerDashboard, onOpenAdminDashboard, onOpenTestMode, onOpenDesignSystem, showOwnerDashboard = false, showAdminDashboard = false, showPostVacancy = true }: ProfileShortcutsProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (message: string) => {
@@ -47,7 +52,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
         }
       }
     },
-    {
+    ...(showPostVacancy ? [{
       id: 'post',
       title: 'Post Vacancy',
       subtitle: 'List a vacant home',
@@ -60,21 +65,35 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
           showToast('Vacancy post form context missing');
         }
       }
-    },
-    {
+    }] : []),
+    ...(showOwnerDashboard ? [{
       id: 'dashboard',
       title: 'Dashboard',
       subtitle: 'Manage your listings',
       icon: Building2,
-      ariaLabel: 'Open landlord dashboard',
+      ariaLabel: 'Open owner dashboard',
       onClick: () => {
-        if (onOpenLandlordDashboard) {
-          onOpenLandlordDashboard();
+        if (onOpenOwnerDashboard) {
+          onOpenOwnerDashboard();
         } else {
-          showToast('Landlord dashboard is coming soon!');
+          showToast('Owner dashboard is coming soon!');
         }
       }
-    },
+    }] : []),
+    ...(showAdminDashboard ? [{
+      id: 'admin',
+      title: 'Admin',
+      subtitle: 'Moderate listings',
+      icon: ShieldAlert,
+      ariaLabel: 'Open admin dashboard',
+      onClick: () => {
+        if (onOpenAdminDashboard) {
+          onOpenAdminDashboard();
+        } else {
+          showToast('Admin dashboard is coming soon!');
+        }
+      }
+    }] : []),
     {
       id: 'safety',
       title: 'Safety',
