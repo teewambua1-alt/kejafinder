@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ClipboardList, MapPin, Image, Eye } from 'lucide-react';
+import { Check, Home, MapPin, Grid, Image, Eye } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PostStep } from '../types/postListing';
 
@@ -9,10 +9,11 @@ type PostStepProgressProps = {
 
 export default function PostStepProgress({ currentStep }: PostStepProgressProps) {
   const steps = [
-    { number: 1, label: 'Details', icon: ClipboardList },
+    { number: 1, label: 'Property', icon: Home },
     { number: 2, label: 'Location', icon: MapPin },
-    { number: 3, label: 'Photos', icon: Image },
-    { number: 4, label: 'Review', icon: Eye },
+    { number: 3, label: 'Amenities', icon: Grid },
+    { number: 4, label: 'Photos', icon: Image },
+    { number: 5, label: 'Preview', icon: Eye },
   ];
 
   return (

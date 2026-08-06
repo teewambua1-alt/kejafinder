@@ -30,6 +30,8 @@ export async function createListingDraft(userId: string, role: string, params: P
     estate: params.estate || '',
     landmark: params.landmark || '',
     distance_from_road: params.distance_from_road || '',
+    lat: params.lat ?? null,
+    lng: params.lng ?? null,
     toilet_type: params.toilet_type || '',
     bathroom_type: params.bathroom_type || '',
     floor_level: params.floor_level || '',

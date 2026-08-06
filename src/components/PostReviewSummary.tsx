@@ -26,7 +26,7 @@ import PostListingPreview, { formatHouseType } from './PostListingPreview';
 interface PostReviewSummaryProps {
   draft: PostListingDraft;
   photoPreviews: PostPhotoPreview[];
-  onEditStep: (step: 1 | 2 | 3) => void;
+  onEditStep: (step: 1 | 2 | 3 | 4) => void;
   onBack: () => void;
   onReset: () => void;
   onSaveDraft: () => Promise<boolean>;
@@ -49,7 +49,7 @@ const AMENITY_LABELS: Record<string, string> = {
   near_main_road: 'Near main road',
   near_bus_stage: 'Near bus stage',
   no_agent_fee: 'No agent fee',
-  parking: 'Parking prk',
+  parking: 'Parking',
 };
 
 export default function PostReviewSummary({
@@ -162,7 +162,7 @@ export default function PostReviewSummary({
           Review your listing
         </h3>
         <span className="text-[10px] bg-neutral-100 dark:bg-stone-800 text-neutral-500 px-2 py-0.5 rounded-md font-extrabold">
-          Step 4 of 4
+          Step 5 of 5
         </span>
       </div>
 
@@ -224,6 +224,9 @@ export default function PostReviewSummary({
                 House details
               </h5>
               <div className="space-y-0.5 mt-0.5">
+                <p className="text-[12.5px] font-black text-neutral-850 dark:text-stone-100 truncate max-w-[210px]">
+                  {draft.title || 'Not added'}
+                </p>
                 <p className="text-[12px] font-extrabold text-neutral-800 dark:text-stone-200">
                   {formatHouseType(draft.houseType)}
                 </p>
@@ -236,13 +239,31 @@ export default function PostReviewSummary({
                 <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
                   Available: {draft.availabilityDate || 'Not added'}
                 </p>
+                {(draft.agentFee || draft.viewingFee) && (
+                  <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
+                    {draft.agentFee && `Agent fee: KSh ${Number(draft.agentFee).toLocaleString()}`}
+                    {draft.agentFee && draft.viewingFee && ' · '}
+                    {draft.viewingFee && `Viewing fee: KSh ${Number(draft.viewingFee).toLocaleString()}`}
+                  </p>
+                )}
                 <p className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500 italic truncate max-w-[210px]">
                   &ldquo;{draft.description || 'No description added'}&rdquo;
                 </p>
+                {(draft.waterCharge || draft.electricityType || draft.toiletType || draft.bathroomType || draft.floorLevel || draft.security) && (
+                  <div className="flex flex-wrap gap-1 pt-1 max-w-[220px]">
+                    {[draft.waterCharge, draft.electricityType, draft.toiletType, draft.bathroomType, draft.floorLevel, draft.security]
+                      .filter(Boolean)
+                      .map((tag, idx) => (
+                        <span key={idx} className="bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded text-[9.5px] font-bold border border-neutral-200/40 dark:border-stone-750">
+                          {tag}
+                        </span>
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          
+
           <button
             type="button"
             onClick={() => onEditStep(1)}
@@ -278,10 +299,13 @@ export default function PostReviewSummary({
                     <span>{draft.distanceFromRoad} from tarmac</span>
                   </p>
                 )}
+                <p className={`flex items-center text-[10px] font-bold ${draft.lat !== null && draft.lng !== null ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
+                  {draft.lat !== null && draft.lng !== null ? '✓ Real GPS location captured' : '✗ No GPS location added'}
+                </p>
               </div>
             </div>
           </div>
-          
+
           <button
             type="button"
             onClick={() => onEditStep(2)}
@@ -326,7 +350,7 @@ export default function PostReviewSummary({
           
           <button
             type="button"
-            onClick={() => onEditStep(2)}
+            onClick={() => onEditStep(3)}
             aria-label="Edit amenities"
             className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
@@ -386,7 +410,7 @@ export default function PostReviewSummary({
           
           <button
             type="button"
-            onClick={() => onEditStep(3)}
+            onClick={() => onEditStep(4)}
             aria-label="Edit photos"
             className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
@@ -469,7 +493,7 @@ export default function PostReviewSummary({
           
           <button
             type="button"
-            onClick={() => onEditStep(2)}
+            onClick={() => onEditStep(3)}
             aria-label="Edit verification requests"
             className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >

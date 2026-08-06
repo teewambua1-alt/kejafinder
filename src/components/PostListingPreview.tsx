@@ -46,7 +46,7 @@ const AMENITY_TEXTS: Record<string, string> = {
   near_main_road: 'Near main road',
   near_bus_stage: 'Near bus stage',
   no_agent_fee: 'No agent fee',
-  parking: 'Parking prk',
+  parking: 'Parking',
 };
 
 export default function PostListingPreview({
@@ -127,8 +127,8 @@ export default function PostListingPreview({
           {/* House Type & Verification badges line */}
           <div className="flex items-start justify-between">
             <div className="flex flex-col space-y-0.5">
-              <span className="text-xs font-black text-neutral-800 dark:text-stone-200 tracking-tight">
-                {formatHouseType(draft.houseType)} in {draft.estate || 'Estate'}
+              <span className="text-xs font-black text-neutral-800 dark:text-stone-200 tracking-tight truncate max-w-[190px]">
+                {draft.title || `${formatHouseType(draft.houseType)} in ${draft.estate || 'Estate'}`}
               </span>
               <div className="flex items-center text-[10.5px] font-bold text-neutral-400 dark:text-stone-500">
                 <MapPin className="w-3 h-3 text-neutral-400 mr-1 shrink-0" />

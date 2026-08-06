@@ -33,19 +33,30 @@ export function mapPostVacancyFormToSupabaseListing(draft: PostListingDraft): Pa
 
   const rentAmount = parseInt(draft.rent.replace(/\D/g, ''), 10) || 0;
   const depositAmount = parseInt(draft.deposit.replace(/\D/g, ''), 10) || 0;
+  const agentFee = parseInt(draft.agentFee.replace(/\D/g, ''), 10) || 0;
+  const viewingFee = parseInt(draft.viewingFee.replace(/\D/g, ''), 10) || 0;
 
   return {
+    title: draft.title || undefined,
     house_type: houseTypeMap[draft.houseType] || 'other',
     monthly_rent: rentAmount,
     deposit_amount: depositAmount,
-    agent_fee: 0,
-    viewing_fee: 0,
+    agent_fee: agentFee,
+    viewing_fee: viewingFee,
     description: draft.description || '',
+    water_charge: draft.waterCharge || '',
+    electricity_type: draft.electricityType || '',
+    toilet_type: draft.toiletType || '',
+    bathroom_type: draft.bathroomType || '',
+    floor_level: draft.floorLevel || '',
+    security: draft.security || '',
     county: draft.county || '',
     town: draft.town || '',
     estate: draft.estate || '',
     landmark: draft.landmark || '',
     distance_from_road: draft.distanceFromRoad || '',
+    lat: draft.lat,
+    lng: draft.lng,
     contact_name: draft.contactName || '',
     contact_role: draft.contactRole,
     contact_phone: draft.allowCalls ? draft.contactPhone : '',

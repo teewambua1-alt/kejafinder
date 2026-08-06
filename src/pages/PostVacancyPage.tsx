@@ -1,20 +1,22 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, ArrowLeft, ChevronLeft, MapPin, ShieldCheck, Sparkles, AlertTriangle, UserCircle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShieldCheck, Sparkles, AlertTriangle, UserCircle } from 'lucide-react';
 import PostHeader from '../components/PostHeader';
 import PostStepProgress from '../components/PostStepProgress';
 import PostHouseTypeSelector from '../components/PostHouseTypeSelector';
+import PostTitleField from '../components/PostTitleField';
 import PostPricingFields from '../components/PostPricingFields';
 import PostAvailabilityField from '../components/PostAvailabilityField';
 import PostDescriptionField from '../components/PostDescriptionField';
+import PostPropertyDetailsFields from '../components/PostPropertyDetailsFields';
 import PostContactOptions from '../components/PostContactOptions';
-import PostLocationSearch from '../components/PostLocationSearch';
 import PostMapPreview from '../components/PostMapPreview';
 import PostLocationForm from '../components/PostLocationForm';
 import PostAmenitiesGrid from '../components/PostAmenitiesGrid';
 import PostTrustToggles from '../components/PostTrustToggles';
 import PostPhotoUploader, { PostPhotoPreview } from '../components/PostPhotoUploader';
 import PostReviewSummary from '../components/PostReviewSummary';
+import { formatHouseType } from '../components/PostListingPreview';
 import { PostListingDraft, PostStep } from '../types/postListing';
 import { usePostListingDraft } from '../hooks/usePostListingDraft';
 import { mapPostVacancyFormToSupabaseListing } from '../lib/listingMappers';
@@ -23,6 +25,42 @@ import { useAuth } from '../context/AuthContext';
 interface PostVacancyPageProps {
   onTabChange?: (tab: string) => void;
 }
+
+const INITIAL_DRAFT: PostListingDraft = {
+  title: '',
+  houseType: 'single_room',
+  rent: '',
+  deposit: '',
+  availabilityDate: '',
+  description: '',
+  waterCharge: '',
+  electricityType: '',
+  toiletType: '',
+  bathroomType: '',
+  floorLevel: '',
+  security: '',
+  agentFee: '',
+  viewingFee: '',
+  county: '',
+  town: '',
+  estate: '',
+  landmark: '',
+  distanceFromRoad: '',
+  lat: null,
+  lng: null,
+  contactName: '',
+  contactRole: 'caretaker',
+  contactPhone: '',
+  whatsappPhone: '',
+  allowCalls: true,
+  allowWhatsApp: true,
+  amenities: [],
+  photos: [],
+  allowPhoneVerification: true,
+  requestLocationCheck: false,
+  requestScoutVerification: false,
+  remindToUpdate: true,
+};
 
 export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = {}) {
   const { user: currentUser, profile: userProfile } = useAuth();
@@ -37,32 +75,9 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
   } = usePostListingDraft();
 
   const [currentStep, setCurrentStep] = useState<PostStep>(1);
-  const [locationSearch, setLocationSearch] = useState('');
+  const [titleTouched, setTitleTouched] = useState(false);
   const [photoPreviews, setPhotoPreviews] = useState<PostPhotoPreview[]>([]);
-  const [draft, setDraft] = useState<PostListingDraft>({
-    houseType: 'single_room',
-    rent: '',
-    deposit: '',
-    availabilityDate: '',
-    description: '',
-    county: '',
-    town: '',
-    estate: '',
-    landmark: '',
-    distanceFromRoad: '',
-    contactName: '',
-    contactRole: 'caretaker',
-    contactPhone: '',
-    whatsappPhone: '',
-    allowCalls: true,
-    allowWhatsApp: true,
-    amenities: [],
-    photos: [],
-    allowPhoneVerification: true,
-    requestLocationCheck: false,
-    requestScoutVerification: false,
-    remindToUpdate: true,
-  });
+  const [draft, setDraft] = useState<PostListingDraft>(INITIAL_DRAFT);
 
   const [errors, setErrors] = useState<{
     rent?: string;
@@ -80,6 +95,11 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     landmark?: string;
     photos?: string;
   }>({});
+
+  // Live title suggestion -- only while the user hasn't typed a real title
+  // of their own, so it never clobbers an intentional edit.
+  const suggestedTitle = `${formatHouseType(draft.houseType)} in ${draft.town || 'Kenya'}`;
+  const effectiveTitle = titleTouched ? draft.title : suggestedTitle;
 
   // Page container animation variants
   const containerVariants: any = {
@@ -107,7 +127,14 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     },
   };
 
-  const handleContinue = () => {
+  const scrollToFirstError = (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const handleContinueStep1 = () => {
     const newErrors: typeof errors = {};
 
     if (!draft.rent.trim()) {
@@ -152,8 +179,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      
-      // Smooth scroll to the first active error element
+
       const firstErrorKey = Object.keys(newErrors)[0];
       let elementId = '';
       if (firstErrorKey === 'availabilityDate') {
@@ -170,42 +196,20 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
         elementId = `${firstErrorKey}-input`;
       }
 
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      scrollToFirstError(elementId);
       return;
+    }
+
+    // Commit the live-suggested title if the user never typed their own.
+    if (!titleTouched) {
+      setDraft((prev) => ({ ...prev, title: suggestedTitle }));
     }
 
     setErrors({});
     setCurrentStep(2);
   };
 
-  const getHeaderInfo = () => {
-    if (currentStep === 1) {
-      return {
-        title: 'Post a vacant house',
-        subtitle: 'Reach renters faster with clear, trusted details.',
-      };
-    } else if (currentStep === 2) {
-      return {
-        title: 'Where is the house located?',
-        subtitle: 'Help renters find the exact place easily.',
-      };
-    } else if (currentStep === 3) {
-      return {
-        title: 'Photos of the house',
-        subtitle: 'Add clear photos to help renters see the house.',
-      };
-    } else {
-      return {
-        title: 'Review your listing',
-        subtitle: 'Confirm all details before publishing.',
-      };
-    }
-  };
-
-  const handleSaveAndContinueStep2 = () => {
+  const handleContinueStep2 = () => {
     const newErrors: typeof errors = {};
 
     if (!draft.county) {
@@ -224,7 +228,6 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
 
-      // Smooth scroll to the first active error element
       const firstErrorKey = Object.keys(newErrors)[0];
       let elementId = '';
       if (firstErrorKey === 'county') {
@@ -239,10 +242,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
         elementId = `${firstErrorKey}-input`;
       }
 
-      const element = document.getElementById(elementId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      scrollToFirstError(elementId);
       return;
     }
 
@@ -250,45 +250,56 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     setCurrentStep(3);
   };
 
-  const handleSaveAndContinueStep3 = () => {
+  const handleContinueStep3 = () => {
+    setErrors({});
+    setCurrentStep(4);
+  };
+
+  const handleContinueStep4 = () => {
     if (photoPreviews.length === 0) {
       setErrors({ photos: 'Add at least one photo before continuing.' });
       return;
     }
 
     setErrors({});
-    setCurrentStep(4);
+    setCurrentStep(5);
   };
 
   const handleReset = () => {
-    setDraft({
-      houseType: 'single_room',
-      rent: '',
-      deposit: '',
-      availabilityDate: '',
-      description: '',
-      county: '',
-      town: '',
-      estate: '',
-      landmark: '',
-      distanceFromRoad: '',
-      contactName: '',
-      contactRole: 'caretaker',
-      contactPhone: '',
-      whatsappPhone: '',
-      allowCalls: true,
-      allowWhatsApp: true,
-      amenities: [],
-      photos: [],
-      allowPhoneVerification: true,
-      requestLocationCheck: false,
-      requestScoutVerification: false,
-      remindToUpdate: true,
-    });
+    setDraft(INITIAL_DRAFT);
     setPhotoPreviews([]);
     setErrors({});
-    setLocationSearch('');
+    setTitleTouched(false);
     setCurrentStep(1);
+  };
+
+  const getHeaderInfo = () => {
+    if (currentStep === 1) {
+      return {
+        title: 'Post a vacant house',
+        subtitle: 'Reach renters faster with clear, trusted details.',
+      };
+    } else if (currentStep === 2) {
+      return {
+        title: 'Where is the house located?',
+        subtitle: 'Help renters find the exact place easily.',
+      };
+    } else if (currentStep === 3) {
+      return {
+        title: 'Amenities & trust',
+        subtitle: 'Show tenants what’s included and build trust.',
+      };
+    } else if (currentStep === 4) {
+      return {
+        title: 'Photos of the house',
+        subtitle: 'Add clear photos to help renters see the house.',
+      };
+    } else {
+      return {
+        title: 'Preview your listing',
+        subtitle: 'Confirm all details before publishing.',
+      };
+    }
   };
 
   const headerInfo = getHeaderInfo();
@@ -296,7 +307,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
   // Why this can't be null when canSubmitListing is false: PostReviewSummary
   // only shows its "Listing submitted for review" screen when onSubmitReview
   // resolves truthy, so every path that returns false below must pair with a
-  // reason here â€” otherwise the button would look like it silently did nothing.
+  // reason here — otherwise the button would look like it silently did nothing.
   const notSubmittableReason = !currentUser
     ? 'You are not logged in, so nothing was actually submitted. Log in to submit this listing for review.'
     : userProfile?.role === 'tenant'
@@ -312,9 +323,9 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
     >
       {/* 1. Real Header Component */}
       <motion.div variants={itemVariants}>
-        <PostHeader 
-          title={headerInfo.title} 
-          subtitle={headerInfo.subtitle} 
+        <PostHeader
+          title={headerInfo.title}
+          subtitle={headerInfo.subtitle}
           onNotificationsClick={() => onTabChange?.('notifications')}
         />
       </motion.div>
@@ -335,13 +346,22 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             transition={{ duration: 0.35 }}
             className="flex flex-col space-y-5"
           >
-            {/* 3. House Type selector section */}
-            <PostHouseTypeSelector 
-              value={draft.houseType} 
-              onChange={(houseType) => setDraft((prev) => ({ ...prev, houseType }))} 
+            {/* House Type selector section */}
+            <PostHouseTypeSelector
+              value={draft.houseType}
+              onChange={(houseType) => setDraft((prev) => ({ ...prev, houseType }))}
             />
 
-            {/* 4. Pricing Fields */}
+            {/* Title Field */}
+            <PostTitleField
+              value={effectiveTitle}
+              onChange={(val) => {
+                setTitleTouched(true);
+                setDraft((prev) => ({ ...prev, title: val }));
+              }}
+            />
+
+            {/* Pricing Fields */}
             <PostPricingFields
               rent={draft.rent}
               deposit={draft.deposit}
@@ -351,20 +371,33 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               onDepositChange={(val) => setDraft((prev) => ({ ...prev, deposit: val }))}
             />
 
-            {/* 5. Availability Date */}
+            {/* Availability Date */}
             <PostAvailabilityField
               value={draft.availabilityDate}
               error={errors.availabilityDate}
               onChange={(val) => setDraft((prev) => ({ ...prev, availabilityDate: val }))}
             />
 
-            {/* 6. Description Field */}
+            {/* Description Field */}
             <PostDescriptionField
               value={draft.description}
               onChange={(val) => setDraft((prev) => ({ ...prev, description: val }))}
             />
 
-            {/* 7. Contact Options */}
+            {/* Utilities & condition */}
+            <PostPropertyDetailsFields
+              waterCharge={draft.waterCharge}
+              electricityType={draft.electricityType}
+              toiletType={draft.toiletType}
+              bathroomType={draft.bathroomType}
+              floorLevel={draft.floorLevel}
+              security={draft.security}
+              agentFee={draft.agentFee}
+              viewingFee={draft.viewingFee}
+              onChange={(fields) => setDraft((prev) => ({ ...prev, ...fields }))}
+            />
+
+            {/* Contact Options */}
             <PostContactOptions
               contactName={draft.contactName}
               contactRole={draft.contactRole}
@@ -376,7 +409,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               onChange={(fields) => setDraft((prev) => ({ ...prev, ...fields }))}
             />
 
-            {/* 8. Clear Rent / Deposit Verification Hint */}
+            {/* Clear Rent / Deposit Verification Hint */}
             <div className="flex items-center space-x-2.5 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-sans">
               <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-450 shrink-0" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
@@ -384,7 +417,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               </span>
             </div>
 
-            {/* 9. Safety Warning Note */}
+            {/* Safety Warning Note */}
             <div className="flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans">
               <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2]" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
@@ -392,15 +425,15 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               </span>
             </div>
 
-            {/* 10. Continue button Action wrapper */}
-            <motion.div 
+            {/* Continue button Action wrapper */}
+            <motion.div
               whileTap={{ scale: 0.98 }}
               className="w-full pt-2"
             >
               <button
                 type="button"
                 id="btn-post-continue"
-                onClick={handleContinue}
+                onClick={handleContinueStep1}
                 className="w-full h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
@@ -417,16 +450,14 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             transition={{ duration: 0.35 }}
             className="flex flex-col space-y-5"
           >
-            {/* 1. Location Search Input */}
-            <PostLocationSearch
-              value={locationSearch}
-              onChange={(val) => setLocationSearch(val)}
+            {/* Real geolocation-driven map preview */}
+            <PostMapPreview
+              lat={draft.lat}
+              lng={draft.lng}
+              onLocationCaptured={(lat, lng) => setDraft((prev) => ({ ...prev, lat, lng }))}
             />
 
-            {/* 2. Mock Map Preview */}
-            <PostMapPreview />
-
-            {/* 3. Location Details Form */}
+            {/* Location Details Form */}
             <PostLocationForm
               county={draft.county}
               town={draft.town}
@@ -437,23 +468,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               onChange={(fields) => setDraft((prev) => ({ ...prev, ...fields }))}
             />
 
-            {/* 3.1. Amenities Grid */}
-            <PostAmenitiesGrid
-              selectedAmenities={draft.amenities}
-              onChange={(amenities) => setDraft((prev) => ({ ...prev, amenities }))}
-              warning={draft.amenities.length === 0 ? "Adding amenities helps tenants decide faster." : undefined}
-            />
-
-            {/* 3.2. Trust & Verification Toggles */}
-            <PostTrustToggles
-              allowPhoneVerification={draft.allowPhoneVerification}
-              requestLocationCheck={draft.requestLocationCheck}
-              requestScoutVerification={draft.requestScoutVerification}
-              remindToUpdate={draft.remindToUpdate}
-              onChange={(fields) => setDraft((prev) => ({ ...prev, ...fields }))}
-            />
-
-            {/* 4. Privacy and safety note banner selection */}
+            {/* Privacy and safety note banner selection */}
             <div className="flex items-center space-x-2.5 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-sans">
               <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-450 shrink-0" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
@@ -461,7 +476,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               </span>
             </div>
 
-            {/* 5. Back and Save & Continue Buttons */}
+            {/* Back and Continue Buttons */}
             <div className="flex items-center space-x-3 w-full pt-2">
               <motion.button
                 type="button"
@@ -478,10 +493,10 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.97 }}
-                onClick={handleSaveAndContinueStep2}
+                onClick={handleContinueStep2}
                 className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
-                <span>Save & Continue</span>
+                <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
               </motion.button>
             </div>
@@ -489,6 +504,56 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
         ) : currentStep === 3 ? (
           <motion.div
             key="step3"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35 }}
+            className="flex flex-col space-y-5"
+          >
+            {/* Amenities Grid */}
+            <PostAmenitiesGrid
+              selectedAmenities={draft.amenities}
+              onChange={(amenities) => setDraft((prev) => ({ ...prev, amenities }))}
+              warning={draft.amenities.length === 0 ? "Adding amenities helps tenants decide faster." : undefined}
+            />
+
+            {/* Trust & Verification Toggles */}
+            <PostTrustToggles
+              allowPhoneVerification={draft.allowPhoneVerification}
+              requestLocationCheck={draft.requestLocationCheck}
+              requestScoutVerification={draft.requestScoutVerification}
+              remindToUpdate={draft.remindToUpdate}
+              onChange={(fields) => setDraft((prev) => ({ ...prev, ...fields }))}
+            />
+
+            {/* Back and Continue Buttons */}
+            <div className="flex items-center space-x-3 w-full pt-2">
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  setErrors({});
+                  setCurrentStep(2);
+                }}
+                className="flex-1 h-13 rounded-2xl bg-white/50 dark:bg-stone-850/40 border border-emerald-500/20 text-emerald-800 dark:text-emerald-400 font-extrabold text-sm flex items-center justify-center space-x-2 cursor-pointer hover:bg-emerald-500/5 transition-colors font-sans"
+              >
+                <ArrowLeft className="w-4.5 h-4.5 stroke-[2.5]" />
+                <span>Back</span>
+              </motion.button>
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                onClick={handleContinueStep3}
+                className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
+              >
+                <span>Continue</span>
+                <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
+              </motion.button>
+            </div>
+          </motion.div>
+        ) : currentStep === 4 ? (
+          <motion.div
+            key="step4"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
@@ -520,18 +585,18 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             <div className="flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-850 dark:text-blue-400 font-sans shadow-3xs">
               <Sparkles className="w-5 h-5 text-blue-500 shrink-0 stroke-[2] mt-0.5" />
               <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
-                Photos upload when you save or submit this listing â€” they aren't public until an admin approves it.
+                Photos upload when you save or submit this listing — they aren't public until an admin approves it.
               </span>
             </div>
 
-            {/* Step 3 back and continue controllers */}
+            {/* Step 4 back and continue controllers */}
             <div className="flex items-center space-x-3 w-full pt-2">
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   setErrors({});
-                  setCurrentStep(2);
+                  setCurrentStep(3);
                 }}
                 className="flex-1 h-13 rounded-2xl bg-white/50 dark:bg-stone-850/40 border border-emerald-500/20 text-emerald-800 dark:text-emerald-400 font-extrabold text-sm flex items-center justify-center space-x-2 cursor-pointer hover:bg-emerald-500/5 transition-colors font-sans"
               >
@@ -541,7 +606,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.97 }}
-                onClick={handleSaveAndContinueStep3}
+                onClick={handleContinueStep4}
                 className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
@@ -551,7 +616,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
           </motion.div>
         ) : (
           <motion.div
-            key="step4-review"
+            key="step5-preview"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
@@ -567,7 +632,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                   <p className="text-[11px] font-medium text-neutral-550 dark:text-neutral-400 max-w-[240px] mx-auto">Create an account as a landlord, caretaker, agent, or scout to submit listings for review.</p>
                 </div>
                 <div className="flex flex-col space-y-2 w-full max-w-[220px]">
-                  <button 
+                  <button
                     onClick={() => onTabChange?.('profile')}
                     className="w-full h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl text-white text-[11px] font-bold tracking-wider"
                   >
@@ -579,7 +644,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 </div>
               </div>
             )}
-            
+
             {currentUser && userProfile?.role === 'tenant' && (
               <div className="mb-4 flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans">
                 <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2]" />
@@ -599,7 +664,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               }}
               onBack={() => {
                 setErrors({});
-                setCurrentStep(3);
+                setCurrentStep(4);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onReset={handleReset}
