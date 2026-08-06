@@ -1,7 +1,7 @@
 import { supabase } from './supabase/client';
 import type { SupabaseListingWithImages } from '../services/listingService';
 import type { Database } from '../types/database';
-import { Listing, ListingType } from '../types/listing';
+import { Listing, ListingType, getListingTypeLabel } from '../types/listing';
 import { PostListingDraft } from '../types/postListing';
 
 type ListingInsert = Database['public']['Tables']['listings']['Insert'];
@@ -62,18 +62,37 @@ export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Lis
     ? (row.house_type as ListingType)
     : ('other' as ListingType);
 
+  // Canonical badge vocabulary already established elsewhere (SafetyTrustBadges.tsx,
+  // SearchResultCard.tsx, SimilarHomeCard.tsx, data/listings.ts sample data) --
+  // this mapper previously emitted `${verification_level} Verified` (e.g.
+  // "phone Verified"), which matched none of those consumers' exact-string
+  // checks, so every trust badge silently never rendered for real listings.
+  const VERIFICATION_LEVEL_BADGE: Record<string, string> = {
+    phone: 'Phone Verified',
+    location: 'Location Checked',
+    scout: 'Scout Verified',
+    trusted: 'Trusted Landlord',
+  };
+
   const badges: string[] = [];
-  if (row.verification_level && row.verification_level !== 'none') {
-    badges.push(`${row.verification_level} Verified`);
+  if (row.verification_level && VERIFICATION_LEVEL_BADGE[row.verification_level]) {
+    badges.push(VERIFICATION_LEVEL_BADGE[row.verification_level]);
   }
   if (row.is_featured) {
     badges.push('Featured');
+  }
+  if (row.updated_at) {
+    const daysSinceUpdate = (Date.now() - new Date(row.updated_at).getTime()) / (1000 * 60 * 60 * 24);
+    if (daysSinceUpdate <= 7) {
+      badges.push('Recently Updated');
+    }
   }
 
   return {
     id: row.id,
     title: row.title || `${row.house_type.replace('_', ' ')} in ${row.town || 'Kenya'}`,
     type,
+    typeLabel: getListingTypeLabel(type),
     rent: row.monthly_rent || 0,
     deposit: row.deposit_amount || 0,
     location: row.estate || row.landmark || row.town,
