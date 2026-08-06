@@ -10,15 +10,17 @@ interface ResultsSummaryProps {
   onSortChange?: (option: SortOption) => void;
   viewMode?: 'list' | 'grid';
   onViewModeChange?: (mode: 'list' | 'grid') => void;
+  rightSlot?: React.ReactNode;
 }
 
-export default function ResultsSummary({ 
-  count = 6, 
+export default function ResultsSummary({
+  count = 6,
   searchQuery = '',
   selectedSort = 'Most relevant',
   onSortChange,
   viewMode = 'list',
-  onViewModeChange
+  onViewModeChange,
+  rightSlot
 }: ResultsSummaryProps) {
   return (
     <motion.div
@@ -70,6 +72,8 @@ export default function ResultsSummary({
         <div className="shrink-0">
           <SortDropdown selected={selectedSort} onChange={onSortChange} />
         </div>
+
+        {rightSlot}
       </div>
     </motion.div>
   );

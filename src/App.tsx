@@ -11,6 +11,9 @@ import FreshVacancies from './components/FreshVacancies';
 import PopularLocations from './components/PopularLocations';
 import SafetyBanner from './components/SafetyBanner';
 import { useListings } from './hooks/useListings';
+import type { SearchFilters } from './components/SearchFilterSheet';
+import type { SortOption } from './components/SortDropdown';
+import type { SavedSearch } from './hooks/useSavedSearches';
 
 const SearchResultsPage = lazy(() => import('./pages/SearchResultsPage'));
 const PostVacancyPage = lazy(() => import('./pages/PostVacancyPage'));
@@ -36,9 +39,20 @@ export default function App() {
   const [selectedListingId, setSelectedListingId] = useState<string | null>(null);
   const [previousTab, setPreviousTab] = useState<string>('home');
   const [pendingSearchQuery, setPendingSearchQuery] = useState<string | undefined>(undefined);
+  const [pendingSearchFilters, setPendingSearchFilters] = useState<SearchFilters | undefined>(undefined);
+  const [pendingSearchSort, setPendingSearchSort] = useState<SortOption | undefined>(undefined);
 
   const handleSearchSubmit = (query: string) => {
     setPendingSearchQuery(query);
+    setPendingSearchFilters(undefined);
+    setPendingSearchSort(undefined);
+    setActiveTab('search');
+  };
+
+  const handleApplySavedSearch = (search: SavedSearch) => {
+    setPendingSearchQuery(search.query);
+    setPendingSearchFilters(search.filters);
+    setPendingSearchSort(search.sort);
     setActiveTab('search');
   };
 
@@ -264,14 +278,17 @@ export default function App() {
           onTabChange={setActiveTab}
           onSelectListing={openListingDetails}
           initialQuery={pendingSearchQuery}
+          initialFilters={pendingSearchFilters}
+          initialSort={pendingSearchSort}
         />
       ) : activeTab === 'post' ? (
         <PostVacancyPage onTabChange={setActiveTab} />
       ) : activeTab === 'saved' ? (
-        <SavedPage 
-          onExploreHomes={() => setActiveTab('home')} 
-          onTabChange={setActiveTab} 
+        <SavedPage
+          onExploreHomes={() => setActiveTab('home')}
+          onTabChange={setActiveTab}
           onSelectListing={openListingDetails}
+          onApplySavedSearch={handleApplySavedSearch}
         />
       ) : activeTab === 'profile' ? (
         <ProfilePage 

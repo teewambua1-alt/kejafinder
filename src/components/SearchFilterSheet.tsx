@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useDragControls, type PanInfo } from 'motion/react';
 import { X, Check } from 'lucide-react';
 import { ListingType } from '../types/listing';
+import PriceRangeSlider from './PriceRangeSlider';
 
 export type SearchFilters = {
   houseTypes: ListingType[];
@@ -11,8 +12,8 @@ export type SearchFilters = {
   maxDeposit: number | "";
   availableNow: boolean;
   verifiedOnly: boolean;
+  recentlyUpdatedOnly: boolean;
   amenities: string[];
-  localDetails: string[];
 };
 
 export const defaultSearchFilters: SearchFilters = {
@@ -23,8 +24,8 @@ export const defaultSearchFilters: SearchFilters = {
   maxDeposit: "",
   availableNow: false,
   verifiedOnly: false,
-  amenities: [],
-  localDetails: []
+  recentlyUpdatedOnly: false,
+  amenities: []
 };
 
 interface SearchFilterSheetProps {
@@ -33,6 +34,7 @@ interface SearchFilterSheetProps {
   filters: SearchFilters;
   onApply: (updatedFilters: SearchFilters) => void;
   onClear: () => void;
+  rentBounds: { min: number; max: number };
 }
 
 export default function SearchFilterSheet({
@@ -40,10 +42,12 @@ export default function SearchFilterSheet({
   onClose,
   filters,
   onApply,
-  onClear
+  onClear,
+  rentBounds
 }: SearchFilterSheetProps) {
   // Use a draft state so edits are committed only on Apply click
   const [draft, setDraft] = useState<SearchFilters>({ ...filters });
+  const dragControls = useDragControls();
 
   // Reset draft whenever filters or isOpen changes
   useEffect(() => {
@@ -72,16 +76,6 @@ export default function SearchFilterSheet({
     });
   };
 
-  const toggleLocalDetail = (detail: string) => {
-    setDraft((prev) => {
-      const isSelected = prev.localDetails.includes(detail);
-      const localDetails = isSelected
-        ? prev.localDetails.filter((d) => d !== detail)
-        : [...prev.localDetails, detail];
-      return { ...prev, localDetails };
-    });
-  };
-
   const handleApply = () => {
     onApply(draft);
     onClose();
@@ -97,6 +91,12 @@ export default function SearchFilterSheet({
     e.stopPropagation();
   };
 
+  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (info.offset.y > 120 || info.velocity.y > 600) {
+      onClose();
+    }
+  };
+
   const houseTypeOptions: { value: ListingType; label: string }[] = [
     { value: 'single_room', label: 'Single Room' },
     { value: 'bedsitter', label: 'Bedsitter' },
@@ -106,38 +106,27 @@ export default function SearchFilterSheet({
     { value: 'mabati', label: 'Mabati' }
   ];
 
-  const amenityOptions = [
-    'Water',
-    'Token electricity',
-    'Private toilet',
-    'Shared toilet',
-    'Private bathroom',
-    'Shared bathroom',
-    'Parking'
+  // Real amenity ids -- must match PostAmenitiesGrid.tsx exactly, since these
+  // are the literal strings stored in listing.amenities. Matching against
+  // hand-typed display strings here (as this used to do) silently breaks
+  // every filter except the ones that happen to substring-match.
+  const amenityOptions: { value: string; label: string }[] = [
+    { value: 'water_available', label: 'Water' },
+    { value: 'token_electricity', label: 'Token electricity' },
+    { value: 'private_toilet', label: 'Private toilet' },
+    { value: 'shared_toilet', label: 'Shared toilet' },
+    { value: 'private_bathroom', label: 'Private bathroom' },
+    { value: 'shared_bathroom', label: 'Shared bathroom' },
+    { value: 'tiled_floor', label: 'Tiled floor' },
+    { value: 'secure_gate', label: 'Secure gate' },
+    { value: 'near_main_road', label: 'Near main road' },
+    { value: 'near_bus_stage', label: 'Near bus stage' },
+    { value: 'no_agent_fee', label: 'No agent fee' },
+    { value: 'parking', label: 'Parking' }
   ];
 
-  const localDetailOptions = [
-    'Near main road',
-    'Near stage',
-    'school',
-    'Secure gate'
-  ];
-
-  // Helper labels for local detail pills mapping to user-friendly text
-  const getLocalDetailLabel = (detail: string) => {
-    switch (detail) {
-      case 'Near main road':
-        return 'Near main road';
-      case 'Near stage':
-        return 'Near bus stage';
-      case 'school':
-        return 'Near school';
-      case 'Secure gate':
-        return 'Secure gate';
-      default:
-        return detail;
-    }
-  };
+  const lowRent = draft.minRent === "" ? rentBounds.min : draft.minRent;
+  const highRent = draft.maxRent === "" ? rentBounds.max : draft.maxRent;
 
   return (
     <AnimatePresence>
@@ -160,12 +149,22 @@ export default function SearchFilterSheet({
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 20, stiffness: 150 }}
             onClick={handleSheetClick}
+            drag="y"
+            dragControls={dragControls}
+            dragListener={false}
+            dragConstraints={{ top: 0, bottom: 500 }}
+            dragSnapToOrigin
+            onDragEnd={handleDragEnd}
             className="absolute inset-x-0 bottom-0 max-h-[82%] bg-white dark:bg-stone-900 rounded-t-3xl border-t border-neutral-100 dark:border-neutral-800 shadow-[0_-8px_32px_rgba(0,0,0,0.15)] flex flex-col z-50 pointer-events-auto overflow-hidden animate-none font-sans"
           >
             {/* Drag Handle & Header block */}
             <div className="shrink-0 text-center pb-2 pt-3">
-              <div className="w-12 h-1 bg-neutral-200 dark:bg-neutral-700/80 rounded-full mx-auto" />
-              
+              <div
+                onPointerDown={(e) => dragControls.start(e)}
+                className="w-12 h-1.5 bg-neutral-200 dark:bg-neutral-700/80 rounded-full mx-auto cursor-grab active:cursor-grabbing touch-none"
+                aria-hidden="true"
+              />
+
               <div className="flex items-center justify-between px-6 mt-3">
                 <h2 className="text-[17px] font-extrabold text-[#111] dark:text-neutral-50 tracking-tight">
                   Filter vacancies
@@ -184,7 +183,7 @@ export default function SearchFilterSheet({
 
             {/* Scrollable filters body list content */}
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 no-scrollbar pb-24">
-              
+
               {/* Section A: House Type pills row */}
               <div className="space-y-2.5">
                 <h3 className="text-[12px] font-bold text-neutral-500 dark:text-stone-400 uppercase tracking-wider">
@@ -212,33 +211,17 @@ export default function SearchFilterSheet({
                 </div>
               </div>
 
-              {/* Section B: Rent Range outputs inputs */}
+              {/* Section B: Rent Range dual slider */}
               <div className="space-y-2.5">
                 <h3 className="text-[12px] font-bold text-neutral-500 dark:text-stone-400 uppercase tracking-wider">
                   Rent Range (KSh /month)
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500">Min Rent</label>
-                    <input
-                      type="number"
-                      placeholder="3,000"
-                      value={draft.minRent}
-                      onChange={(e) => setDraft({ ...draft, minRent: e.target.value === "" ? "" : Number(e.target.value) })}
-                      className="w-full h-[40px] px-3.5 rounded-xl border border-neutral-150 dark:border-neutral-800 bg-neutral-50 dark:bg-stone-850 text-xs font-semibold text-neutral-850 dark:text-neutral-150 placeholder-neutral-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500">Max Rent</label>
-                    <input
-                      type="number"
-                      placeholder="20,000"
-                      value={draft.maxRent}
-                      onChange={(e) => setDraft({ ...draft, maxRent: e.target.value === "" ? "" : Number(e.target.value) })}
-                      className="w-full h-[40px] px-3.5 rounded-xl border border-neutral-150 dark:border-neutral-800 bg-neutral-50 dark:bg-stone-850 text-xs font-semibold text-neutral-850 dark:text-neutral-150 placeholder-neutral-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
-                    />
-                  </div>
-                </div>
+                <PriceRangeSlider
+                  min={rentBounds.min}
+                  max={rentBounds.max}
+                  value={[lowRent, highRent]}
+                  onChange={([nextMin, nextMax]) => setDraft({ ...draft, minRent: nextMin, maxRent: nextMax })}
+                />
               </div>
 
               {/* Section C: Deposit Range inputs */}
@@ -304,39 +287,13 @@ export default function SearchFilterSheet({
                     Verified Only
                   </button>
 
-                  {/* No Agent Fee pill */}
-                  <button
-                    type="button"
-                    aria-pressed={draft.localDetails.includes('No Agent Fee')}
-                    onClick={() => {
-                      const isSelected = draft.localDetails.includes('No Agent Fee');
-                      const localDetails = isSelected
-                        ? draft.localDetails.filter((d) => d !== 'No Agent Fee')
-                        : [...draft.localDetails, 'No Agent Fee'];
-                      setDraft({ ...draft, localDetails });
-                    }}
-                    className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
-                      draft.localDetails.includes('No Agent Fee')
-                        ? 'bg-emerald-600 border-emerald-600 text-white'
-                        : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
-                    }`}
-                  >
-                    No Agent Fee
-                  </button>
-
                   {/* Recently Updated pill */}
                   <button
                     type="button"
-                    aria-pressed={draft.localDetails.includes('Recently Updated')}
-                    onClick={() => {
-                      const isSelected = draft.localDetails.includes('Recently Updated');
-                      const localDetails = isSelected
-                        ? draft.localDetails.filter((d) => d !== 'Recently Updated')
-                        : [...draft.localDetails, 'Recently Updated'];
-                      setDraft({ ...draft, localDetails });
-                    }}
+                    aria-pressed={draft.recentlyUpdatedOnly}
+                    onClick={() => setDraft({ ...draft, recentlyUpdatedOnly: !draft.recentlyUpdatedOnly })}
                     className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
-                      draft.localDetails.includes('Recently Updated')
+                      draft.recentlyUpdatedOnly
                         ? 'bg-emerald-600 border-emerald-600 text-white'
                         : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
                     }`}
@@ -352,48 +309,21 @@ export default function SearchFilterSheet({
                   Amenities
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {amenityOptions.map((amenity) => {
-                    const isSelected = draft.amenities.includes(amenity);
+                  {amenityOptions.map((opt) => {
+                    const isSelected = draft.amenities.includes(opt.value);
                     return (
                       <button
-                        key={amenity}
+                        key={opt.value}
                         type="button"
                         aria-pressed={isSelected}
-                        onClick={() => toggleAmenity(amenity)}
+                        onClick={() => toggleAmenity(opt.value)}
                         className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                           isSelected
                             ? 'bg-emerald-600 border-emerald-600 text-white'
                             : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
                         }`}
                       >
-                        {amenity}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Section F: Local details toggles list */}
-              <div className="space-y-2.5">
-                <h3 className="text-[12px] font-bold text-neutral-500 dark:text-stone-400 uppercase tracking-wider">
-                  Local Details
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {localDetailOptions.map((detail) => {
-                    const isSelected = draft.localDetails.includes(detail);
-                    return (
-                      <button
-                        key={detail}
-                        type="button"
-                        aria-pressed={isSelected}
-                        onClick={() => toggleLocalDetail(detail)}
-                        className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
-                          isSelected
-                            ? 'bg-emerald-600 border-emerald-600 text-white'
-                            : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
-                        }`}
-                      >
-                        {getLocalDetailLabel(detail)}
+                        {opt.label}
                       </button>
                     );
                   })}

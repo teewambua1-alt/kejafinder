@@ -25,19 +25,23 @@ import SavedCompareSheet from '../components/SavedCompareSheet';
 import SavedViewToggle from '../components/SavedViewToggle';
 import SavedMapView from '../components/SavedMapView';
 import SavedUpdates from '../components/SavedUpdates';
+import SavedSearchesSection from '../components/SavedSearchesSection';
 import { initialSavedUpdates } from '../data/savedUpdates';
 import { Listing } from '../types/listing';
 import { useSavedListings } from '../hooks/useSavedListings';
+import { useSavedSearches, SavedSearch } from '../hooks/useSavedSearches';
 
 interface SavedPageProps {
   onExploreHomes?: () => void;
   onTabChange?: (tab: string) => void;
   onSelectListing?: (id: string) => void;
+  onApplySavedSearch?: (search: SavedSearch) => void;
 }
 
-export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing }: SavedPageProps) {
+export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing, onApplySavedSearch }: SavedPageProps) {
   const { savedListings, source, isLoading, unsaveListing, saveListing } = useSavedListings();
-  
+  const { savedSearches, removeSearch } = useSavedSearches();
+
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
   const [activeSavedFilter, setActiveSavedFilter] = useState('all');
   const [savedSort, setSavedSort] = useState('Recently saved');
@@ -284,6 +288,17 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           </p>
         )}
       </motion.div>
+
+      {/* Saved Searches section -- hidden entirely when there are none */}
+      {!showSavedUpdates && (
+        <motion.div variants={itemVariants} className="w-full">
+          <SavedSearchesSection
+            savedSearches={savedSearches}
+            onApply={(search) => onApplySavedSearch?.(search)}
+            onDelete={removeSearch}
+          />
+        </motion.div>
+      )}
 
       {/* Saved Search Bar Area - Only show if we actually have items saved or if query is not empty */}
       {(savedListings.length > 0 || savedSearchQuery) && (

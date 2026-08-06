@@ -1,30 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Map as MapIcon, List, LocateFixed } from 'lucide-react';
 import Header from '../components/Header';
 import SearchTopBar from '../components/SearchTopBar';
 import SearchMapPreview from '../components/SearchMapPreview';
 import SearchFilterChips from '../components/SearchFilterChips';
+import SearchHouseTypeChips from '../components/SearchHouseTypeChips';
 import ResultsSummary from '../components/ResultsSummary';
 import SearchResultsList from '../components/SearchResultsList';
 import SearchFilterSheet, { SearchFilters, defaultSearchFilters } from '../components/SearchFilterSheet';
+import SaveSearchButton from '../components/SaveSearchButton';
 import { SortOption } from '../components/SortDropdown';
+import ListingCardSkeleton from '../components/ListingCardSkeleton';
+import EmptyState from '../components/ui/EmptyState';
 import { useListings } from '../hooks/useListings';
+import { useNearbyListings } from '../hooks/useNearbyListings';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import SearchFullMap from '../components/SearchFullMap';
-import { Map, List } from 'lucide-react';
+import { Listing, ListingType } from '../types/listing';
 
 interface SearchResultsPageProps {
   onBackToHome?: () => void;
   onTabChange?: (tab: string) => void;
   onSelectListing?: (id: string) => void;
   initialQuery?: string;
+  initialFilters?: SearchFilters;
+  initialSort?: SortOption;
 }
 
-export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery }: SearchResultsPageProps) {
+export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery, initialFilters, initialSort }: SearchResultsPageProps) {
   const { listings: baseListings, isLoading } = useListings();
   const [searchQuery, setSearchQuery] = useState(initialQuery || 'Syokimau');
-  const [selectedSort, setSelectedSort] = useState<SortOption>('Most relevant');
-  const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);
+  const [selectedSort, setSelectedSort] = useState<SortOption>(initialSort || 'Most relevant');
+  const [filters, setFilters] = useState<SearchFilters>(initialFilters || defaultSearchFilters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid' | 'map'>('list');
   // At xl+ (1280px) there's room for Airbnb-style side-by-side list+map, so
@@ -36,8 +44,56 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
   const isDesktopSplit = useMediaQuery('(min-width: 1280px)');
   const effectiveViewMode = isDesktopSplit && viewMode === 'map' ? 'list' : viewMode;
 
+  // "Nearest" reuses the same geolocation-driven RPC pattern Home's Nearby
+  // Listings already uses, rather than building a second location flow.
+  const { permissionState: nearbyPermissionState, listings: nearbyListings, isLoading: isNearbyLoading, requestLocation: requestNearbyLocation } = useNearbyListings();
+  const isNearestSort = selectedSort === 'Nearest';
+
+  useEffect(() => {
+    if (isNearestSort && nearbyPermissionState === 'idle') {
+      requestNearbyLocation();
+    }
+  }, [isNearestSort, nearbyPermissionState, requestNearbyLocation]);
+
+  // The nearby_listings RPC already returns real, server-side distance
+  // ordering -- only switch the source dataset once we actually have that
+  // real ordering to show; otherwise keep browsing the full listing set.
+  const sourceListings = isNearestSort && nearbyPermissionState === 'granted' ? nearbyListings : baseListings;
+
+  // Real aggregation of already-loaded listings for the Rent slider's bounds
+  // and the estate dropdown -- never guessed constants or a curated list.
+  const rentBounds = useMemo(() => {
+    const rents = baseListings.map((l) => l.rent).filter((r) => typeof r === 'number' && r > 0);
+    if (rents.length === 0) return { min: 0, max: 30000 };
+    const min = Math.min(...rents);
+    const max = Math.max(...rents);
+    return min === max ? { min: Math.max(0, min - 1000), max: max + 1000 } : { min, max };
+  }, [baseListings]);
+
+  const estates = useMemo(() => {
+    const counts = new Map<string, number>();
+    baseListings.forEach((listing) => {
+      const name = listing.estate?.trim();
+      if (!name) return;
+      counts.set(name, (counts.get(name) || 0) + 1);
+    });
+    return Array.from(counts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [baseListings]);
+
+  const selectedHouseTypeChip = filters.houseTypes.length === 1 ? filters.houseTypes[0] : null;
+
+  const handleSelectHouseTypeChip = (type: ListingType | null) => {
+    setFilters((prev) => ({ ...prev, houseTypes: type ? [type] : [] }));
+  };
+
+  const handleSelectEstate = (name: string | null) => {
+    setSearchQuery(name || '');
+  };
+
   // 1. Filtering pipeline combining searchQuery and advanced filters
-  const filteredListings = baseListings.filter((listing) => {
+  const filteredListings = sourceListings.filter((listing) => {
     // A. House type filter (if any are selected, match one of the selection)
     if (filters.houseTypes.length > 0) {
       if (!filters.houseTypes.includes(listing.type)) {
@@ -77,71 +133,16 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
       if (!isVerified) return false;
     }
 
-    // F. Amenities matching (ensure ALL selected amenities are matched against listing amenities)
-    if (filters.amenities.length > 0) {
-      const matchAllAmenities = filters.amenities.every((selected) => {
-        return listing.amenities.some((listingAmenity) =>
-          listingAmenity.toLowerCase().includes(selected.toLowerCase())
-        );
-      });
-      if (!matchAllAmenities) return false;
+    // F. Recently updated quick check
+    if (filters.recentlyUpdatedOnly && !listing.badges.includes('Recently Updated')) {
+      return false;
     }
 
-    // G. Local details matching
-    if (filters.localDetails.length > 0) {
-      const matchAllDetails = filters.localDetails.every((detail) => {
-        const dLower = detail.toLowerCase();
-        
-        if (detail === 'No Agent Fee') {
-          return (
-            listing.amenities.some((a) => a.toLowerCase().includes('agent fee') || a.toLowerCase().includes('no agent')) ||
-            listing.badges.some((b) => b.toLowerCase().includes('agent fee') || b.toLowerCase().includes('no agent'))
-          );
-        }
-        if (detail === 'Recently Updated') {
-          return listing.badges.includes('Recently Updated');
-        }
-        if (detail === 'Near main road') {
-          return (
-            (listing.landmark || '').toLowerCase().includes('main road') ||
-            (listing.landmark || '').toLowerCase().includes('highway') ||
-            listing.location.toLowerCase().includes('main road')
-          );
-        }
-        if (detail === 'Near stage') {
-          return (
-            (listing.landmark || '').toLowerCase().includes('stage') ||
-            (listing.landmark || '').toLowerCase().includes('railway') ||
-            (listing.landmark || '').toLowerCase().includes('station') ||
-            listing.location.toLowerCase().includes('stage') ||
-            listing.location.toLowerCase().includes('station')
-          );
-        }
-        if (dLower === 'school') {
-          return (
-            (listing.landmark || '').toLowerCase().includes('school') ||
-            (listing.landmark || '').toLowerCase().includes('academy') ||
-            listing.location.toLowerCase().includes('school')
-          );
-        }
-        if (detail === 'Secure gate') {
-          return (
-            (listing.landmark || '').toLowerCase().includes('gate') ||
-            listing.estate.toLowerCase().includes('gate') ||
-            listing.location.toLowerCase().includes('gate')
-          );
-        }
-
-        // Generic catch-all string check
-        return (
-          listing.location.toLowerCase().includes(dLower) ||
-          listing.estate.toLowerCase().includes(dLower) ||
-          (listing.landmark || '').toLowerCase().includes(dLower) ||
-          listing.amenities.some((a) => a.toLowerCase().includes(dLower)) ||
-          listing.badges.some((b) => b.toLowerCase().includes(dLower))
-        );
-      });
-      if (!matchAllDetails) return false;
+    // G. Amenities matching -- exact id match against the real ids stored on
+    // the listing (see PostAmenitiesGrid.tsx), not a substring guess.
+    if (filters.amenities.length > 0) {
+      const matchAllAmenities = filters.amenities.every((id) => listing.amenities.includes(id));
+      if (!matchAllAmenities) return false;
     }
 
     // H. Query Keyword text search (case-insensitive & trimmed)
@@ -183,8 +184,9 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
     );
   });
 
-  // 2. Sorting pipeline
-  const sortedListings = [...filteredListings].sort((a, b) => {
+  // 2. Sorting pipeline -- skipped for "Nearest": the RPC already returned
+  // filteredListings in real distance order, re-sorting here would undo that.
+  const sortedListings: Listing[] = isNearestSort ? filteredListings : [...filteredListings].sort((a, b) => {
     switch (selectedSort) {
       case 'Most relevant': {
         // Featured listings prioritized
@@ -201,14 +203,14 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
         return a.rent - b.rent;
       }
       case 'Verified first': {
-        const aVerified = a.badges.some(badge => 
-          badge === 'Scout Verified' || 
-          badge === 'Location Checked' || 
+        const aVerified = a.badges.some(badge =>
+          badge === 'Scout Verified' ||
+          badge === 'Location Checked' ||
           badge === 'Phone Verified'
         );
-        const bVerified = b.badges.some(badge => 
-          badge === 'Scout Verified' || 
-          badge === 'Location Checked' || 
+        const bVerified = b.badges.some(badge =>
+          badge === 'Scout Verified' ||
+          badge === 'Location Checked' ||
           badge === 'Phone Verified'
         );
         if (aVerified && !bVerified) return -1;
@@ -239,7 +241,6 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
     setSearchQuery('');
     setSelectedSort('Most relevant');
     setFilters(defaultSearchFilters);
-    // TODO: Clear any future advanced filter states when added in version 0.3.9
   };
 
   // Container animation configuration for Staggered appearances
@@ -256,6 +257,48 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
   const itemVariants: any = {
     hidden: { opacity: 0, y: 15 },
     show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } },
+  };
+
+  // "Nearest" sort needs its own honest status states (requesting/denied/
+  // unsupported/empty) instead of the normal results list, reusing the exact
+  // same copy and EmptyState pattern Home's NearbyListings.tsx established.
+  const renderResults = (vm: 'list' | 'grid') => {
+    if (isNearestSort) {
+      if (nearbyPermissionState === 'denied') {
+        return (
+          <EmptyState
+            icon={LocateFixed}
+            title="Location access needed"
+            description="Enable location access in your browser settings to sort homes by distance."
+          />
+        );
+      }
+      if (nearbyPermissionState === 'unsupported') {
+        return (
+          <EmptyState
+            icon={LocateFixed}
+            title="Location not supported"
+            description="Your browser doesn't support location sharing on this device."
+          />
+        );
+      }
+      if (nearbyPermissionState === 'requesting' || (nearbyPermissionState === 'granted' && isNearbyLoading)) {
+        return (
+          <div className="flex flex-col gap-4">
+            {Array.from({ length: 3 }).map((_, i) => <ListingCardSkeleton key={i} />)}
+          </div>
+        );
+      }
+    }
+
+    return (
+      <SearchResultsList
+        listings={sortedListings}
+        onClearSearch={handleClearSearch}
+        onSelectListing={onSelectListing}
+        viewMode={vm}
+      />
+    );
   };
 
   return (
@@ -286,7 +329,12 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
                 searchQuery={searchQuery}
                 filters={filters}
                 onOpenFilters={() => setIsFilterSheetOpen(true)}
+                estates={estates}
+                onSelectEstate={handleSelectEstate}
               />
+            </motion.div>
+            <motion.div variants={itemVariants} className="w-full">
+              <SearchHouseTypeChips selectedType={selectedHouseTypeChip} onSelectType={handleSelectHouseTypeChip} />
             </motion.div>
             <motion.div variants={itemVariants} className="w-full">
               <ResultsSummary
@@ -296,15 +344,11 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
                 onSortChange={setSelectedSort}
                 viewMode={effectiveViewMode}
                 onViewModeChange={setViewMode as any}
+                rightSlot={<SaveSearchButton query={searchQuery} filters={filters} sort={selectedSort} onRequireAuth={() => onTabChange?.('profile')} />}
               />
             </motion.div>
             <motion.div variants={itemVariants} className="w-full">
-              <SearchResultsList
-                listings={sortedListings}
-                onClearSearch={handleClearSearch}
-                onSelectListing={onSelectListing}
-                viewMode={effectiveViewMode === 'map' ? 'list' : effectiveViewMode}
-              />
+              {renderResults(effectiveViewMode === 'map' ? 'list' : effectiveViewMode)}
             </motion.div>
           </div>
           <div className="w-[420px] shrink-0 sticky top-6 h-[calc(100vh-7rem)]">
@@ -339,15 +383,22 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
               searchQuery={searchQuery}
               filters={filters}
               onOpenFilters={() => setIsFilterSheetOpen(true)}
+              estates={estates}
+              onSelectEstate={handleSelectEstate}
             />
           </motion.div>
 
-          {/* 3. Map Preview */}
+          {/* 3. House Type Chips Row */}
+          <motion.div variants={itemVariants} className="w-full">
+            <SearchHouseTypeChips selectedType={selectedHouseTypeChip} onSelectType={handleSelectHouseTypeChip} />
+          </motion.div>
+
+          {/* 4. Map Preview */}
           <motion.div variants={itemVariants} className="w-full">
             <SearchMapPreview />
           </motion.div>
 
-          {/* 4. Results Summary Row */}
+          {/* 5. Results Summary Row */}
           <motion.div variants={itemVariants} className="w-full">
             <ResultsSummary
               count={sortedListings.length}
@@ -356,17 +407,13 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
               onSortChange={setSelectedSort}
               viewMode={viewMode}
               onViewModeChange={setViewMode as any}
+              rightSlot={<SaveSearchButton query={searchQuery} filters={filters} sort={selectedSort} onRequireAuth={() => onTabChange?.('profile')} />}
             />
           </motion.div>
 
-          {/* 5. Listing Results Card Area */}
+          {/* 6. Listing Results Card Area */}
           <motion.div variants={itemVariants} className="w-full">
-            <SearchResultsList
-              listings={sortedListings}
-              onClearSearch={handleClearSearch}
-              onSelectListing={onSelectListing}
-              viewMode={viewMode}
-            />
+            {renderResults(viewMode)}
           </motion.div>
         </>
       )}
@@ -377,7 +424,7 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
-          className="absolute bottom-6 right-6 z-50 bg-neutral-900 dark:bg-emerald-600 text-white rounded-full px-5 py-3.5 flex items-center space-x-2 shadow-lg border border-neutral-800 dark:border-emerald-500"
+          className="absolute bottom-24 md:bottom-6 right-6 z-50 bg-neutral-900 dark:bg-emerald-600 text-white rounded-full px-5 py-3.5 flex items-center space-x-2 shadow-lg border border-neutral-800 dark:border-emerald-500"
         >
           {viewMode === 'map' ? (
             <>
@@ -386,20 +433,21 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
             </>
           ) : (
             <>
-              <Map className="w-5 h-5" />
+              <MapIcon className="w-5 h-5" />
               <span className="font-bold tracking-wide text-sm">Map View</span>
             </>
           )}
         </motion.button>
       )}
 
-      {/* 6. Advanced Filters Drawer Bottom Sheet Modal (Version 0.3.8) */}
+      {/* 7. Advanced Filters Drawer Bottom Sheet Modal */}
       <SearchFilterSheet
         isOpen={isFilterSheetOpen}
         onClose={() => setIsFilterSheetOpen(false)}
         filters={filters}
         onApply={setFilters}
         onClear={() => setFilters(defaultSearchFilters)}
+        rentBounds={rentBounds}
       />
 
     </motion.div>

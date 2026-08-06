@@ -8,7 +8,8 @@ export type SortOption =
   | 'Cheapest'
   | 'Verified first'
   | 'Recently updated'
-  | 'Most viewed';
+  | 'Most viewed'
+  | 'Nearest';
 
 export interface SortDropdownProps {
   selected?: SortOption;
@@ -24,6 +25,7 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
 
   const options: SortOption[] = [
     'Most relevant',
+    'Nearest',
     'Newest',
     'Cheapest',
     'Verified first',
@@ -84,7 +86,7 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white/95 dark:bg-stone-850/95 backdrop-blur-md border border-neutral-100/90 dark:border-neutral-700/80 shadow-lg z-30 py-1 origin-top-right focus:outline-none"
+            className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white/95 dark:bg-stone-850/95 backdrop-blur-md border border-neutral-100/90 dark:border-neutral-700/80 shadow-lg z-60 py-1 origin-top-right focus:outline-none"
             role="listbox"
           >
             {options.map((option) => (
