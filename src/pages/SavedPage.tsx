@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   BellRing,
@@ -26,21 +26,29 @@ import SavedViewToggle from '../components/SavedViewToggle';
 import SavedMapView from '../components/SavedMapView';
 import SavedUpdates from '../components/SavedUpdates';
 import SavedSearchesSection from '../components/SavedSearchesSection';
+import ListingCardSkeleton from '../components/ListingCardSkeleton';
 import { initialSavedUpdates } from '../data/savedUpdates';
 import { Listing } from '../types/listing';
 import { useSavedListings } from '../hooks/useSavedListings';
 import { useSavedSearches, SavedSearch } from '../hooks/useSavedSearches';
+import { useToast } from '../context/ToastContext';
 
 interface SavedPageProps {
   onExploreHomes?: () => void;
   onTabChange?: (tab: string) => void;
   onSelectListing?: (id: string) => void;
   onApplySavedSearch?: (search: SavedSearch) => void;
+  onRefreshReady?: (refresh: () => Promise<void>) => void;
 }
 
-export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing, onApplySavedSearch }: SavedPageProps) {
-  const { savedListings, source, isLoading, unsaveListing, saveListing } = useSavedListings();
+export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing, onApplySavedSearch, onRefreshReady }: SavedPageProps) {
+  const { savedListings, source, isLoading, unsaveListing, saveListing, refreshSavedListings } = useSavedListings();
   const { savedSearches, removeSearch } = useSavedSearches();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    onRefreshReady?.(refreshSavedListings);
+  }, [refreshSavedListings, onRefreshReady]);
 
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
   const [activeSavedFilter, setActiveSavedFilter] = useState('all');
@@ -58,14 +66,6 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
   const [isCompareMode, setIsCompareMode] = useState(false);
   const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>([]);
   const [isCompareSheetOpen, setIsCompareSheetOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
 
   // Stagger entry animation variants
   const containerVariants: any = {
@@ -96,7 +96,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         return prev.filter((cid) => cid !== id);
       }
       if (prev.length >= 3) {
-        showToast("You can compare up to 3 homes.");
+        showToast("You can compare up to 3 homes.", { icon: AlertCircle });
         return prev;
       }
       return [...prev, id];
@@ -414,6 +414,12 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
             onClearRead={handleClearRead}
             onBack={() => setShowSavedUpdates(false)}
           />
+        ) : isLoading ? (
+          <div className="flex flex-col gap-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <ListingCardSkeleton key={i} />
+            ))}
+          </div>
         ) : savedListings.length === 0 ? (
           <div className="space-y-6">
             {/* 1. Full empty state component */}
@@ -502,21 +508,6 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           setIsCompareSheetOpen(false);
         }}
       />
-
-      {/* Absolute Overlaid Warning toast messages */}
-      <div className="fixed inset-x-0 top-18 z-50 flex items-center justify-center pointer-events-none">
-        {toastMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-neutral-900/95 dark:bg-stone-950/95 text-white text-[11.5px] font-extrabold px-4 py-2.5 rounded-2xl shadow-xl border border-neutral-800 flex items-center space-x-1.5 pointer-events-auto"
-          >
-            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
-            <span>{toastMessage}</span>
-          </motion.div>
-        )}
-      </div>
 
     </motion.div>
   );

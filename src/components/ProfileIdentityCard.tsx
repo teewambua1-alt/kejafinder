@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  User, 
-  Phone, 
-  MapPin, 
-  Mail, 
-  Pencil, 
-  ShieldCheck, 
-  Clock, 
-  AlertCircle 
+import React from 'react';
+import { motion } from 'motion/react';
+import {
+  User,
+  Phone,
+  MapPin,
+  Mail,
+  Pencil,
+  ShieldCheck,
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 interface ProfileIdentityCardProps {
   isAdmin?: boolean;
@@ -18,13 +19,10 @@ interface ProfileIdentityCardProps {
 
 export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentityCardProps) {
   const { profile, user } = useAuth();
-  const [showToast, setShowToast] = useState(false);
+  const { showToast } = useToast();
 
   const handleEditClick = () => {
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 2500);
+    showToast('Edit profile form is coming soon!', { icon: AlertCircle });
   };
 
   const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || "KejaFinder User";
@@ -135,23 +133,6 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
           </div>
         </div>
       </motion.div>
-
-      {/* Pop up float message */}
-      <AnimatePresence>
-        {showToast && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto"
-            >
-              <AlertCircle className="w-4 h-4 text-emerald-450 shrink-0" />
-              <span>Edit profile form is coming soon!</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

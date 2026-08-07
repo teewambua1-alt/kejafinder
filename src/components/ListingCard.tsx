@@ -3,6 +3,7 @@ import { Heart, MapPin, Wifi, Droplet, Zap, Car, ShieldCheck, Star, Phone, Refre
 import { motion } from 'motion/react';
 import { Listing } from '../types/listing';
 import { useSavedListings } from '../hooks/useSavedListings';
+import { useToast } from '../context/ToastContext';
 
 interface ListingCardProps {
   listing: Listing;
@@ -18,8 +19,8 @@ const AMENITY_ICONS: { match: (a: string) => boolean; label: string; icon: typeo
 
 export default function ListingCard({ listing, onSelectListing }: ListingCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
+  const { showToast } = useToast();
   const [localSaved, setLocalSaved] = useState(false);
-  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const saved = source === 'supabase' ? fbIsSaved(listing.id) : localSaved;
   const isVerified = listing.badges.some((b) => b.toLowerCase().includes('verified') || b.toLowerCase().includes('checked'));
@@ -34,8 +35,7 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
       // Supabase is configured but no one is logged in — flipping localSaved
       // here would look like a real save that then silently vanishes, since
       // it never reaches the database and never shows up on the Saved page.
-      setShowLoginHint(true);
-      setTimeout(() => setShowLoginHint(false), 2000);
+      showToast('Log in to save homes.');
     } else {
       setLocalSaved(!saved);
     }
@@ -89,20 +89,20 @@ export default function ListingCard({ listing, onSelectListing }: ListingCardPro
             className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 dark:bg-stone-800/95 flex items-center justify-center shadow-xs text-neutral-800 dark:text-neutral-150 outline-none cursor-pointer border-none"
             aria-label="Save Spot"
           >
-            <Heart
-              className={`w-4 h-4 transition-transform duration-200 ${
-                saved
-                  ? 'fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500 scale-105 stroke-[2.2]'
-                  : 'text-neutral-600 dark:text-stone-300 stroke-[2.2]'
-              }`}
-            />
+            <motion.div
+              animate={saved ? { scale: [1, 1.25, 1] } : {}}
+              transition={{ duration: 0.3 }}
+            >
+              <Heart
+                className={`w-4 h-4 ${
+                  saved
+                    ? 'fill-emerald-600 text-emerald-600 dark:fill-emerald-500 dark:text-emerald-500 stroke-[2.2]'
+                    : 'text-neutral-600 dark:text-stone-300 stroke-[2.2]'
+                }`}
+              />
+            </motion.div>
           </motion.button>
 
-          {showLoginHint && (
-            <div className="absolute top-12 right-2.5 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
-              Log in to save homes
-            </div>
-          )}
         </div>
 
         {/* 2. Listing Price Row */}

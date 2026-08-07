@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  ShieldCheck, 
-  AlertTriangle, 
-  CheckCircle2, 
-  AlertCircle, 
-  LifeBuoy, 
+import React from 'react';
+import { motion } from 'motion/react';
+import {
+  ShieldCheck,
+  AlertTriangle,
+  CheckCircle2,
+  AlertCircle,
+  LifeBuoy,
   Flag,
   MessageSquare,
   ShieldAlert,
   Headphones
 } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 interface ProfileSafetySupportProps {
   onOpenSafety?: () => void;
@@ -18,14 +19,7 @@ interface ProfileSafetySupportProps {
 }
 
 export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: ProfileSafetySupportProps) {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2500);
-  };
+  const { showToast } = useToast();
 
   const supportShortcuts = [
     {
@@ -132,7 +126,7 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
                 if (shortcut.action) {
                   shortcut.action();
                 } else {
-                  showToast(shortcut.feedback);
+                  showToast(shortcut.feedback, { icon: AlertCircle });
                 }
               }}
               className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-800/40 p-3.5 rounded-2.5xl shadow-3xs flex flex-col justify-between items-start text-left min-h-[105px] hover:bg-neutral-50/50 dark:hover:bg-stone-850/25 transition-all cursor-pointer outline-none select-none max-w-full overflow-hidden"
@@ -172,23 +166,6 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
           <strong className="text-emerald-700 dark:text-emerald-400">KejaFinder does not collect deposits.</strong> Always confirm the house physically and run identity checks in person before paying anyone.
         </p>
       </div>
-
-      {/* Internal interactive local feedback notification toast */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto"
-            >
-              <AlertCircle className="w-4 h-4 text-emerald-450 shrink-0" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

@@ -425,21 +425,19 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               </span>
             </div>
 
-            {/* Continue button Action wrapper */}
-            <motion.div
-              whileTap={{ scale: 0.98 }}
-              className="w-full pt-2"
-            >
-              <button
+            {/* Continue button */}
+            <div className="w-full pt-2">
+              <motion.button
                 type="button"
                 id="btn-post-continue"
+                whileTap={{ scale: 0.97 }}
                 onClick={handleContinueStep1}
                 className="w-full h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
-              </button>
-            </motion.div>
+              </motion.button>
+            </div>
           </motion.div>
         ) : currentStep === 2 ? (
           <motion.div
@@ -632,15 +630,19 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                   <p className="text-[11px] font-medium text-neutral-550 dark:text-neutral-400 max-w-[240px] mx-auto">Create an account as a landlord, caretaker, agent, or scout to submit listings for review.</p>
                 </div>
                 <div className="flex flex-col space-y-2 w-full max-w-[220px]">
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => onTabChange?.('profile')}
                     className="w-full h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl text-white text-[11px] font-bold tracking-wider"
                   >
                     Log in or create account
-                  </button>
-                  <button className="w-full h-10 bg-neutral-100 dark:bg-stone-800/50 rounded-xl text-neutral-700 dark:text-neutral-300 text-[11px] font-bold tracking-wider">
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full h-10 bg-neutral-100 dark:bg-stone-800/50 rounded-xl text-neutral-700 dark:text-neutral-300 text-[11px] font-bold tracking-wider"
+                  >
                     Continue editing locally
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             )}

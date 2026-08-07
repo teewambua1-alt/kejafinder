@@ -110,7 +110,12 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                 }`}
                 aria-label="Save listing"
               >
-                <Heart className={`w-4.5 h-4.5 stroke-[2.2] ${isSaved ? 'fill-rose-500' : ''}`} />
+                <motion.div
+                  animate={isSaved ? { scale: [1, 1.25, 1] } : {}}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Heart className={`w-4.5 h-4.5 stroke-[2.2] ${isSaved ? 'fill-rose-500' : ''}`} />
+                </motion.div>
               </motion.button>
             )}
           </div>

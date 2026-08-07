@@ -26,10 +26,15 @@ interface SearchResultsPageProps {
   initialQuery?: string;
   initialFilters?: SearchFilters;
   initialSort?: SortOption;
+  onRefreshReady?: (refresh: () => Promise<void>) => void;
 }
 
-export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery, initialFilters, initialSort }: SearchResultsPageProps) {
-  const { listings: baseListings, isLoading } = useListings();
+export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery, initialFilters, initialSort, onRefreshReady }: SearchResultsPageProps) {
+  const { listings: baseListings, isLoading, refreshListings } = useListings();
+
+  useEffect(() => {
+    onRefreshReady?.(refreshListings);
+  }, [refreshListings, onRefreshReady]);
   const [searchQuery, setSearchQuery] = useState(initialQuery || 'Syokimau');
   const [selectedSort, setSelectedSort] = useState<SortOption>(initialSort || 'Most relevant');
   const [filters, setFilters] = useState<SearchFilters>(initialFilters || defaultSearchFilters);

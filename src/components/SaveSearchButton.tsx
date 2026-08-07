@@ -62,11 +62,16 @@ export default function SaveSearchButton({ query, filters, sort, onRequireAuth }
         aria-label="Save this search"
         className="w-9 h-9 rounded-xl bg-neutral-100 dark:bg-stone-850 border border-neutral-200/50 dark:border-stone-800 flex items-center justify-center text-neutral-600 dark:text-stone-300 hover:bg-neutral-150 dark:hover:bg-stone-800 transition-colors cursor-pointer outline-none"
       >
-        {justSaved ? (
-          <BookmarkCheck className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
-        ) : (
-          <Bookmark className="w-4.5 h-4.5 stroke-[2.2]" />
-        )}
+        <motion.div
+          animate={justSaved ? { scale: [1, 1.25, 1] } : {}}
+          transition={{ duration: 0.3 }}
+        >
+          {justSaved ? (
+            <BookmarkCheck className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+          ) : (
+            <Bookmark className="w-4.5 h-4.5 stroke-[2.2]" />
+          )}
+        </motion.div>
       </motion.button>
 
       <AnimatePresence>

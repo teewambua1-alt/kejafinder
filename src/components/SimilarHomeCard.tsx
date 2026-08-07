@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Heart, MapPin, CheckCircle2, RefreshCw, MessageCircle, ArrowRight } from 'lucide-react';
 import { KejaListing } from '../types/listings';
 import { useSavedListings } from '../hooks/useSavedListings';
+import { useToast } from '../context/ToastContext';
 
 interface SimilarHomeCardProps {
   listing: KejaListing;
@@ -12,8 +13,8 @@ interface SimilarHomeCardProps {
 
 export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHomeCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
+  const { showToast } = useToast();
   const [localSaved, setLocalSaved] = useState(listing.isSaved || false);
-  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const isSaved = source === 'supabase' ? fbIsSaved(listing.id) : localSaved;
 
@@ -25,8 +26,7 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
       // Supabase is configured but no one is logged in — flipping localSaved
       // here would look like a real save that then silently vanishes, since
       // it never reaches the database and never shows up on the Saved page.
-      setShowLoginHint(true);
-      setTimeout(() => setShowLoginHint(false), 2000);
+      showToast('Log in to save homes.');
       return;
     } else {
       setLocalSaved(!localSaved);
@@ -44,6 +44,7 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
   return (
     <motion.div
       whileTap={{ scale: 0.98 }}
+      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
       onClick={onView}
       className="w-[260px] flex-shrink-0 bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-800/40 rounded-3xl overflow-hidden shadow-sm flex flex-col cursor-pointer hover:shadow-md transition-shadow"
     >
@@ -61,16 +62,13 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center text-white border border-white/20 transition-transform active:scale-95"
           aria-label={`Save ${listing.title}`}
         >
-          <motion.div whileTap={{ scale: 1.2 }}>
+          <motion.div
+            animate={isSaved ? { scale: [1, 1.25, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : 'fill-transparent'}`} />
           </motion.div>
         </button>
-
-        {showLoginHint && (
-          <div className="absolute top-12 right-3 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
-            Log in to save homes
-          </div>
-        )}
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">

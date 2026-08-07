@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
-  User, 
-  Bell, 
-  MapPin, 
-  Wallet, 
-  Home, 
-  ShieldCheck, 
-  HelpCircle, 
-  Globe, 
-  LogOut, 
-  ChevronRight, 
-  AlertCircle 
+import React from 'react';
+import { motion } from 'motion/react';
+import {
+  User,
+  Bell,
+  MapPin,
+  Wallet,
+  Home,
+  ShieldCheck,
+  HelpCircle,
+  Globe,
+  LogOut,
+  ChevronRight
 } from 'lucide-react';
 import { profileActions, ProfileAction } from '../data/profileData';
 import { ProfileSettingsPanelType } from './ProfileSettingsPanel';
@@ -22,15 +21,6 @@ interface ProfileActionListProps {
 }
 
 export default function ProfileActionList({ onOpenPanel, onLogout }: ProfileActionListProps) {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2500);
-  };
-
   // Icon mapping resolver
   const getIcon = (iconName: string, isDanger: boolean) => {
     const iconProps = {
@@ -151,23 +141,6 @@ export default function ProfileActionList({ onOpenPanel, onLogout }: ProfileActi
           </div>
         </div>
       </div>
-
-      {/* Floating feedback alert toast info */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto shadow-md"
-            >
-              <AlertCircle className="w-4 h-4 text-emerald-450 shrink-0" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

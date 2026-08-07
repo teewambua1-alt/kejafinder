@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { Banknote, Receipt, UserRound, Eye, Droplets, Zap, Clock, ShieldCheck } from 'lucide-react';
 import { KejaListing } from '../types/listings';
+import { useToast } from '../context/ToastContext';
 
 interface ListingPricingSummaryProps {
   listing: KejaListing;
@@ -9,7 +10,7 @@ interface ListingPricingSummaryProps {
 }
 
 export default function ListingPricingSummary({ listing, onFeedback }: ListingPricingSummaryProps) {
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const formatKES = (amount: number) => {
     return `${listing.currency || 'KSh'} ${amount.toLocaleString()}`;
@@ -19,8 +20,7 @@ export default function ListingPricingSummary({ listing, onFeedback }: ListingPr
     if (onFeedback) {
       onFeedback("Cost confirmation message coming soon.");
     } else {
-      setFeedbackMessage("Cost confirmation message coming soon.");
-      setTimeout(() => setFeedbackMessage(null), 3000);
+      showToast("Cost confirmation message coming soon.");
     }
   };
 
@@ -49,19 +49,6 @@ export default function ListingPricingSummary({ listing, onFeedback }: ListingPr
       transition={{ staggerChildren: 0.1 }}
       className="space-y-4"
     >
-      <AnimatePresence>
-        {feedbackMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-20 left-1/2 z-50 bg-neutral-900/90 dark:bg-stone-100/90 text-white dark:text-stone-900 px-4 py-2 rounded-full text-xs font-bold shadow-lg backdrop-blur-md whitespace-nowrap"
-          >
-            {feedbackMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* 1. Main price card */}
       <motion.div variants={rowVariants} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/60 dark:border-stone-800/60 rounded-3xl p-5 shadow-sm relative overflow-hidden">
         <div className="flex justify-between items-start">

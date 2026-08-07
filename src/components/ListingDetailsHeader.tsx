@@ -81,7 +81,12 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
           }`}
           aria-label="Save listing"
         >
-          <Heart className={`w-4 h-4 stroke-[2.2] ${isInitialSaved ? 'fill-rose-500' : ''}`} />
+          <motion.div
+            animate={isInitialSaved ? { scale: [1, 1.25, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            <Heart className={`w-4 h-4 stroke-[2.2] ${isInitialSaved ? 'fill-rose-500' : ''}`} />
+          </motion.div>
         </motion.button>
       </div>
     </motion.header>

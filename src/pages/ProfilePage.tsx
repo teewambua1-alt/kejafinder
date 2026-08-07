@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { Heart, Search, Home, Clock, CheckCircle2, Eye, MessageSquare } from 'lucide-react';
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileIdentityCard from '../components/ProfileIdentityCard';
@@ -14,6 +14,7 @@ import { useIsAdmin } from '../hooks/useIsAdmin';
 import { useOwnerListings } from '../hooks/useOwnerListings';
 import { useSavedListings } from '../hooks/useSavedListings';
 import { useSavedSearches } from '../hooks/useSavedSearches';
+import { useToast } from '../context/ToastContext';
 
 interface ProfilePageProps {
   onTabChange?: (tab: string) => void;
@@ -31,8 +32,8 @@ const POSTER_ROLES = ['landlord', 'caretaker', 'agent', 'scout'];
 
 export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenOwnerDashboard, onOpenAdminDashboard, onOpenTestMode, onOpenDesignSystem }: ProfilePageProps) {
   const { user: currentUser, profile, signOut } = useAuth();
+  const { showToast } = useToast();
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const isPosterRole = !!profile && POSTER_ROLES.includes(profile.role);
   const { isAdmin } = useIsAdmin();
@@ -45,8 +46,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
   const { stats: ownerStats } = useOwnerListings(isPosterRole);
 
   const handleSave = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2500);
+    showToast(msg);
   };
 
   const handleLogout = async () => {
@@ -214,23 +214,6 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
         onOpenSupport={onOpenSupport}
         onLogout={handleLogout}
       />
-
-      {/* Feedback toast message notifications */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto shadow-md"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </motion.div>
   );

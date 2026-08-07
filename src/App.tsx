@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense, lazy, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, Suspense, lazy, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import AppShell from './components/AppShell';
 import Header from './components/Header';
@@ -10,7 +10,9 @@ import FeaturedListings from './components/FeaturedListings';
 import FreshVacancies from './components/FreshVacancies';
 import PopularLocations from './components/PopularLocations';
 import SafetyBanner from './components/SafetyBanner';
+import PullToRefreshIndicator from './components/PullToRefreshIndicator';
 import { useListings } from './hooks/useListings';
+import { usePullToRefresh } from './hooks/usePullToRefresh';
 import type { SearchFilters } from './components/SearchFilterSheet';
 import type { SortOption } from './components/SortDropdown';
 import type { SavedSearch } from './hooks/useSavedSearches';
@@ -31,12 +33,38 @@ const TestModePage = lazy(() => import('./pages/TestModePage'));
 const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage'));
 
 export default function App() {
-  const { listings: allListings, isLoading } = useListings();
+  const { listings: allListings, isLoading, refreshListings } = useListings();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeFilterChip, setActiveFilterChip] = useState<string | null>(null);
-  
+
+  // Search and Saved each fetch their own listings independently (separate
+  // hook instances), so pulling to refresh on those tabs needs to call
+  // *their* refetch, not Home's -- each page hands its refetch fn up here
+  // once it's ready via onRefreshReady.
+  const [searchRefreshFn, setSearchRefreshFn] = useState<(() => Promise<void>) | null>(null);
+  const [savedRefreshFn, setSavedRefreshFn] = useState<(() => Promise<void>) | null>(null);
+  const handleSearchRefreshReady = useCallback((fn: () => Promise<void>) => {
+    setSearchRefreshFn(() => fn);
+  }, []);
+  const handleSavedRefreshReady = useCallback((fn: () => Promise<void>) => {
+    setSavedRefreshFn(() => fn);
+  }, []);
+
+  const activeRefreshFn = activeTab === 'home'
+    ? refreshListings
+    : activeTab === 'search'
+    ? searchRefreshFn
+    : activeTab === 'saved'
+    ? savedRefreshFn
+    : null;
+
+  const { pullDistance, isRefreshing, containerProps: pullToRefreshHandlers } = usePullToRefresh(
+    async () => { await activeRefreshFn?.(); },
+    { enabled: activeRefreshFn !== null }
+  );
+
   const [selectedListingId, setSelectedListingId] = useState<string | null>(null);
   const [previousTab, setPreviousTab] = useState<string>('home');
   const [pendingSearchQuery, setPendingSearchQuery] = useState<string | undefined>(undefined);
@@ -217,6 +245,8 @@ export default function App() {
       onOpenTestMode={openTestMode}
       onOpenDesignSystem={openDesignSystem}
       onSearchSubmit={handleSearchSubmit}
+      pullToRefreshHandlers={pullToRefreshHandlers}
+      pullToRefreshIndicator={<PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isRefreshing} />}
     >
       <Suspense fallback={null}>
       <AnimatePresence mode="wait">
@@ -290,6 +320,7 @@ export default function App() {
           initialQuery={pendingSearchQuery}
           initialFilters={pendingSearchFilters}
           initialSort={pendingSearchSort}
+          onRefreshReady={handleSearchRefreshReady}
         />
       ) : activeTab === 'post' ? (
         <PostVacancyPage onTabChange={setActiveTab} />
@@ -299,6 +330,7 @@ export default function App() {
           onTabChange={setActiveTab}
           onSelectListing={openListingDetails}
           onApplySavedSearch={handleApplySavedSearch}
+          onRefreshReady={handleSavedRefreshReady}
         />
       ) : activeTab === 'profile' ? (
         <ProfilePage

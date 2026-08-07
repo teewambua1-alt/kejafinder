@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { Bell, MapPinHouse, Sun, Moon, AlertCircle, Settings } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase/client';
+import { useToast } from '../context/ToastContext';
 
 interface ProfileHeaderProps {
   onNotificationsClick?: () => void;
@@ -13,7 +14,7 @@ interface ProfileHeaderProps {
 export default function ProfileHeader({ onNotificationsClick, onSettingsClick }: ProfileHeaderProps = {}) {
   const { isDark, toggleTheme } = useTheme();
   const { user, profile } = useAuth();
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
@@ -40,13 +41,6 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         setUnreadCount(count ?? 0);
       });
   }, [user]);
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2000);
-  };
 
   return (
     <motion.header 
@@ -89,7 +83,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
 
         {/* Bell Notification Button */}
         <button
-          onClick={onNotificationsClick ? onNotificationsClick : () => showToast("Notifications aren't wired up to real data yet.")}
+          onClick={onNotificationsClick ? onNotificationsClick : () => showToast("Notifications aren't wired up to real data yet.", { icon: AlertCircle })}
           className="relative w-9 h-9 rounded-full bg-white dark:bg-stone-800/95 border border-neutral-200/50 dark:border-stone-800 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-2xs hover:bg-neutral-50 dark:hover:bg-stone-750/90 active:scale-95 transition-all cursor-pointer outline-none"
           aria-label="Open notifications"
         >
@@ -114,7 +108,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         {/* User Profile Avatar with emerald status border ring */}
         <button
           type="button"
-          onClick={() => showToast(user ? `Logged in as ${fullName}` : 'Not logged in')}
+          onClick={() => showToast(user ? `Logged in as ${fullName}` : 'Not logged in', { icon: AlertCircle })}
           className="relative w-9 h-9 rounded-full p-[1.5px] bg-emerald-600/10 border border-emerald-500/30 shadow-2xs flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer outline-none"
           aria-label="Open profile info"
         >
@@ -129,23 +123,6 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
           {user && <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />}
         </button>
       </div>
-
-      {/* Toast Alert Popup */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto"
-            >
-              <AlertCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 }

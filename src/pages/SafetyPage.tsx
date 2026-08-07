@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { ShieldCheck, AlertTriangle } from 'lucide-react';
 import SafetyHeader from '../components/SafetyHeader';
 import SafetyHero from '../components/SafetyHero';
@@ -10,6 +10,7 @@ import SafetyReportGuide from '../components/SafetyReportGuide';
 import SafetyPaymentGuide from '../components/SafetyPaymentGuide';
 import SafetyContactTips from '../components/SafetyContactTips';
 import SafetyFAQ from '../components/SafetyFAQ';
+import { useToast } from '../context/ToastContext';
 
 interface SafetyPageProps {
   onBack: () => void;
@@ -20,13 +21,10 @@ interface SafetyPageProps {
 }
 
 export default function SafetyPage({ onBack, onGoSearch, onGoPost, onOpenListingDetails, onOpenSupport }: SafetyPageProps) {
-  const [safetyFeedback, setSafetyFeedback] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const handleShowFeedback = (msg: string) => {
-    setSafetyFeedback(msg);
-    setTimeout(() => {
-      setSafetyFeedback((current) => (current === msg ? null : current));
-    }, 4000);
+    showToast(msg);
   };
 
   const containerVariants = {
@@ -50,20 +48,6 @@ export default function SafetyPage({ onBack, onGoSearch, onGoPost, onOpenListing
     <div className="flex-1 flex flex-col relative animate-fadeIn bg-neutral-50/50 dark:bg-stone-900/10 min-h-full -mx-6 -mt-6">
       {/* Visual background ambient blur spots */}
       <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none z-0" />
-      
-      {/* Scroll-proof Feedback Message */}
-      <AnimatePresence>
-        {safetyFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed left-1/2 top-20 z-[100] whitespace-nowrap bg-neutral-800/95 dark:bg-stone-100/95 text-white dark:text-stone-900 px-4 py-2 rounded-full shadow-lg backdrop-blur-md font-bold text-[11px] uppercase tracking-wider"
-          >
-            {safetyFeedback}
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <SafetyHeader onBack={onBack} />
 

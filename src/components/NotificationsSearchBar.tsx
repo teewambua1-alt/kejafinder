@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 interface NotificationsSearchBarProps {
   value: string;
@@ -9,16 +10,13 @@ interface NotificationsSearchBarProps {
 }
 
 export default function NotificationsSearchBar({ value, onChange, onSettingsClick }: NotificationsSearchBarProps) {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const triggerPlaceholderToast = () => {
     if (onSettingsClick) {
       onSettingsClick();
     } else {
-      setToastMessage("Notification filters coming soon.");
-      setTimeout(() => {
-        setToastMessage(null);
-      }, 2000);
+      showToast("Notification filters coming soon.", { icon: AlertCircle });
     }
   };
 
@@ -48,23 +46,6 @@ export default function NotificationsSearchBar({ value, onChange, onSettingsClic
           <SlidersHorizontal className="w-4.5 h-4.5 stroke-[2.2]" />
         </motion.button>
       </div>
-
-      {/* Floating Micro-Toast for filtering feedback */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="absolute right-0 -bottom-14 left-0 z-30 flex items-center justify-center pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, y: -4, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -4, scale: 0.95 }}
-              className="bg-neutral-900/95 border border-neutral-800 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-1.5 rounded-xl shadow-md flex items-center space-x-1.5 pointer-events-auto"
-            >
-              <AlertCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

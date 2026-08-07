@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { 
+import React from 'react';
+import { motion } from 'motion/react';
+import {
   TrendingUp
 } from 'lucide-react';
 import AboutHeader from '../components/AboutHeader';
@@ -10,6 +10,7 @@ import AboutWhoWeServe from '../components/AboutWhoWeServe';
 import AboutHowItWorks from '../components/AboutHowItWorks';
 import AboutTrustPromise from '../components/AboutTrustPromise';
 import AboutLaunchStrategy from '../components/AboutLaunchStrategy';
+import { useToast } from '../context/ToastContext';
 
 interface AboutPageProps {
   onBack: () => void;
@@ -19,13 +20,10 @@ interface AboutPageProps {
 }
 
 export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: AboutPageProps) {
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const showFeedback = (msg: string) => {
-    setFeedbackMessage(msg);
-    setTimeout(() => {
-      setFeedbackMessage((current) => (current === msg ? null : current));
-    }, 2500);
+    showToast(msg);
   };
 
   const containerVariants: any = {
@@ -61,21 +59,6 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
       {/* Background soft blurs */}
       <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none z-0" />
       <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none z-0" />
-
-      {/* Global Page Feedback Toast */}
-      <AnimatePresence>
-        {feedbackMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="absolute left-1/2 top-20 z-[100] whitespace-nowrap bg-neutral-800/95 dark:bg-stone-100/95 text-white dark:text-stone-900 px-4 py-2 rounded-full shadow-lg backdrop-blur-md font-bold text-[11px] uppercase tracking-wider flex items-center space-x-2"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-450 animate-ping" />
-            <span>{feedbackMessage}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <AboutHeader onBack={onBack} />
 

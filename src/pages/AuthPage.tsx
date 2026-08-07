@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import AuthHeader from '../components/AuthHeader';
 import AuthWelcomeChoice from '../components/AuthWelcomeChoice';
@@ -9,6 +9,7 @@ import AuthRoleSelection from '../components/AuthRoleSelection';
 import AuthOtpVerification from '../components/AuthOtpVerification';
 import AuthTrustSafetyOnboarding from '../components/AuthTrustSafetyOnboarding';
 import { AuthMode, AuthDraftUser } from '../types/auth';
+import { useToast } from '../context/ToastContext';
 
 interface AuthPageProps {
   onBack: () => void;
@@ -16,13 +17,12 @@ interface AuthPageProps {
 }
 
 export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
+  const { showToast } = useToast();
   const [authMode, setAuthMode] = useState<AuthMode>("welcome");
-  const [authFeedback, setAuthFeedback] = useState<string | null>(null);
   const [authDraftUser, setAuthDraftUser] = useState<Partial<AuthDraftUser>>({});
 
   const handleShowFeedback = (msg: string) => {
-    setAuthFeedback(msg);
-    setTimeout(() => setAuthFeedback(null), 3000);
+    showToast(msg, { icon: Check });
   };
   
   const handleSetAuthDraftUser = (userUpdate: Partial<AuthDraftUser>) => {
@@ -148,21 +148,6 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
 
         </motion.div>
       </div>
-
-      {/* Local Feedback Toast */}
-      <AnimatePresence>
-        {authFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-20 left-1/2 z-50 bg-neutral-900 dark:bg-stone-100 text-white dark:text-stone-900 px-5 py-3 rounded-2xl shadow-xl flex items-center space-x-2 w-[85%] max-w-xs"
-          >
-            <Check className="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0 stroke-[3]" />
-            <span className="text-[11px] font-bold uppercase tracking-wider">{authFeedback}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

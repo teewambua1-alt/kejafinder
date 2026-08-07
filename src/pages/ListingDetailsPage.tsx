@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import ListingDetailsHeader from '../components/ListingDetailsHeader';
 import ListingImageGallery from '../components/ListingImageGallery';
 import ListingTitleSection from '../components/ListingTitleSection';
@@ -18,6 +18,7 @@ import { KejaListing } from '../types/listings';
 import ReportListingPanel from '../components/ReportListingPanel';
 import ListingStickyContactBar from '../components/ListingStickyContactBar';
 import { incrementListingView, incrementContactClick, submitListingReport } from '../services/listingService';
+import { useToast } from '../context/ToastContext';
 
 interface ListingDetailsPageProps {
   listingId: string | null;
@@ -26,13 +27,13 @@ interface ListingDetailsPageProps {
 
 export default function ListingDetailsPage({ listingId, onBack }: ListingDetailsPageProps) {
   const [internalListingId, setInternalListingId] = useState<string | null>(listingId);
-  const [listingFeedback, setListingFeedback] = useState<string | null>(null);
   const [isReportPanelOpen, setIsReportPanelOpen] = useState(false);
 
   const { listing: fbListing, isLoading } = useListing(internalListingId || undefined);
   const { listings: allListings } = useListings();
   const { isSaved, toggleSavedListing, source } = useSavedListings();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   // Sync internal ID when prop changes
   React.useEffect(() => {
@@ -91,8 +92,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   };
 
   const showFeedback = (message: string) => {
-    setListingFeedback(message);
-    setTimeout(() => setListingFeedback(null), 3000);
+    showToast(message);
   };
 
   const handleShare = async () => {
@@ -262,20 +262,6 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
         onWhatsAppClick={handleWhatsAppClick}
       />
 
-      {/* Local Feedback Toast */}
-      <AnimatePresence>
-        {listingFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-20 left-1/2 z-50 bg-neutral-900/90 dark:bg-stone-100/90 text-white dark:text-stone-900 px-4 py-2 rounded-full text-xs font-bold shadow-lg backdrop-blur-md whitespace-nowrap"
-          >
-            {listingFeedback}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Main Content Area */}
       <motion.div 
         variants={containerVariants}
@@ -335,21 +321,20 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
 
         {/* G. Trust and safety (v1.4.6) */}
         <motion.div variants={cardVariants}>
-          <ListingTrustSafety 
+          <ListingTrustSafety
             listing={currentListing as any}
             onAvailabilityCheck={handleAskAvailability}
             onReportSubmit={handleReportSubmit}
-            listingFeedback={listingFeedback}
           />
         </motion.div>
 
         {/* H. Similar homes (v1.4.7) */}
         <motion.div variants={cardVariants}>
-          <SimilarHomesSection 
+          <SimilarHomesSection
             currentListing={currentListing as any}
             allListings={allAvailableListings}
             onOpenListingDetails={handleOpenSimilarListing}
-            setListingFeedback={setListingFeedback}
+            setListingFeedback={showToast}
           />
         </motion.div>
       </motion.div>

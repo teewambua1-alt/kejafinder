@@ -334,24 +334,26 @@ export default function SearchFilterSheet({
 
             {/* Bottom sticky action bar with safe area padding */}
             <div className="shrink-0 bg-white/95 dark:bg-stone-900/95 border-t border-neutral-100 dark:border-neutral-800 px-6 py-4 flex items-center justify-between gap-4 pb-[env(safe-area-inset-bottom,20px)]">
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.97 }}
                 onClick={handleClear}
                 aria-label="Clear filters"
                 className="w-1/3 h-[42px] rounded-xl bg-neutral-100 hover:bg-neutral-150 dark:bg-stone-850 dark:hover:bg-stone-800 text-neutral-700 dark:text-neutral-300 text-xs font-bold transition-colors border-none cursor-pointer outline-none"
               >
                 Clear all
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.97 }}
                 onClick={handleApply}
                 aria-label="Apply filters"
                 className="flex-1 h-[42px] rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-sm transition-colors border-none cursor-pointer outline-none flex items-center justify-center gap-1.5"
               >
                 <Check className="w-4 h-4" />
                 <span>Apply filters</span>
-              </button>
+              </motion.button>
             </div>
 
           </motion.div>

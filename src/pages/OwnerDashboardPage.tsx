@@ -23,6 +23,7 @@ import { useOwnerListings } from '../hooks/useOwnerListings';
 import type { OwnerListingRow } from '../services/ownerListingsService';
 import { getListingTypeLabel, ListingType } from '../types/listing';
 import { supabase } from '../lib/supabase/client';
+import Skeleton from '../components/ui/Skeleton';
 
 interface OwnerDashboardPageProps {
   onBack: () => void;
@@ -82,8 +83,9 @@ function ListingRow({
       exit={{ opacity: 0, height: 0 }}
       className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-2.5xl p-4 shadow-sm space-y-3"
     >
-      <button
+      <motion.button
         type="button"
+        whileTap={{ scale: 0.97 }}
         onClick={() => onSelect?.(listing.id)}
         className="w-full flex items-center space-x-3 text-left cursor-pointer outline-none"
       >
@@ -103,7 +105,7 @@ function ListingRow({
         <span className={`shrink-0 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${badge.className}`}>
           {badge.label}
         </span>
-      </button>
+      </motion.button>
 
       {listing.moderation_status === 'approved' && (
         <div className="flex items-center justify-between text-[10.5px] font-bold text-neutral-500 dark:text-stone-400 px-0.5">
@@ -120,31 +122,34 @@ function ListingRow({
       {listing.moderation_status === 'draft' && (
         confirmingDelete ? (
           <div className="flex items-center space-x-2">
-            <button
+            <motion.button
               type="button"
+              whileTap={{ scale: 0.97 }}
               disabled={isBusy}
               onClick={handleDelete}
               className="flex-1 h-9 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[11px] font-black uppercase tracking-wider disabled:opacity-60"
             >
               {isBusy ? 'Deleting...' : 'Confirm delete'}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
+              whileTap={{ scale: 0.97 }}
               onClick={() => setConfirmingDelete(false)}
               className="flex-1 h-9 rounded-xl bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 text-[11px] font-black uppercase tracking-wider"
             >
               Cancel
-            </button>
+            </motion.button>
           </div>
         ) : (
-          <button
+          <motion.button
             type="button"
+            whileTap={{ scale: 0.97 }}
             onClick={() => setConfirmingDelete(true)}
             className="w-full h-9 rounded-xl border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>Delete draft</span>
-          </button>
+          </motion.button>
         )
       )}
 
@@ -156,15 +161,16 @@ function ListingRow({
       )}
 
       {listing.moderation_status === 'approved' && (
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.97 }}
           disabled={isBusy}
           onClick={handleToggle}
           className="w-full h-9 rounded-xl border border-neutral-200 dark:border-stone-800 text-neutral-700 dark:text-stone-300 text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5 disabled:opacity-60"
         >
           {isLive ? <ToggleRight className="w-4 h-4 text-emerald-600" /> : <ToggleLeft className="w-4 h-4" />}
           <span>{isBusy ? 'Updating...' : isLive ? 'Mark as taken' : 'Mark as available'}</span>
-        </button>
+        </motion.button>
       )}
 
       {listing.moderation_status === 'rejected' && (
@@ -174,6 +180,22 @@ function ListingRow({
         </div>
       )}
     </motion.div>
+  );
+}
+
+function ListingRowSkeleton() {
+  return (
+    <div className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-2.5xl p-4 shadow-sm space-y-3">
+      <div className="flex items-center space-x-3">
+        <Skeleton variant="block" className="w-14 h-14 rounded-xl shrink-0" />
+        <div className="flex-1 min-w-0 space-y-2">
+          <Skeleton variant="text" className="w-3/4" />
+          <Skeleton variant="text" className="w-1/2" />
+        </div>
+        <Skeleton variant="block" className="w-14 h-5 rounded-lg shrink-0" />
+      </div>
+      <Skeleton variant="block" className="w-full h-9 rounded-xl" />
+    </div>
   );
 }
 
@@ -248,7 +270,11 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
 
             <motion.div variants={itemVariants} className="space-y-3">
               {isLoading ? (
-                <div className="text-center py-8 text-[12px] font-bold text-neutral-400 dark:text-stone-500">Loading your listings...</div>
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <ListingRowSkeleton key={i} />
+                  ))}
+                </div>
               ) : listings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-3">
                   <Home className="w-8 h-8 text-neutral-350 dark:text-stone-600 mx-auto" />

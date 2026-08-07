@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { Phone, MessageCircle, ShieldCheck, AlertTriangle, Eye, CheckCircle2, UserRound, Copy, Info } from 'lucide-react';
 import { KejaListing } from '../types/listings';
+import { useToast } from '../context/ToastContext';
 
 interface ListingContactCardProps {
   listing: KejaListing;
@@ -11,7 +12,7 @@ interface ListingContactCardProps {
 }
 
 export default function ListingContactCard({ listing, onFeedback, onCallClick, onWhatsAppClick }: ListingContactCardProps) {
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const rowVariants = {
     hidden: { opacity: 0, y: 5 },
@@ -22,8 +23,7 @@ export default function ListingContactCard({ listing, onFeedback, onCallClick, o
     if (onFeedback) {
       onFeedback(message);
     } else {
-      setFeedbackMessage(message);
-      setTimeout(() => setFeedbackMessage(null), 3000);
+      showToast(message);
     }
   };
 
@@ -67,19 +67,6 @@ export default function ListingContactCard({ listing, onFeedback, onCallClick, o
       transition={{ staggerChildren: 0.1 }}
       className="space-y-4"
     >
-      <AnimatePresence>
-        {feedbackMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: -20, x: '-50%' }}
-            className="fixed top-20 left-1/2 z-50 bg-neutral-900/90 dark:bg-stone-100/90 text-white dark:text-stone-900 px-4 py-2 rounded-full text-xs font-bold shadow-lg backdrop-blur-md whitespace-nowrap"
-          >
-            {feedbackMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* 1. Header */}
       <motion.div variants={rowVariants} className="px-1 flex items-center space-x-2">
         <div>

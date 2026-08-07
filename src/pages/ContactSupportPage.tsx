@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import ContactSupportHeader from '../components/ContactSupportHeader';
 import SupportHeroQuickActions from '../components/SupportHeroQuickActions';
 import SupportCategories from '../components/SupportCategories';
@@ -7,6 +7,7 @@ import SupportIssueFormMockup from '../components/SupportIssueFormMockup';
 import SupportContactChannels from '../components/SupportContactChannels';
 import SupportSafetyScamBlock from '../components/SupportSafetyScamBlock';
 import SupportFAQ from '../components/SupportFAQ';
+import { useToast } from '../context/ToastContext';
 
 interface ContactSupportPageProps {
   onBack: () => void;
@@ -15,11 +16,10 @@ interface ContactSupportPageProps {
 }
 
 export default function ContactSupportPage({ onBack, onGoSearch, onGoSafety }: ContactSupportPageProps) {
-  const [supportFeedback, setSupportFeedback] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const handleShowFeedback = (msg: string) => {
-    setSupportFeedback(msg);
-    setTimeout(() => setSupportFeedback(null), 3000);
+    showToast(msg);
   };
 
   const containerVariants = {
@@ -72,21 +72,6 @@ export default function ContactSupportPage({ onBack, onGoSearch, onGoSafety }: C
             <SupportFAQ />
           </motion.div>
         </div>
-
-        {/* Global Feedback Toast within the page */}
-        <AnimatePresence>
-          {supportFeedback && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, x: '-50%' }}
-              animate={{ opacity: 1, y: 0, x: '-50%' }}
-              exit={{ opacity: 0, y: -20, x: '-50%' }}
-              className="absolute left-1/2 top-20 z-[100] whitespace-nowrap bg-neutral-800/95 dark:bg-stone-200/95 text-white dark:text-stone-900 px-4 py-2.5 rounded-full shadow-lg backdrop-blur-md font-bold text-[11px] uppercase tracking-wider flex items-center space-x-2 border border-neutral-700 dark:border-stone-300"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-450 animate-ping" />
-              <span>{supportFeedback}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );

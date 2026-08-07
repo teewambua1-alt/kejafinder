@@ -14,6 +14,12 @@ interface AppShellProps {
   onOpenTestMode?: () => void;
   onOpenDesignSystem?: () => void;
   onSearchSubmit?: (query: string) => void;
+  pullToRefreshHandlers?: {
+    onTouchStart?: (e: React.TouchEvent<HTMLDivElement>) => void;
+    onTouchMove?: (e: React.TouchEvent<HTMLDivElement>) => void;
+    onTouchEnd?: (e: React.TouchEvent<HTMLDivElement>) => void;
+  };
+  pullToRefreshIndicator?: React.ReactNode;
 }
 
 /**
@@ -40,6 +46,8 @@ export default function AppShell({
   onOpenTestMode,
   onOpenDesignSystem,
   onSearchSubmit,
+  pullToRefreshHandlers,
+  pullToRefreshIndicator,
 }: AppShellProps) {
   const { isDark } = useTheme();
 
@@ -74,7 +82,11 @@ export default function AppShell({
         {/* Content Viewport: independently scrolling fixed-height box on mobile
             (pb-28 clears the bottom nav); on md+ it's part of the normal page
             flow instead, width-capped and centered like DesktopNavbar's row. */}
-        <div className="flex-1 overflow-y-auto md:overflow-visible no-scrollbar relative flex flex-col p-6 pb-28 md:p-8 md:pb-10 md:max-w-3xl xl:max-w-7xl md:mx-auto md:w-full xl:px-12">
+        <div
+          className="flex-1 overflow-y-auto md:overflow-visible no-scrollbar relative flex flex-col p-6 pb-28 md:p-8 md:pb-10 md:max-w-3xl xl:max-w-7xl md:mx-auto md:w-full xl:px-12"
+          {...pullToRefreshHandlers}
+        >
+          {pullToRefreshIndicator}
           {children}
         </div>
 

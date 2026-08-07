@@ -17,6 +17,7 @@ import {
   Info
 } from 'lucide-react';
 import { SavedUpdate, SavedUpdateType } from '../data/savedUpdates';
+import { useToast } from '../context/ToastContext';
 
 interface SavedUpdatesProps {
   updates: SavedUpdate[];
@@ -39,14 +40,10 @@ export default function SavedUpdates({
   const [prefVerify, setPrefVerify] = useState(true);
   const [prefRecent, setPrefRecent] = useState(true);
 
-  // Local action toast display
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const triggerToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2500);
+    showToast(msg);
   };
 
   // Map icon dynamically based on update type
@@ -366,22 +363,6 @@ export default function SavedUpdates({
         </div>
 
       </div>
-
-      {/* Micro absolute toast message container for prototype preview inside this component */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-18 z-50 flex items-center justify-center pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 15 }}
-              className="bg-neutral-900 text-white text-[10.5px] font-extrabold px-3.5 py-2 rounded-xl shadow-lg border border-neutral-800/80 pointer-events-auto"
-            >
-              {toastMessage}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </div>
   );

@@ -156,6 +156,7 @@ export default function SavedListingCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -50, scale: 0.95 }}
+      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
       onClick={handleCardClick}
       transition={{ duration: 0.3, ease: 'easeOut' }}
       className={`w-full backdrop-blur-md rounded-2.5xl p-3.5 shadow-3xs transition-all flex flex-col space-y-3.5 border cursor-pointer select-none ${
@@ -202,13 +203,18 @@ export default function SavedListingCard({
             className="absolute top-2 left-2 w-7.5 h-7.5 rounded-full bg-white/95 dark:bg-stone-850/95 flex items-center justify-center shadow-2xs hover:shadow-xs transition-shadow cursor-pointer select-none border-none outline-none z-10"
             aria-label={isSaved ? "Remove from saved homes" : "Save home"}
           >
-            <Heart 
-              className={`w-3.5 h-3.5 transition-transform duration-250 ${
-                isSaved 
-                  ? 'fill-emerald-600 text-emerald-600 dark:fill-emerald-400 dark:text-emerald-400 font-bold scale-110 stroke-[2.5]' 
-                  : 'text-neutral-500 dark:text-stone-400 stroke-[2.2]'
-              }`}
-            />
+            <motion.div
+              animate={isSaved ? { scale: [1, 1.25, 1] } : {}}
+              transition={{ duration: 0.3 }}
+            >
+              <Heart
+                className={`w-3.5 h-3.5 ${
+                  isSaved
+                    ? 'fill-emerald-600 text-emerald-600 dark:fill-emerald-400 dark:text-emerald-400 stroke-[2.5]'
+                    : 'text-neutral-500 dark:text-stone-400 stroke-[2.2]'
+                }`}
+              />
+            </motion.div>
           </motion.button>
         </div>
 

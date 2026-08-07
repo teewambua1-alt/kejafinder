@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { Bell, MapPinHouse, Sun, Moon, AlertCircle } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 interface NotificationsHeaderProps {
   onNotificationsClick?: () => void;
@@ -13,23 +14,16 @@ interface NotificationsHeaderProps {
 export default function NotificationsHeader({ onNotificationsClick, onProfileClick, unreadCount }: NotificationsHeaderProps) {
   const { isDark, toggleTheme } = useTheme();
   const { user, profile } = useAuth();
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
   const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 2000);
-  };
 
   const handleBellClick = () => {
     if (onNotificationsClick) {
       onNotificationsClick();
     } else {
-      showToast("You are already on the Notifications Hub.");
+      showToast("You are already on the Notifications Hub.", { icon: AlertCircle });
     }
   };
 
@@ -37,7 +31,7 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
     if (onProfileClick) {
       onProfileClick();
     } else {
-      showToast(user ? `Logged in as ${fullName}` : 'Not logged in');
+      showToast(user ? `Logged in as ${fullName}` : 'Not logged in', { icon: AlertCircle });
     }
   };
 
@@ -115,23 +109,6 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
           <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />
         </button>
       </div>
-
-      {/* Toast Alert Popup */}
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="fixed inset-x-0 bottom-24 z-50 flex items-center justify-center pointer-events-none px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.95 }}
-              className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10.5px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto"
-            >
-              <AlertCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>{toastMessage}</span>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 }

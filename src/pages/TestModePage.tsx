@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import TestModeHeader from '../components/TestModeHeader';
 import TestModeSummary from '../components/TestModeSummary';
 import TestReadinessScore from '../components/TestReadinessScore';
@@ -8,6 +8,7 @@ import TestIssueBoard from '../components/TestIssueBoard';
 import TestModeReportPanel from '../components/TestModeReportPanel';
 import { initialTestItems, TestItem, TestStatus } from '../data/testModeChecklist';
 import { CheckCircle2 } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 
 interface TestModePageProps {
   onBack: () => void;
@@ -26,12 +27,11 @@ interface TestModePageProps {
 export default function TestModePage({ 
   onBack, onGoHome, onGoSearch, onGoPost, onGoSaved, onGoProfile, onGoAuth, onGoSafety, onGoAbout, onGoSupport, onGoLandlordDashboard 
 }: TestModePageProps) {
+  const { showToast } = useToast();
   const [testItems, setTestItems] = useState<TestItem[]>(initialTestItems);
-  const [testFeedback, setTestFeedback] = useState<string | null>(null);
 
   const showFeedback = (msg: string) => {
-    setTestFeedback(msg);
-    setTimeout(() => setTestFeedback(null), 3000);
+    showToast(msg, { icon: CheckCircle2 });
   };
 
   const handleToggleStatus = (id: string) => {
@@ -145,22 +145,6 @@ export default function TestModePage({
             </div>
           </div>
         </div>
-
-        {/* Global Feedback Toast */}
-        <AnimatePresence>
-          {testFeedback && (
-            <motion.div
-              initial={{ opacity: 0, y: -20, x: '-50%' }}
-              animate={{ opacity: 1, y: 0, x: '-50%' }}
-              exit={{ opacity: 0, y: -20, x: '-50%' }}
-              className="absolute left-1/2 top-20 z-[100] whitespace-nowrap bg-neutral-800/95 dark:bg-stone-200/95 text-white dark:text-stone-900 px-4 py-2.5 rounded-full shadow-lg backdrop-blur-md font-bold text-[11px] uppercase tracking-wider flex items-center space-x-2 border border-neutral-700 dark:border-stone-300"
-            >
-              <CheckCircle2 className="w-4 h-4 text-emerald-450 dark:text-emerald-600" />
-              <span>{testFeedback}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
       </div>
     </div>
   );

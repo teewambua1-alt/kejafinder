@@ -22,10 +22,9 @@ interface ListingTrustSafetyProps {
   listing: KejaListing;
   onAvailabilityCheck?: () => void;
   onReportSubmit?: (reason: ReportReason, message: string) => void;
-  listingFeedback?: string | null;
 }
 
-export default function ListingTrustSafety({ listing, onAvailabilityCheck, onReportSubmit, listingFeedback }: ListingTrustSafetyProps) {
+export default function ListingTrustSafety({ listing, onAvailabilityCheck, onReportSubmit }: ListingTrustSafetyProps) {
   const [hasAskedAvailability, setHasAskedAvailability] = useState(false);
   const [showReportPanel, setShowReportPanel] = useState(false);
 

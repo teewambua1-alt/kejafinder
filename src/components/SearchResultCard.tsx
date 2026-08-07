@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Listing, getListingTypeLabel } from '../types/listing';
 import { useSavedListings } from '../hooks/useSavedListings';
+import { useToast } from '../context/ToastContext';
 
 export interface SearchResultCardProps {
   listing: Listing;
@@ -24,8 +25,8 @@ export interface SearchResultCardProps {
 
 export default function SearchResultCard({ listing, onSelectListing, viewMode = 'list' }: SearchResultCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
+  const { showToast } = useToast();
   const [localSaved, setLocalSaved] = useState(listing.isSaved || false);
-  const [showLoginHint, setShowLoginHint] = useState(false);
 
   const isSaved = source === 'supabase' ? fbIsSaved(listing.id) : localSaved;
 
@@ -37,8 +38,7 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
       // Supabase is configured but no one is logged in — flipping localSaved
       // here would look like a real save that then silently vanishes, since
       // it never reaches the database and never shows up on the Saved page.
-      setShowLoginHint(true);
-      setTimeout(() => setShowLoginHint(false), 2000);
+      showToast('Log in to save homes.');
     } else {
       setLocalSaved(!isSaved);
     }
@@ -92,6 +92,7 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
       transition={{ type: 'spring', stiffness: 100, damping: 15 }}
       onClick={() => onSelectListing?.(listing.id)}
       className={`w-full bg-white dark:bg-stone-900 rounded-3xl border border-neutral-100/90 dark:border-neutral-800/80 shadow-xs p-3.5 flex ${viewMode === 'grid' ? 'flex-col gap-3' : 'flex-row gap-3.5'} relative overflow-hidden cursor-pointer`}
@@ -133,12 +134,6 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
             />
           </motion.div>
         </button>
-
-        {showLoginHint && (
-          <div className="absolute top-12 right-2.5 z-20 px-2.5 py-1.5 rounded-lg bg-neutral-900 dark:bg-stone-950 text-white text-[10px] font-bold whitespace-nowrap shadow-lg">
-            Log in to save homes
-          </div>
-        )}
 
         {/* Image index counter indicator */}
         <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-3xs text-[9px] text-white font-mono font-bold tracking-wider z-10">

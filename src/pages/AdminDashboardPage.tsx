@@ -19,6 +19,7 @@ import { useIsAdmin } from '../hooks/useIsAdmin';
 import type { AdminListingRow } from '../services/adminService';
 import { getListingTypeLabel, ListingType } from '../types/listing';
 import { supabase } from '../lib/supabase/client';
+import Skeleton from '../components/ui/Skeleton';
 
 interface AdminDashboardPageProps {
   onBack: () => void;
@@ -89,37 +90,57 @@ function PendingListingCard({
             className="w-full h-9 px-3 rounded-xl border border-neutral-200 dark:border-stone-800 bg-neutral-50 dark:bg-stone-850 text-xs font-semibold text-neutral-800 dark:text-stone-200 outline-none focus:border-red-400"
           />
           <div className="flex items-center space-x-2">
-            <button type="button" disabled={isBusy} onClick={handleReject} className="flex-1 h-9 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[11px] font-black uppercase tracking-wider disabled:opacity-60">
+            <motion.button type="button" whileTap={{ scale: 0.97 }} disabled={isBusy} onClick={handleReject} className="flex-1 h-9 rounded-xl bg-red-600 hover:bg-red-500 text-white text-[11px] font-black uppercase tracking-wider disabled:opacity-60">
               {isBusy ? 'Rejecting...' : 'Confirm reject'}
-            </button>
-            <button type="button" onClick={() => setShowRejectReason(false)} className="flex-1 h-9 rounded-xl bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 text-[11px] font-black uppercase tracking-wider">
+            </motion.button>
+            <motion.button type="button" whileTap={{ scale: 0.97 }} onClick={() => setShowRejectReason(false)} className="flex-1 h-9 rounded-xl bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 text-[11px] font-black uppercase tracking-wider">
               Cancel
-            </button>
+            </motion.button>
           </div>
         </div>
       ) : (
         <div className="flex items-center space-x-2">
-          <button
+          <motion.button
             type="button"
+            whileTap={{ scale: 0.97 }}
             disabled={isBusy}
             onClick={handleApprove}
             className="flex-1 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5 disabled:opacity-60"
           >
             <Check className="w-3.5 h-3.5" />
             <span>{isBusy ? 'Working...' : 'Approve'}</span>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
+            whileTap={{ scale: 0.97 }}
             disabled={isBusy}
             onClick={() => setShowRejectReason(true)}
             className="flex-1 h-9 rounded-xl border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5"
           >
             <X className="w-3.5 h-3.5" />
             <span>Reject</span>
-          </button>
+          </motion.button>
         </div>
       )}
     </motion.div>
+  );
+}
+
+function PendingListingCardSkeleton() {
+  return (
+    <div className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-2.5xl p-4 shadow-sm space-y-3">
+      <div className="flex items-center space-x-3">
+        <Skeleton variant="block" className="w-14 h-14 rounded-xl shrink-0" />
+        <div className="flex-1 min-w-0 space-y-2">
+          <Skeleton variant="text" className="w-3/4" />
+          <Skeleton variant="text" className="w-1/2" />
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <Skeleton variant="block" className="flex-1 h-9 rounded-xl" />
+        <Skeleton variant="block" className="flex-1 h-9 rounded-xl" />
+      </div>
+    </div>
   );
 }
 
@@ -195,7 +216,11 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                 Pending review ({pendingListings.length})
               </h3>
               {isLoading ? (
-                <div className="text-center py-6 text-[12px] font-bold text-neutral-400 dark:text-stone-500">Loading queue...</div>
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <PendingListingCardSkeleton key={i} />
+                  ))}
+                </div>
               ) : pendingListings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-2">
                   <Inbox className="w-7 h-7 text-neutral-350 dark:text-stone-600 mx-auto" />

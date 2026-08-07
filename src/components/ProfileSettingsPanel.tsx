@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase/client';
+import { useToast } from '../context/ToastContext';
 
 export type ProfileSettingsPanelType =
   | "settings_home"
@@ -53,6 +54,7 @@ interface ProfileSettingsPanelProps {
 
 export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, onTypeChange, onOpenAbout, onOpenSupport, onLogout }: ProfileSettingsPanelProps) {
   const { user, profile, refreshProfile } = useAuth();
+  const { showToast } = useToast();
 
   // Direct redirect when about_page selected: closes bottom-sheet and opens the custom view
   React.useEffect(() => {
@@ -78,7 +80,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
   const [phone, setPhone] = useState(profile?.phone || '');
   const [town, setTown] = useState(profile?.town || '');
   const [isSavingDetails, setIsSavingDetails] = useState(false);
-  const [editingToast, setEditingToast] = useState<string | null>(null);
 
   React.useEffect(() => {
     if (isOpen && type === 'personal_details') {
@@ -126,8 +127,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
     : null;
 
   const showEditingToast = (message: string) => {
-    setEditingToast(message);
-    setTimeout(() => setEditingToast(null), 2500);
+    showToast(message, { icon: AlertCircle });
   };
 
   // Toggle preferred location chip
@@ -807,23 +807,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
               )}
             </motion.div>
           </motion.div>
-
-          {/* D. Local toast notices inside specific panels details */}
-          <AnimatePresence>
-            {editingToast && (
-              <div className="fixed inset-x-0 bottom-28 z-[60] flex items-center justify-center pointer-events-none px-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 12, scale: 0.95 }}
-                  className="bg-neutral-900 border border-neutral-800 text-white font-extrabold text-[10px] uppercase tracking-wider px-3.5 py-2 rounded-xl shadow-lg flex items-center space-x-2 pointer-events-auto"
-                >
-                  <AlertCircle className="w-3.5 h-3.5 text-emerald-450 shrink-0" />
-                  <span>{editingToast}</span>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
         </>
       )}
     </AnimatePresence>
