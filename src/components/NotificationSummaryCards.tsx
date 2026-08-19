@@ -107,7 +107,7 @@ export default function NotificationSummaryCards({
         <h2 className="text-xs font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
           Activity alerts
         </h2>
-        <p className="text-[10px] text-neutral-450 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
+        <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
           Quick view of updates that need your attention.
         </p>
       </div>
@@ -142,7 +142,7 @@ export default function NotificationSummaryCards({
                 <h3 className="text-[10.5px] font-black text-neutral-805 dark:text-stone-200 uppercase tracking-tight leading-none">
                   {card.label}
                 </h3>
-                <p className="text-[9.5px] text-neutral-450 dark:text-stone-500 font-bold leading-none mt-1.5 whitespace-nowrap">
+                <p className="text-[9.5px] text-neutral-550 dark:text-stone-500 font-bold leading-none mt-1.5 whitespace-nowrap">
                   {card.helperText}
                 </p>
               </div>

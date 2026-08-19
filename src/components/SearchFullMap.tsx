@@ -16,8 +16,12 @@ interface SearchFullMapProps {
   onSelectListing?: (id: string) => void;
   /** 'fullscreen' (default): mobile/tablet FAB takeover, absolutely positioned
    *  over the whole page. 'panel': in-flow, fills its parent container --
-   *  used for the desktop sticky list+map split view. */
+   *  used for the desktop sticky list+map split view and the inline preview
+   *  card. */
   variant?: 'fullscreen' | 'panel';
+  /** Disabled for the small inline preview card so hovering it while
+   *  scrolling the page doesn't hijack the scroll wheel as a zoom. */
+  scrollWheelZoom?: boolean;
 }
 
 const NAIROBI_CENTER: [number, number] = [-1.2921, 36.8219];
@@ -38,7 +42,7 @@ function approximateCoordinates(id: string): [number, number] {
   return [NAIROBI_CENTER[0] + offsetLat, NAIROBI_CENTER[1] + offsetLng];
 }
 
-export default function SearchFullMap({ listings, onSelectListing, variant = 'fullscreen' }: SearchFullMapProps) {
+export default function SearchFullMap({ listings, onSelectListing, variant = 'fullscreen', scrollWheelZoom = true }: SearchFullMapProps) {
   const containerClassName =
     variant === 'fullscreen'
       ? 'absolute inset-0 z-[40] bg-neutral-100 dark:bg-stone-900 overflow-hidden'
@@ -49,7 +53,7 @@ export default function SearchFullMap({ listings, onSelectListing, variant = 'fu
       <MapContainer
         center={NAIROBI_CENTER}
         zoom={12}
-        scrollWheelZoom={true}
+        scrollWheelZoom={scrollWheelZoom}
         className="w-full h-full z-0"
       >
         <TileLayer

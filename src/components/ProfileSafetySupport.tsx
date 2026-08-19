@@ -5,10 +5,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   AlertCircle,
-  LifeBuoy,
-  Flag,
-  MessageSquare,
-  ShieldAlert,
   Headphones
 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
@@ -23,19 +19,10 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
 
   const supportShortcuts = [
     {
-      id: "report-listing",
-      title: "Report Listing",
-      description: "Flag suspicious or outdated homes",
-      icon: Flag,
-      isDanger: true,
-      feedback: "Report listing flow coming soon."
-    },
-    {
       id: "contact-support",
       title: "Contact Support",
       description: "Get help from KejaFinder",
       icon: Headphones,
-      isDanger: false,
       feedback: "Support center coming soon.",
       action: onOpenSupport
     },
@@ -44,17 +31,8 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
       title: "Safety Tips",
       description: "Learn how to avoid scams",
       icon: ShieldCheck,
-      isDanger: false,
       feedback: "Safety tips page coming soon.",
       action: onOpenSafety
-    },
-    {
-      id: "whatsapp-help",
-      title: "WhatsApp Help",
-      description: "Support chat coming soon",
-      icon: MessageSquare,
-      isDanger: false,
-      feedback: "WhatsApp support will be added later."
     }
   ];
 
@@ -73,7 +51,7 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
         <h3 className="text-xs font-black text-neutral-800 dark:text-stone-255 uppercase tracking-wider">
           Safety & Support
         </h3>
-        <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 leading-relaxed">
+        <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 leading-relaxed">
           Stay safe while searching and get help when you need it.
         </p>
       </div>
@@ -133,24 +111,16 @@ export default function ProfileSafetySupport({ onOpenSafety, onOpenSupport }: Pr
               aria-label={shortcut.title}
             >
               {/* Top circle containing icon representation */}
-              <div className={`w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 border mb-2 ${
-                shortcut.isDanger 
-                  ? 'bg-orange-50 dark:bg-orange-950/15 border-orange-100 dark:border-orange-950/20' 
-                  : 'bg-emerald-50 dark:bg-emerald-950/15 border-emerald-100 dark:border-emerald-950/20'
-              }`}>
-                <IconComponent className={`w-4 h-4 stroke-[2.2] ${
-                  shortcut.isDanger ? 'text-orange-550 dark:text-orange-400' : 'text-emerald-555 dark:text-emerald-450'
-                }`} />
+              <div className="w-8.5 h-8.5 rounded-xl flex items-center justify-center shrink-0 border mb-2 bg-emerald-50 dark:bg-emerald-950/15 border-emerald-100 dark:border-emerald-950/20">
+                <IconComponent className="w-4 h-4 stroke-[2.2] text-emerald-555 dark:text-emerald-450" />
               </div>
 
               {/* Text label content inside card */}
               <div className="space-y-0.5 w-full">
-                <span className={`block text-[11px] font-black uppercase tracking-tight truncate ${
-                  shortcut.isDanger ? 'text-orange-600 dark:text-orange-400' : 'text-neutral-800 dark:text-stone-150'
-                }`}>
+                <span className="block text-[11px] font-black uppercase tracking-tight truncate text-neutral-800 dark:text-stone-150">
                   {shortcut.title}
                 </span>
-                <span className="block text-[9.5px] font-semibold text-neutral-450 dark:text-stone-500 leading-tight line-clamp-1 w-full">
+                <span className="block text-[9.5px] font-semibold text-neutral-550 dark:text-stone-500 leading-tight line-clamp-1 w-full">
                   {shortcut.description}
                 </span>
               </div>

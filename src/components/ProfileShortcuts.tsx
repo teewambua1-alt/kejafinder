@@ -4,15 +4,11 @@ import {
   Bookmark,
   PlusCircle,
   ShieldCheck,
-  LifeBuoy,
   ChevronRight,
   Settings,
   Building2,
-  Bug,
-  Palette,
   ShieldAlert
 } from 'lucide-react';
-import { useToast } from '../context/ToastContext';
 
 interface ProfileShortcutsProps {
   onTabChange?: (tab: string) => void;
@@ -20,16 +16,12 @@ interface ProfileShortcutsProps {
   onOpenSafety?: () => void;
   onOpenOwnerDashboard?: () => void;
   onOpenAdminDashboard?: () => void;
-  onOpenTestMode?: () => void;
-  onOpenDesignSystem?: () => void;
   showOwnerDashboard?: boolean;
   showAdminDashboard?: boolean;
   showPostVacancy?: boolean;
 }
 
-export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenOwnerDashboard, onOpenAdminDashboard, onOpenTestMode, onOpenDesignSystem, showOwnerDashboard = false, showAdminDashboard = false, showPostVacancy = true }: ProfileShortcutsProps) {
-  const { showToast } = useToast();
-
+export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSafety, onOpenOwnerDashboard, onOpenAdminDashboard, showOwnerDashboard = false, showAdminDashboard = false, showPostVacancy = true }: ProfileShortcutsProps) {
   const shortcuts = [
     {
       id: 'saved',
@@ -37,13 +29,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'View saved homes',
       icon: Bookmark,
       ariaLabel: 'Open saved homes',
-      onClick: () => {
-        if (onTabChange) {
-          onTabChange('saved');
-        } else {
-          showToast('Saved homes navigation context missing');
-        }
-      }
+      onClick: () => onTabChange?.('saved')
     },
     ...(showPostVacancy ? [{
       id: 'post',
@@ -51,13 +37,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'List a vacant home',
       icon: PlusCircle,
       ariaLabel: 'Post a vacancy',
-      onClick: () => {
-        if (onTabChange) {
-          onTabChange('post');
-        } else {
-          showToast('Vacancy post form context missing');
-        }
-      }
+      onClick: () => onTabChange?.('post')
     }] : []),
     ...(showOwnerDashboard ? [{
       id: 'dashboard',
@@ -65,13 +45,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'Manage your listings',
       icon: Building2,
       ariaLabel: 'Open owner dashboard',
-      onClick: () => {
-        if (onOpenOwnerDashboard) {
-          onOpenOwnerDashboard();
-        } else {
-          showToast('Owner dashboard is coming soon!');
-        }
-      }
+      onClick: () => onOpenOwnerDashboard?.()
     }] : []),
     ...(showAdminDashboard ? [{
       id: 'admin',
@@ -79,13 +53,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'Moderate listings',
       icon: ShieldAlert,
       ariaLabel: 'Open admin dashboard',
-      onClick: () => {
-        if (onOpenAdminDashboard) {
-          onOpenAdminDashboard();
-        } else {
-          showToast('Admin dashboard is coming soon!');
-        }
-      }
+      onClick: () => onOpenAdminDashboard?.()
     }] : []),
     {
       id: 'safety',
@@ -93,23 +61,7 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'Tips & guidelines',
       icon: ShieldCheck,
       ariaLabel: 'Open safety tips',
-      onClick: () => {
-        if (onOpenSafety) {
-          onOpenSafety();
-        } else {
-          showToast('Safety guide is coming soon!');
-        }
-      }
-    },
-    {
-      id: 'support',
-      title: 'Support',
-      subtitle: 'Get help anytime',
-      icon: LifeBuoy,
-      ariaLabel: 'Open support',
-      onClick: () => {
-        showToast('Support center is coming soon!');
-      }
+      onClick: () => onOpenSafety?.()
     },
     {
       id: 'settings',
@@ -117,66 +69,24 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
       subtitle: 'Manage your account & preferences',
       icon: Settings,
       ariaLabel: 'Open settings panel',
-      onClick: () => {
-        if (onOpenSettings) {
-          onOpenSettings();
-        } else {
-          showToast('Settings configuration dashboard is coming soon!');
-        }
-      }
-    },
-    {
-      id: 'test_mode',
-      title: 'Test Mode',
-      subtitle: 'Audit prototype pages and flows.',
-      icon: Bug,
-      ariaLabel: 'Open test mode',
-      onClick: () => {
-        if (onOpenTestMode) {
-          onOpenTestMode();
-        } else {
-          showToast('Test mode not available');
-        }
-      }
-    },
-    {
-      id: 'design_system',
-      title: 'Design System',
-      subtitle: 'Tokens, buttons, inputs, and states.',
-      icon: Palette,
-      ariaLabel: 'Open design system reference',
-      onClick: () => {
-        if (onOpenDesignSystem) {
-          onOpenDesignSystem();
-        } else {
-          showToast('Design system reference not available');
-        }
-      }
+      onClick: () => onOpenSettings?.()
     }
   ];
 
   return (
     <div className="w-full space-y-3" id="profile-shortcuts-section">
-      {/* Group header title and See all button */}
+      {/* Group header title */}
       <div className="flex items-center justify-between px-1">
         <h3 className="text-xs font-black text-neutral-800 dark:text-stone-255 uppercase tracking-wider">
           My shortcuts
         </h3>
-        <button 
-          onClick={() => showToast('Full shortcuts explorer coming soon!')}
-          className="flex items-center space-x-0.5 text-[10.5px] font-black text-emerald-600 dark:text-emerald-450 uppercase tracking-tight hover:text-emerald-700 hover:underline transition-colors cursor-pointer outline-none bg-transparent border-none"
-          aria-label="See all shortcuts"
-        >
-          <span>See all</span>
-          <ChevronRight className="w-3.5 h-3.5 stroke-[2.2]" />
-        </button>
       </div>
 
       {/* Grid container with 2 column grid for mobile */}
       <div className="grid grid-cols-2 gap-3">
         {shortcuts.map((shortcut) => {
           const IconComp = shortcut.icon;
-          const isWide = shortcut.id === 'settings' || shortcut.id === 'test_mode';
+          const isWide = shortcut.id === 'settings';
           return (
             <motion.button
               key={shortcut.id}
@@ -185,8 +95,8 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
               onClick={shortcut.onClick}
               aria-label={shortcut.ariaLabel}
               className={`group text-left w-full bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-800/40 rounded-2.5xl p-4 shadow-3xs hover:shadow-2xs transition-all cursor-pointer outline-none focus:ring-2 focus:ring-emerald-500/20 ${
-                isWide 
-                  ? 'col-span-2 flex flex-row items-center space-x-3.5 min-h-[64px]' 
+                isWide
+                  ? 'col-span-2 flex flex-row items-center space-x-3.5 min-h-[64px]'
                   : 'flex flex-col justify-between min-h-[105px]'
               }`}
             >
@@ -202,11 +112,11 @@ export default function ProfileShortcuts({ onTabChange, onOpenSettings, onOpenSa
                 <span className="block text-[11px] sm:text-[11.5px] font-black text-neutral-805 dark:text-stone-100 tracking-tight uppercase">
                   {shortcut.title}
                 </span>
-                <span className="block text-[8.5px] sm:text-[9.5px] font-semibold text-neutral-450 dark:text-stone-500 leading-tight mt-0.5">
+                <span className="block text-[8.5px] sm:text-[9.5px] font-semibold text-neutral-550 dark:text-stone-500 leading-tight mt-0.5">
                   {shortcut.subtitle}
                 </span>
               </div>
-              
+
               {isWide && (
                 <ChevronRight className="w-4 h-4 text-neutral-400 dark:text-stone-600 shrink-0 ml-1" />
               )}

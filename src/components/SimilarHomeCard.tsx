@@ -8,10 +8,9 @@ import { useToast } from '../context/ToastContext';
 interface SimilarHomeCardProps {
   listing: KejaListing;
   onView: () => void;
-  onSave?: (id: string, currentlySaved: boolean) => void;
 }
 
-export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHomeCardProps) {
+export default function SimilarHomeCard({ listing, onView }: SimilarHomeCardProps) {
   const { isSaved: fbIsSaved, toggleSavedListing, source } = useSavedListings();
   const { showToast } = useToast();
   const [localSaved, setLocalSaved] = useState(listing.isSaved || false);
@@ -31,14 +30,18 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
     } else {
       setLocalSaved(!localSaved);
     }
-    if (onSave) onSave(listing.id, isSaved); // trigger callback if any
   };
+
+  const whatsappNumber = listing.whatsappPhone || listing.contactPhone || '';
 
   const handleWhatsAppClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const phone = listing.whatsappPhone || listing.contactPhone || '254000000000';
+    if (!whatsappNumber) {
+      showToast('No WhatsApp number on file for this listing.');
+      return;
+    }
     const text = `Hi, I saw ${listing.title} on KejaFinder. Is it still available?`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (
@@ -54,6 +57,8 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
           src={listing.imageUrl || listing.images?.[0] || 'https://images.unsplash.com/photo-1542361345-89e58247f2d5?auto=format&fit=crop&w=600&q=80'}
           alt={`${listing.title} photo`}
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
         
         {/* Save button */}
@@ -152,8 +157,12 @@ export default function SimilarHomeCard({ listing, onView, onSave }: SimilarHome
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={handleWhatsAppClick}
-              className="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center shrink-0"
-              aria-label={`WhatsApp caretaker for ${listing.title}`}
+              className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${
+                whatsappNumber
+                  ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30'
+                  : 'bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 border-neutral-200 dark:border-stone-700'
+              }`}
+              aria-label={whatsappNumber ? `WhatsApp caretaker for ${listing.title}` : 'No WhatsApp number on file'}
             >
               <MessageCircle className="w-4.5 h-4.5" />
             </motion.button>

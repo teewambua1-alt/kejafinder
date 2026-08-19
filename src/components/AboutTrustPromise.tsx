@@ -13,8 +13,9 @@ import {
   BadgeCheck, 
   Eye, 
   Home, 
-  BookOpen, 
-  Search 
+  BookOpen,
+  Search,
+  Check
 } from 'lucide-react';
 
 interface AboutTrustPromiseProps {
@@ -119,7 +120,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         <p className="text-[12px] font-bold text-neutral-650 dark:text-stone-300 leading-snug">
           KejaFinder only works if renters can trust the listings they see.
         </p>
-        <p className="text-[11px] font-semibold text-neutral-450 dark:text-stone-450 leading-relaxed">
+        <p className="text-[11px] font-semibold text-neutral-550 dark:text-stone-450 leading-relaxed">
           That means clear prices, local details, freshness, reports, and safety reminders must be visible from the start.
         </p>
       </motion.div>
@@ -166,7 +167,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
                 <h5 className="text-[11.5px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight">
                   {principle.title}
                 </h5>
-                <p className="text-[10.5px] font-semibold text-neutral-450 dark:text-stone-400 leading-snug">
+                <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-snug">
                   {principle.desc}
                 </p>
               </div>
@@ -190,7 +191,9 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         <div className="space-y-2.5" role="list">
           {badgesExplained.map((badge, idx) => (
             <div key={idx} className="flex items-start space-x-2.5 text-[11px]" role="listitem">
-              <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0 mt-0.5">✓</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0 mt-0.5">
+                <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />
+              </span>
               <p className="text-neutral-600 dark:text-stone-350 font-semibold leading-snug">
                 <strong className="text-neutral-805 dark:text-stone-100 uppercase font-bold tracking-tight">{badge.name}:</strong> {badge.meaning}
               </p>
@@ -198,8 +201,9 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
           ))}
         </div>
 
-        <div className="bg-neutral-50 dark:bg-stone-850 p-2.5 rounded-lg border border-neutral-150/50 dark:border-stone-800/50 text-[10px] font-bold text-neutral-450 dark:text-stone-400 text-center uppercase tracking-normal">
-          ⚠️ Badges are trust signals, not payment guarantees.
+        <div className="flex items-center justify-center gap-1 bg-neutral-50 dark:bg-stone-850 p-2.5 rounded-lg border border-neutral-150/50 dark:border-stone-800/50 text-[10px] font-bold text-neutral-550 dark:text-stone-400 text-center uppercase tracking-normal">
+          <AlertTriangle className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+          Badges are trust signals, not payment guarantees.
         </div>
       </motion.div>
 

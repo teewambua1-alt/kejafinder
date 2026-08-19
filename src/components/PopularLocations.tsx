@@ -47,7 +47,7 @@ export default function PopularLocations({ locations, onSelectLocation }: Popula
             className="flex flex-col items-start shrink-0 px-4 py-3 rounded-2xl bg-white dark:bg-stone-850 border border-neutral-100/80 dark:border-neutral-800/65 shadow-2xs hover:border-emerald-200 dark:hover:border-emerald-900/50 transition-colors cursor-pointer outline-none"
           >
             <span className="text-xs font-black text-neutral-800 dark:text-neutral-100">{location.name}</span>
-            <span className="text-2xs font-semibold text-neutral-450 dark:text-stone-500 mt-0.5">
+            <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 mt-0.5">
               {location.count} {location.count === 1 ? 'home' : 'homes'}
             </span>
           </motion.button>

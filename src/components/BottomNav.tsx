@@ -22,14 +22,14 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
     }
   };
 
-  // Tenant accounts can't submit vacancies (see usePostListingDraft) -- a
-  // signed-out visitor still sees Post, since PostVacancyPage's own sign-in
-  // prompt is the real gate for that case.
-  const isTenant = profile?.role === 'tenant';
+  // Only signed-in landlords/caretakers/agents/scouts can submit vacancies
+  // (see usePostListingDraft) -- signed-out visitors and tenant accounts
+  // don't get the tab at all.
+  const canPost = !!profile && profile.role !== 'tenant';
   const navItems = [
     { id: 'home', label: 'Explore', icon: Home },
     { id: 'search', label: 'Search', icon: Search },
-    ...(isTenant ? [] : [{ id: 'post', label: 'Post', icon: Plus }]),
+    ...(canPost ? [{ id: 'post', label: 'Post', icon: Plus }] : []),
     { id: 'saved', label: 'Saved', icon: Heart },
     { id: 'profile', label: 'Profile', icon: User },
   ];

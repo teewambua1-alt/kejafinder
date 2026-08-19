@@ -81,7 +81,7 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
                   <p className="text-xs font-black text-neutral-850 dark:text-stone-100 truncate">
                     {profile?.full_name || 'KejaFinder User'}
                   </p>
-                  <p className="text-2xs font-semibold text-neutral-450 dark:text-stone-500 truncate">
+                  <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 truncate">
                     {profile?.role ? profile.role[0].toUpperCase() + profile.role.slice(1) : user.email}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
                   key={item.id}
                   role="menuitem"
                   onClick={item.onClick}
-                  className="w-full flex items-center space-x-2.5 px-4 py-2 text-left text-2xs font-bold text-neutral-450 dark:text-stone-500 hover:bg-neutral-50 dark:hover:bg-stone-850/60 transition-colors cursor-pointer"
+                  className="w-full flex items-center space-x-2.5 px-4 py-2 text-left text-2xs font-bold text-neutral-550 dark:text-stone-500 hover:bg-neutral-50 dark:hover:bg-stone-850/60 transition-colors cursor-pointer"
                 >
                   <item.icon className="w-3.5 h-3.5 stroke-[2.2] shrink-0" />
                   <span>{item.label}</span>

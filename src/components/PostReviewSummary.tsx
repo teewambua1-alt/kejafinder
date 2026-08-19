@@ -16,7 +16,8 @@ import {
   Phone,
   MessageSquare,
   Compass,
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PostListingDraft } from '../types/postListing';
@@ -29,6 +30,7 @@ interface PostReviewSummaryProps {
   onEditStep: (step: 1 | 2 | 3 | 4) => void;
   onBack: () => void;
   onReset: () => void;
+  onGoDashboard?: () => void;
   onSaveDraft: () => Promise<boolean>;
   onSubmitReview: () => Promise<boolean>;
   isSaving: boolean;
@@ -58,6 +60,7 @@ export default function PostReviewSummary({
   onEditStep,
   onBack,
   onReset,
+  onGoDashboard,
   onSaveDraft,
   onSubmitReview,
   isSaving,
@@ -141,13 +144,15 @@ export default function PostReviewSummary({
             <span>Post another vacancy</span>
           </motion.button>
           
-          <button
-            type="button"
-            disabled
-            className="w-full h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 border border-neutral-200/50 dark:border-stone-800 text-xs font-extrabold cursor-not-allowed select-none"
-          >
-            View dashboard (Coming soon)
-          </button>
+          {onGoDashboard && (
+            <button
+              type="button"
+              onClick={onGoDashboard}
+              className="w-full h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-600 dark:text-stone-300 border border-neutral-200/50 dark:border-stone-800 text-xs font-extrabold cursor-pointer hover:bg-neutral-200/70 dark:hover:bg-stone-800 transition-colors select-none"
+            >
+              View dashboard
+            </button>
+          )}
         </div>
       </motion.div>
     );
@@ -299,8 +304,10 @@ export default function PostReviewSummary({
                     <span>{draft.distanceFromRoad} from tarmac</span>
                   </p>
                 )}
-                <p className={`flex items-center text-[10px] font-bold ${draft.lat !== null && draft.lng !== null ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
-                  {draft.lat !== null && draft.lng !== null ? '✓ Real GPS location captured' : '✗ No GPS location added'}
+                <p className={`flex items-center gap-1 text-[10px] font-bold ${draft.lat !== null && draft.lng !== null ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
+                  {draft.lat !== null && draft.lng !== null
+                    ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Real GPS location captured</>
+                    : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> No GPS location added</>}
                 </p>
               </div>
             </div>
@@ -475,17 +482,25 @@ export default function PostReviewSummary({
                 Trust & Verification requests
               </h5>
               <div className="space-y-1 mt-1 flex flex-col">
-                <span className={`text-[10px] font-extrabold ${draft.allowPhoneVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
-                  {draft.allowPhoneVerification ? '✓ SMS Phone Validation active' : '✗ Password/OTP verification ignored'}
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.allowPhoneVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
+                  {draft.allowPhoneVerification
+                    ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> SMS Phone Validation active</>
+                    : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Password/OTP verification ignored</>}
                 </span>
-                <span className={`text-[10px] font-extrabold ${draft.requestLocationCheck ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
-                  {draft.requestLocationCheck ? '✓ Physical Landmark/Location pin check requested' : '✗ Location check disabled'}
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestLocationCheck ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
+                  {draft.requestLocationCheck
+                    ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Physical Landmark/Location pin check requested</>
+                    : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Location check disabled</>}
                 </span>
-                <span className={`text-[10px] font-extrabold ${draft.requestScoutVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
-                  {draft.requestScoutVerification ? '✓ On-site KejaFinder Scout audit requested' : '✗ Scout audit disabled'}
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestScoutVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
+                  {draft.requestScoutVerification
+                    ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> On-site KejaFinder Scout audit requested</>
+                    : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Scout audit disabled</>}
                 </span>
-                <span className={`text-[10px] font-extrabold ${draft.remindToUpdate ? 'text-emerald-650' : 'text-neutral-400'}`}>
-                  {draft.remindToUpdate ? '✓ Remind me to update availability status' : '✗ reminders disabled'}
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.remindToUpdate ? 'text-emerald-650' : 'text-neutral-400'}`}>
+                  {draft.remindToUpdate
+                    ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Remind me to update availability status</>
+                    : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> reminders disabled</>}
                 </span>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useDragControls, type PanInfo } from 'motion/r
 import { X, Check } from 'lucide-react';
 import { ListingType } from '../types/listing';
 import PriceRangeSlider from './PriceRangeSlider';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 export type SearchFilters = {
   houseTypes: ListingType[];
@@ -48,6 +49,7 @@ export default function SearchFilterSheet({
   // Use a draft state so edits are committed only on Apply click
   const [draft, setDraft] = useState<SearchFilters>({ ...filters });
   const dragControls = useDragControls();
+  const containerRef = useModalA11y(isOpen, onClose);
 
   // Reset draft whenever filters or isOpen changes
   useEffect(() => {
@@ -144,6 +146,11 @@ export default function SearchFilterSheet({
 
           {/* Bottom Sheet main panel */}
           <motion.div
+            ref={containerRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filter vacancies"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -155,7 +162,7 @@ export default function SearchFilterSheet({
             dragConstraints={{ top: 0, bottom: 500 }}
             dragSnapToOrigin
             onDragEnd={handleDragEnd}
-            className="absolute inset-x-0 bottom-0 max-h-[82%] bg-white dark:bg-stone-900 rounded-t-3xl border-t border-neutral-100 dark:border-neutral-800 shadow-[0_-8px_32px_rgba(0,0,0,0.15)] flex flex-col z-50 pointer-events-auto overflow-hidden animate-none font-sans"
+            className="absolute inset-x-0 bottom-0 max-h-[82%] bg-white dark:bg-stone-900 rounded-t-3xl border-t border-neutral-100 dark:border-neutral-800 shadow-[0_-8px_32px_rgba(0,0,0,0.15)] flex flex-col z-50 pointer-events-auto overflow-hidden animate-none font-sans outline-none"
           >
             {/* Drag Handle & Header block */}
             <div className="shrink-0 text-center pb-2 pt-3">
@@ -174,7 +181,7 @@ export default function SearchFilterSheet({
                   type="button"
                   onClick={onClose}
                   aria-label="Close filters"
-                  className="w-8 h-8 rounded-full bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 flex items-center justify-center transition-colors border-none cursor-pointer outline-none"
+                  className="w-10 h-10 rounded-full bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 flex items-center justify-center transition-colors border-none cursor-pointer outline-none"
                 >
                   <X className="w-4 h-4 text-neutral-500 dark:text-neutral-400 stroke-[2.2]" />
                 </button>
@@ -198,7 +205,7 @@ export default function SearchFilterSheet({
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() => toggleHouseType(opt.value)}
-                        className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
+                        className={`px-3.5 h-10 rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                           isSelected
                             ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs'
                             : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
@@ -264,7 +271,7 @@ export default function SearchFilterSheet({
                     type="button"
                     aria-pressed={draft.availableNow}
                     onClick={() => setDraft({ ...draft, availableNow: !draft.availableNow })}
-                    className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
+                    className={`px-3.5 h-10 rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                       draft.availableNow
                         ? 'bg-emerald-600 border-emerald-600 text-white'
                         : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
@@ -278,7 +285,7 @@ export default function SearchFilterSheet({
                     type="button"
                     aria-pressed={draft.verifiedOnly}
                     onClick={() => setDraft({ ...draft, verifiedOnly: !draft.verifiedOnly })}
-                    className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
+                    className={`px-3.5 h-10 rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                       draft.verifiedOnly
                         ? 'bg-emerald-600 border-emerald-600 text-white'
                         : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
@@ -292,7 +299,7 @@ export default function SearchFilterSheet({
                     type="button"
                     aria-pressed={draft.recentlyUpdatedOnly}
                     onClick={() => setDraft({ ...draft, recentlyUpdatedOnly: !draft.recentlyUpdatedOnly })}
-                    className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
+                    className={`px-3.5 h-10 rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                       draft.recentlyUpdatedOnly
                         ? 'bg-emerald-600 border-emerald-600 text-white'
                         : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'
@@ -317,7 +324,7 @@ export default function SearchFilterSheet({
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() => toggleAmenity(opt.value)}
-                        className={`px-3.5 h-[34px] rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
+                        className={`px-3.5 h-10 rounded-xl text-xs font-semibold border cursor-pointer select-none outline-none transition-all ${
                           isSelected
                             ? 'bg-emerald-600 border-emerald-600 text-white'
                             : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-neutral-800 text-neutral-750 dark:text-neutral-300 hover:border-neutral-300'

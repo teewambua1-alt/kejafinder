@@ -52,13 +52,13 @@ export default function SavedSearchesSection({ savedSearches, onApply, onDelete 
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-black text-neutral-800 dark:text-neutral-100 truncate">{search.label}</p>
-                <p className="text-2xs font-semibold text-neutral-450 dark:text-stone-500 truncate mt-0.5">
+                <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 truncate mt-0.5">
                   {filterSummary(search)}
                 </p>
               </div>
             </button>
 
-            <ChevronRight className="w-4 h-4 text-neutral-350 dark:text-stone-600 shrink-0" />
+            <ChevronRight className="w-4 h-4 text-neutral-550 dark:text-stone-600 shrink-0" />
 
             <button
               type="button"

@@ -30,7 +30,11 @@ export default function ResultsSummary({
       className="w-full flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 px-1 py-1"
     >
       {/* Dynamic Count Text Indicator */}
-      <div className="text-[14px] font-medium tracking-tight text-neutral-800 dark:text-neutral-100 font-sans">
+      <div
+        role="status"
+        aria-live="polite"
+        className="text-[14px] font-medium tracking-tight text-neutral-800 dark:text-neutral-100 font-sans"
+      >
         <span className="text-emerald-600 dark:text-emerald-400 font-extrabold pr-1">{count}</span>
         {searchQuery.trim() ? (
           <>
@@ -46,9 +50,10 @@ export default function ResultsSummary({
         <div className="flex items-center bg-neutral-100 dark:bg-stone-850 p-1 rounded-xl shadow-sm border border-neutral-200/50 dark:border-stone-800">
           <button
             onClick={() => onViewModeChange?.('list')}
-            className={`p-1.5 rounded-lg transition-all ${
-              viewMode === 'list' 
-                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600' 
+            aria-pressed={viewMode === 'list'}
+            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
+              viewMode === 'list'
+                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600'
                 : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
             }`}
             aria-label="List view"
@@ -57,9 +62,10 @@ export default function ResultsSummary({
           </button>
           <button
             onClick={() => onViewModeChange?.('grid')}
-            className={`p-1.5 rounded-lg transition-all ${
-              viewMode === 'grid' 
-                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600' 
+            aria-pressed={viewMode === 'grid'}
+            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
+              viewMode === 'grid'
+                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600'
                 : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
             }`}
             aria-label="Grid view"

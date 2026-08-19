@@ -20,6 +20,8 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
   const [isOpen, setIsOpen] = useState(false);
   const [localSelected, setLocalSelected] = useState<SortOption>('Most relevant');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const selected = propSelected !== undefined ? propSelected : localSelected;
 
@@ -46,6 +48,14 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
     };
   }, []);
 
+  // Move focus onto the selected (or first) option as soon as the menu opens
+  useEffect(() => {
+    if (!isOpen) return;
+    const selectedIndex = options.findIndex((o) => o === selected);
+    optionRefs.current[selectedIndex >= 0 ? selectedIndex : 0]?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   const handleSelect = (option: SortOption) => {
     if (onChange) {
       onChange(option);
@@ -53,12 +63,31 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
       setLocalSelected(option);
     }
     setIsOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsOpen(false);
+      triggerRef.current?.focus();
+      return;
+    }
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const currentIndex = optionRefs.current.findIndex((el) => el === document.activeElement);
+    const delta = e.key === 'ArrowDown' ? 1 : -1;
+    const nextIndex = currentIndex === -1
+      ? 0
+      : (currentIndex + delta + options.length) % options.length;
+    optionRefs.current[nextIndex]?.focus();
   };
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       {/* Trigger Button */}
       <motion.button
+        ref={triggerRef}
         type="button"
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
@@ -88,10 +117,12 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white/95 dark:bg-stone-850/95 backdrop-blur-md border border-neutral-100/90 dark:border-neutral-700/80 shadow-lg z-60 py-1 origin-top-right focus:outline-none"
             role="listbox"
+            onKeyDown={handleMenuKeyDown}
           >
-            {options.map((option) => (
+            {options.map((option, index) => (
               <button
                 key={option}
+                ref={(el) => { optionRefs.current[index] = el; }}
                 onClick={() => handleSelect(option)}
                 role="option"
                 aria-selected={selected === option}

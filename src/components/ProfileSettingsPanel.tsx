@@ -1,43 +1,21 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  X, 
-  User, 
-  MapPin, 
-  Bell, 
-  Check, 
-  HelpCircle, 
-  ShieldCheck, 
-  Phone, 
-  Mail, 
-  BadgeCheck, 
-  UserCheck, 
-  Globe, 
-  LogOut, 
-  AlertCircle, 
+import {
+  X,
+  User,
+  HelpCircle,
+  LogOut,
   Info,
   ChevronRight,
-  Sparkles,
-  MessageSquare,
-  ArrowLeft,
-  SlidersHorizontal,
-  Lock,
-  Smartphone
+  ArrowLeft
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase/client';
-import { useToast } from '../context/ToastContext';
 
 export type ProfileSettingsPanelType =
   | "settings_home"
   | "personal_details"
-  | "notifications"
-  | "preferred_locations"
-  | "budget_range"
-  | "house_types"
-  | "verification"
   | "help_center"
-  | "language"
   | "logout"
   | "about_page";
 
@@ -54,7 +32,6 @@ interface ProfileSettingsPanelProps {
 
 export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, onTypeChange, onOpenAbout, onOpenSupport, onLogout }: ProfileSettingsPanelProps) {
   const { user, profile, refreshProfile } = useAuth();
-  const { showToast } = useToast();
 
   // Direct redirect when about_page selected: closes bottom-sheet and opens the custom view
   React.useEffect(() => {
@@ -72,8 +49,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
     }
   }, [isOpen, type, onOpenAbout, onOpenSupport, onClose]);
 
-  // 1. Local states for various settings forms
-
   // Personal Details -- real data from useAuth(), re-synced whenever the
   // panel opens so a profile that finishes loading after mount isn't missed.
   const [fullName, setFullName] = useState(profile?.full_name || '');
@@ -89,60 +64,11 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
     }
   }, [isOpen, type, profile]);
 
-  // Notifications
-  const [notifs, setNotifs] = useState({
-    savedHomes: true,
-    priceDrops: true,
-    availability: true,
-    newHomes: false,
-    safetyAlerts: true,
-  });
-
-  // Preferred Locations
-  const [preferredLocs, setPreferredLocs] = useState<string[]>([
-    "Athi River",
-    "Syokimau",
-    "Rongai"
-  ]);
-  const allLocationsAvailable = ["Athi River", "Syokimau", "Rongai", "Kitengela", "Mlolongo"];
-
-  // Budget Range
-  const [minRent, setMinRent] = useState("4,000");
-  const [maxRent, setMaxRent] = useState("15,000");
-
-  // House Types
-  const [houseTypesSelected, setHouseTypesSelected] = useState<string[]>([
-    "Bedsitter",
-    "1 Bedroom"
-  ]);
-  const allHouseTypes = ["Single Room", "Bedsitter", "Studio", "1 Bedroom", "2 Bedroom", "Mabati"];
-
-  // Language settings
-  const [activeLanguage, setActiveLanguage] = useState("English");
-
   const displayName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || 'KejaFinder User';
   const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=10b981&color=fff`;
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : null;
-
-  const showEditingToast = (message: string) => {
-    showToast(message, { icon: AlertCircle });
-  };
-
-  // Toggle preferred location chip
-  const toggleLocation = (loc: string) => {
-    setPreferredLocs(prev => 
-      prev.includes(loc) ? prev.filter(item => item !== loc) : [...prev, loc]
-    );
-  };
-
-  // Toggle house type chip
-  const toggleHouseType = (typeVal: string) => {
-    setHouseTypesSelected(prev => 
-      prev.includes(typeVal) ? prev.filter(item => item !== typeVal) : [...prev, typeVal]
-    );
-  };
 
   // Handle standard Done/Save button
   const handleDone = async () => {
@@ -170,18 +96,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
       return;
     }
 
-    let successMsg = "Preferences updated successfully!";
-    if (type === 'settings_home') successMsg = "Settings preference panel updated.";
-    if (type === 'notifications') successMsg = "Notification settings saved locally.";
-    if (type === 'preferred_locations') successMsg = `Preferred areas saved: ${preferredLocs.join(', ')}`;
-    if (type === 'budget_range') successMsg = `Budget set locally to KSh ${minRent} - KSh ${maxRent}`;
-    if (type === 'house_types') successMsg = `House type filters set to: ${houseTypesSelected.join(', ')}`;
-    if (type === 'language') successMsg = `Platform language set to ${activeLanguage}`;
-    if (type === 'logout') successMsg = "Log out event cancelled.";
-
-    if (onSave) {
-      onSave(successMsg);
-    }
+    onSave?.('Settings preference panel updated.');
     onClose();
   };
 
@@ -205,7 +120,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 <h4 className="text-[13px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight leading-none">
                   {displayName}
                 </h4>
-                <p className="text-[9.5px] font-semibold text-neutral-450 dark:text-stone-450 leading-none mt-1 uppercase tracking-wider">
+                <p className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-450 leading-none mt-1 uppercase tracking-wider">
                   {profile?.role || 'Member'}{memberSince ? ` · Member since ${memberSince}` : ''}
                 </p>
               </div>
@@ -225,34 +140,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                   action: () => onTypeChange?.('personal_details')
                 },
                 {
-                  id: 'notifications',
-                  title: 'Notifications',
-                  desc: 'Alerts and saved-home updates',
-                  icon: Bell,
-                  action: () => onTypeChange?.('notifications')
-                },
-                {
-                  id: 'search_preferences',
-                  title: 'Search Preferences',
-                  desc: 'Locations, budget, and house types',
-                  icon: SlidersHorizontal,
-                  action: () => onTypeChange?.('preferred_locations')
-                },
-                {
-                  id: 'privacy',
-                  title: 'Privacy & Security',
-                  desc: 'Visibility and safety controls',
-                  icon: Lock,
-                  action: () => showEditingToast('Privacy settings coming soon.')
-                },
-                {
-                  id: 'language',
-                  title: 'Language',
-                  desc: 'English for interface',
-                  icon: Globe,
-                  action: () => onTypeChange?.('language')
-                },
-                {
                   id: 'support',
                   title: 'Support',
                   desc: 'Help center and safety messages',
@@ -265,13 +152,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                   desc: 'Our mission and local roadmap',
                   icon: Info,
                   action: () => onTypeChange?.('about_page')
-                },
-                {
-                  id: 'app_experience',
-                  title: 'App Experience',
-                  desc: 'Theme, data saver, and performance',
-                  icon: Smartphone,
-                  action: () => showEditingToast('App experience settings coming soon.')
                 },
               ].map((row) => {
                 const Icon = row.icon;
@@ -298,7 +178,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 );
               })}
             </div>
-            
+
             {/* Quick logout trigger row at the bottom */}
             <button
               type="button"
@@ -321,29 +201,29 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
 
             <div className="space-y-3 pt-2">
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Full Name</label>
-                <input 
-                  type="text" 
+                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-500 uppercase tracking-widest block pl-1">Full Name</label>
+                <input
+                  type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
+                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50"
                   placeholder="Enter full name"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Phone Number</label>
-                <input 
-                  type="text" 
+                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-500 uppercase tracking-widest block pl-1">Phone Number</label>
+                <input
+                  type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
+                  className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50"
                   placeholder="Enter phone number"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Email Address</label>
+                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-500 uppercase tracking-widest block pl-1">Email Address</label>
                 <input
                   type="email"
                   value={user?.email || ''}
@@ -354,7 +234,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Town / Area</label>
+                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-500 uppercase tracking-widest block pl-1">Town / Area</label>
                 <input
                   type="text"
                   value={town}
@@ -371,322 +251,6 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 Email can't be changed here. Name, phone, and town are saved to your account when you tap Done.
               </p>
             </div>
-          </div>
-        );
-
-      case 'notifications':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Notifications</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Configure alert channels & updates</p>
-            </div>
-
-            <div className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/95 dark:border-stone-850 rounded-2.5xl overflow-hidden divide-y divide-neutral-100 dark:divide-stone-850 mt-3 shadow-3xs">
-              {[
-                { key: 'savedHomes', label: 'Saved home updates', desc: 'Alerts when your bookmarked homes have updates' },
-                { key: 'priceDrops', label: 'Price drops', desc: 'Instantly notify me if rent price falls' },
-                { key: 'availability', label: 'Availability reminders', desc: 'Reminders if listing vacancies are booked' },
-                { key: 'newHomes', label: 'New homes near me', desc: 'Notifications of active listings in Athi River' },
-                { key: 'safetyAlerts', label: 'Safety alerts', desc: 'Updates on fraudulent reports and security advice' },
-              ].map((row) => (
-                <div key={row.key} className="p-4 flex items-center justify-between gap-3">
-                  <div className="space-y-0.5 max-w-[210px] min-w-0">
-                    <span className="block text-[12px] font-black text-neutral-805 dark:text-stone-100 tracking-tight leading-snug">
-                      {row.label}
-                    </span>
-                    <span className="block text-[9.5px] font-semibold text-neutral-450 dark:text-stone-500 leading-normal">
-                      {row.desc}
-                    </span>
-                  </div>
-
-                  {/* Toggle Button switch */}
-                  <button
-                    type="button"
-                    aria-pressed={notifs[row.key as keyof typeof notifs]}
-                    onClick={() => setNotifs(prev => ({ ...prev, [row.key]: !prev[row.key as keyof typeof notifs] }))}
-                    className={`w-11 h-6 rounded-full p-0.5 transition-colors duration-200 outline-none cursor-pointer flex items-center ${
-                      notifs[row.key as keyof typeof notifs] ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
-                    }`}
-                  >
-                    <motion.div 
-                      layout
-                      className="w-5 h-5 bg-white rounded-full shadow-xs" 
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      style={{
-                        marginRight: notifs[row.key as keyof typeof notifs] ? '0' : 'auto',
-                        marginLeft: notifs[row.key as keyof typeof notifs] ? 'auto' : '0'
-                      }}
-                    />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'preferred_locations':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Preferred Locations</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Select regions you search often</p>
-            </div>
-
-            <p className="text-[10px] text-neutral-500 dark:text-stone-400 font-semibold leading-relaxed pt-1.5 pl-1">
-              Tap a geographic tag below to highlight or remove it from your regular alert priorities:
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2">
-              {allLocationsAvailable.map((loc) => {
-                const isSelected = preferredLocs.includes(loc);
-                return (
-                  <motion.button
-                    key={loc}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => toggleLocation(loc)}
-                    aria-pressed={isSelected}
-                    className={`px-3.5 py-2.5 rounded-xl text-[10.5px] font-black uppercase tracking-tight border flex items-center space-x-1.5 transition-all outline-none cursor-pointer ${
-                      isSelected 
-                        ? 'bg-emerald-550/10 border-emerald-500 text-emerald-700 dark:text-emerald-400' 
-                        : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-stone-800 text-neutral-450 dark:text-stone-450'
-                    }`}
-                  >
-                    <MapPin className={`w-3.5 h-3.5 ${isSelected ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-400'}`} />
-                    <span>{loc}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 animate-scaleIn shrink-0 ml-0.5 stroke-[2.5]" />}
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            <div className="p-3 bg-neutral-50 dark:bg-stone-850 rounded-2xl border border-neutral-150/70 dark:border-stone-800 mt-2 flex items-start space-x-2.5">
-              <Sparkles className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
-                We’ll use these areas later to improve automated email alerts, search feed sorting, and new matching rent suggestions tailored to Athi River / Machakos county regions.
-              </p>
-            </div>
-          </div>
-        );
-
-      case 'budget_range':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Preferred Budget Range</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Configure rent filters in KSh</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Min Rent</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-neutral-450">KSh</span>
-                  <input 
-                    type="text" 
-                    value={minRent}
-                    onChange={(e) => setMinRent(e.target.value.replace(/\D/g, ""))}
-                    className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl pl-11 pr-3.5 py-3 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
-                    placeholder="4,000"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-450 dark:text-stone-500 uppercase tracking-widest block pl-1">Max Rent</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-neutral-450">KSh</span>
-                  <input 
-                    type="text" 
-                    value={maxRent}
-                    onChange={(e) => setMaxRent(e.target.value.replace(/\D/g, ""))}
-                    className="w-full bg-neutral-50 dark:bg-stone-920 border border-neutral-100 dark:border-stone-850 rounded-xl pl-11 pr-3.5 py-3 text-xs font-black text-neutral-800 dark:text-stone-200 outline-none focus:border-emerald-500/50" 
-                    placeholder="15,000"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[9px] text-neutral-400 dark:text-stone-500 font-semibold text-center mt-1 text-xs">
-              Expected default range: <strong className="text-neutral-700 dark:text-stone-300">KSh 4,000</strong> to <strong className="text-neutral-700 dark:text-stone-300">KSh 15,000</strong> per month
-            </p>
-          </div>
-        );
-
-      case 'house_types':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">House Type Preferences</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Select home categories interested in</p>
-            </div>
-
-            <p className="text-[10px] text-neutral-500 dark:text-stone-400 font-semibold leading-relaxed pt-1.5 pl-1">
-              Filter search matches and saved recommendations by selecting your favorite structures:
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2">
-              {allHouseTypes.map((typeVal) => {
-                const isSelected = houseTypesSelected.includes(typeVal);
-                return (
-                  <motion.button
-                    key={typeVal}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => toggleHouseType(typeVal)}
-                    aria-pressed={isSelected}
-                    className={`px-3.5 py-2.5 rounded-xl text-[10.5px] font-black uppercase tracking-tight border flex items-center space-x-1 transition-all outline-none cursor-pointer ${
-                      isSelected 
-                        ? 'bg-emerald-550/10 border-emerald-500 text-emerald-700 dark:text-emerald-400' 
-                        : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150 dark:border-stone-800 text-neutral-450 dark:text-stone-450'
-                    }`}
-                  >
-                    <span>{typeVal}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 animate-scaleIn shrink-0 ml-0.5 stroke-[2.5]" />}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-        );
-
-      case 'verification':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Verification</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Official trust and badge status log</p>
-            </div>
-
-            <div className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/95 dark:border-stone-850 rounded-2.5xl overflow-hidden divide-y divide-neutral-100 dark:divide-stone-850 mt-3 shadow-3xs">
-              {[
-                { label: 'Phone Checked', status: 'Verified', isDone: true },
-                { label: 'Primary Location Reviewed', status: 'Checked', isDone: true },
-                { label: 'Primary Email Address Linked', status: 'Added', isDone: true },
-                { label: 'ID Document Verification', status: 'Coming soon', isDone: false },
-                { label: 'Field Scout Verification (Posters)', status: 'Available for posters', isDone: false }
-              ].map((vRow, index) => (
-                <div key={index} className="p-4 flex items-center justify-between">
-                  <span className="text-[11.5px] font-black text-neutral-800 dark:text-stone-200">
-                    {vRow.label}
-                  </span>
-
-                  <span className={`px-2 py-0.5 text-[8px] font-black rounded-md uppercase tracking-wider ${
-                    vRow.isDone 
-                      ? 'bg-emerald-500/10 border border-emerald-150/10 text-emerald-700 dark:text-emerald-400' 
-                      : 'bg-neutral-100 dark:bg-stone-800 text-neutral-450 dark:text-stone-450'
-                  }`}>
-                    {vRow.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-emerald-500/[0.03] dark:bg-emerald-500/[0.04] border border-emerald-500/20 dark:border-emerald-900/30 rounded-2xl p-4 flex items-start space-x-3 shadow-3xs mt-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <span className="block text-[11px] font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-wider leading-none">
-                  Self-verify check disclaimer
-                </span>
-                <p className="text-[10px] text-neutral-500 dark:text-stone-400 font-semibold leading-relaxed">
-                  Verification badges are reviewed and accredited manually by the KejaFinder validation team. Renter/Poster users cannot manually self-verify listings or trust attributes inside description notes.
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'help_center':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Help & Support</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">FAQs and customer helpline center</p>
-            </div>
-
-            {/* Quick Actions helpline buttons */}
-            <div className="grid grid-cols-2 gap-2.5 pt-2">
-              {[
-                { title: 'Contact Support', color: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-100 text-emerald-800', msg: 'Support email request initialized.' },
-                { title: 'Safety Guide Tips', color: 'bg-blue-50 hover:bg-blue-100 border-blue-100 text-blue-800', msg: 'Safety guidelines document opened.' },
-                { title: 'Report Fraud Listing', color: 'bg-red-50 hover:bg-red-100 border-red-100 text-red-800', msg: 'Listing report ticket page initialized.' },
-                { title: 'WhatsApp Helpline', color: 'bg-green-50 hover:bg-green-100 border-green-100 text-green-805', msg: 'Launching official KejaFinder WhatsApp helpline...' }
-              ].map((btn, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => showEditingToast(btn.msg)}
-                  className={`p-3 rounded-xl border text-[10.5px] font-black text-center transition-all cursor-pointer outline-none ${btn.color}`}
-                >
-                  {btn.title}
-                </button>
-              ))}
-            </div>
-
-            {/* Top FAQs list accordion visual wireframe */}
-            <div className="space-y-2 pt-3">
-              <span className="block text-[10px] font-black text-neutral-450 dark:text-stone-500 uppercase tracking-wider pl-1">
-                Frequently Asked Questions
-              </span>
-
-              <div className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/95 dark:border-stone-850 rounded-2.5xl overflow-hidden divide-y divide-neutral-100 dark:divide-stone-850 shadow-3xs">
-                {[
-                  "How do I verify caretaker phone details before paying?",
-                  "Is KejaFinder fully free to find single rooms in Rongai?",
-                  "What should I do if a rental agent demands viewing deposit?"
-                ].map((faq, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => showEditingToast(`Answer opened: "${faq}"`)}
-                    className="w-full p-3.5 text-left flex items-center justify-between text-[11px] font-bold text-neutral-750 dark:text-stone-200 hover:bg-neutral-50 dark:hover:bg-stone-850 cursor-pointer"
-                  >
-                    <span className="truncate pr-4">{faq}</span>
-                    <ChevronRight className="w-4 h-4 text-neutral-450 shrink-0" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'language':
-        return (
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <h2 className="text-base font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight">Interface Language</h2>
-              <p className="text-[10px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Configure your language preference</p>
-            </div>
-
-            <div className="space-y-2 pt-2">
-              {[
-                { code: 'en', name: 'English (United Kingdom / Kenya)', isSelected: true, note: 'Primary translations' },
-                { code: 'sw', name: 'Sheng / Swahili Coming Soon', isSelected: false, note: 'Localization matches in dev' }
-              ].map((lang) => (
-                <button
-                  key={lang.code}
-                  disabled={!lang.isSelected}
-                  onClick={() => setActiveLanguage(lang.isSelected ? 'English' : 'Swahili')}
-                  className={`w-full p-4 rounded-2xl border text-left flex items-center justify-between gap-3 outline-none ${
-                    lang.isSelected 
-                      ? 'bg-emerald-500/10 border-emerald-500 text-emerald-800 dark:text-emerald-400 cursor-pointer' 
-                      : 'bg-neutral-100/50 dark:bg-stone-850/40 border-neutral-200 dark:border-stone-800 text-neutral-400 dark:text-stone-500 cursor-not-allowed opacity-70'
-                  }`}
-                >
-                  <div className="space-y-0.5">
-                    <span className="block text-[11.5px] font-black">{lang.name}</span>
-                    <span className="block text-[9.5px] font-semibold">{lang.note}</span>
-                  </div>
-
-                  {lang.isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-3xs shrink-0">
-                      <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            <p className="text-[10px] text-neutral-450 dark:text-stone-500 font-semibold leading-relaxed pt-2 text-center">
-              Kiswahili (Sheng local phrases mapping) is under development and will be released in an automated patch update.
-            </p>
           </div>
         );
 
@@ -769,7 +333,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                       <ArrowLeft className="w-4 h-4 stroke-[2.2]" />
                     </button>
                   )}
-                  <span className="text-[9px] font-extrabold text-neutral-450 dark:text-stone-550 uppercase tracking-widest font-mono select-none truncate">
+                  <span className="text-[9px] font-extrabold text-neutral-550 dark:text-stone-550 uppercase tracking-widest font-mono select-none truncate">
                     {type === "settings_home" ? "KejaFinder Settings" : "KejaFinder Panel"}
                   </span>
                 </div>
@@ -793,7 +357,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 <div className="pt-4 border-t border-neutral-100 dark:divide-stone-850 flex items-center space-x-2 shrink-0">
                   <button
                     onClick={onClose}
-                    className="flex-1 py-3 text-[11px] font-black uppercase tracking-wider rounded-xl border border-neutral-200 dark:border-stone-850 text-neutral-450 dark:text-stone-450 hover:bg-neutral-50 cursor-pointer outline-none"
+                    className="flex-1 py-3 text-[11px] font-black uppercase tracking-wider rounded-xl border border-neutral-200 dark:border-stone-850 text-neutral-550 dark:text-stone-450 hover:bg-neutral-50 cursor-pointer outline-none"
                   >
                     Cancel
                   </button>

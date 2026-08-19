@@ -28,7 +28,7 @@ export default function SearchHouseTypeChips({ selectedType, onSelectType }: Sea
           whileTap={{ scale: 0.97 }}
           onClick={() => onSelectType(null)}
           aria-pressed={selectedType === null}
-          className={`px-4 h-[34px] rounded-full text-xs font-bold whitespace-nowrap border cursor-pointer select-none outline-none transition-all shrink-0 ${
+          className={`px-4 h-10 rounded-full text-xs font-bold whitespace-nowrap border cursor-pointer select-none outline-none transition-all shrink-0 ${
             selectedType === null
               ? 'bg-neutral-900 dark:bg-emerald-600 border-neutral-900 dark:border-emerald-600 text-white'
               : 'bg-white/95 dark:bg-stone-800/90 border-neutral-150 dark:border-neutral-700/60 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300'
@@ -44,7 +44,7 @@ export default function SearchHouseTypeChips({ selectedType, onSelectType }: Sea
               whileTap={{ scale: 0.97 }}
               onClick={() => onSelectType(isActive ? null : type)}
               aria-pressed={isActive}
-              className={`px-4 h-[34px] rounded-full text-xs font-bold whitespace-nowrap border cursor-pointer select-none outline-none transition-all shrink-0 ${
+              className={`px-4 h-10 rounded-full text-xs font-bold whitespace-nowrap border cursor-pointer select-none outline-none transition-all shrink-0 ${
                 isActive
                   ? 'bg-emerald-600 border-emerald-600 text-white'
                   : 'bg-white/95 dark:bg-stone-800/90 border-neutral-150 dark:border-neutral-700/60 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300'

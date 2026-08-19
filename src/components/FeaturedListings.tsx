@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { motion } from 'motion/react';
 import ListingCard from './ListingCard';
 import ListingCardSkeleton from './ListingCardSkeleton';
 import EmptyState from './ui/EmptyState';
 import { useFeaturedListings } from '../hooks/useFeaturedListings';
+import { useToast } from '../context/ToastContext';
 
 interface FeaturedListingsProps {
   onSelectListing?: (id: string) => void;
@@ -20,7 +21,14 @@ interface FeaturedListingsProps {
  * state below says honestly rather than hiding.
  */
 export default function FeaturedListings({ onSelectListing }: FeaturedListingsProps) {
-  const { listings, isLoading } = useFeaturedListings();
+  const { listings, isLoading, error } = useFeaturedListings();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showToast(error);
+    }
+  }, [error, showToast]);
 
   if (!isLoading && listings.length === 0) {
     return (

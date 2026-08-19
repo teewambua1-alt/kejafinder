@@ -158,7 +158,7 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
         <p className="text-[12px] font-bold text-neutral-650 dark:text-stone-300 leading-snug">
           Search first, compare clearly, then visit physically before paying.
         </p>
-        <p className="text-[11px] font-semibold text-neutral-450 dark:text-stone-450 leading-relaxed">
+        <p className="text-[11px] font-semibold text-neutral-550 dark:text-stone-450 leading-relaxed">
           KejaFinder is designed to reduce wasted trips and help renters contact the right person faster.
         </p>
       </motion.div>
@@ -187,7 +187,7 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
                   <h5 className="text-[11.5px] font-bold text-neutral-800 dark:text-stone-100 uppercase tracking-tight leading-snug">
                     {step.step}. {step.title}
                   </h5>
-                  <p className="text-[10.5px] font-semibold text-neutral-450 dark:text-stone-400 leading-snug">
+                  <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-snug">
                     {step.desc}
                   </p>
                 </div>
@@ -221,7 +221,7 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
                   <h5 className="text-[11.5px] font-bold text-neutral-800 dark:text-stone-100 uppercase tracking-tight leading-snug">
                     {step.step}. {step.title}
                   </h5>
-                  <p className="text-[10.5px] font-semibold text-neutral-450 dark:text-stone-400 leading-snug">
+                  <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-snug">
                     {step.desc}
                   </p>
                 </div>

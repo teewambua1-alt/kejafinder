@@ -51,6 +51,7 @@ export default function CategoryScroller({ selectedCategory, onCategoryChange }:
             <motion.button
               key={category.id}
               id={`category-btn-${category.id}`}
+              aria-pressed={isActive}
               whileTap={{ scale: 0.96 }}
               onClick={() => onCategoryChange(category.id)}
               className={`flex flex-col items-center justify-between p-3.5 w-[76px] h-[82px] rounded-2xl border cursor-pointer select-none outline-none transition-all duration-200 shrink-0 ${

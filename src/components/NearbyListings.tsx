@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapPin, Navigation, LocateFixed } from 'lucide-react';
 import { motion } from 'motion/react';
 import ListingCard from './ListingCard';
 import ListingCardSkeleton from './ListingCardSkeleton';
 import EmptyState from './ui/EmptyState';
 import { useNearbyListings } from '../hooks/useNearbyListings';
+import { useToast } from '../context/ToastContext';
 
 interface NearbyListingsProps {
   onSelectListing?: (id: string) => void;
@@ -33,7 +34,14 @@ function distanceKm(a: { lat: number; lng: number }, b: { lat: number; lng: numb
  * code change needed here.
  */
 export default function NearbyListings({ onSelectListing }: NearbyListingsProps) {
-  const { permissionState, listings, userCoords, isLoading, requestLocation } = useNearbyListings();
+  const { permissionState, listings, userCoords, isLoading, error, requestLocation } = useNearbyListings();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showToast(error);
+    }
+  }, [error, showToast]);
 
   return (
     <motion.div

@@ -74,7 +74,7 @@ export default function ProfileStats({ stats }: ProfileStatsProps) {
                 {stat.value}
               </span>
 
-              <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold text-neutral-450 dark:text-stone-450 text-center leading-tight mt-1 line-clamp-1 max-w-full">
+              <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold text-neutral-550 dark:text-stone-450 text-center leading-tight mt-1 line-clamp-1 max-w-full">
                 {stat.label}
               </span>
             </motion.div>

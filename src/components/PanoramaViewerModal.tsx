@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Maximize } from 'lucide-react';
 import { ReactPhotoSphereViewer } from 'react-photo-sphere-viewer';
 import '@photo-sphere-viewer/core/index.css';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 interface PanoramaViewerModalProps {
   isOpen: boolean;
@@ -11,15 +12,22 @@ interface PanoramaViewerModalProps {
 }
 
 export default function PanoramaViewerModal({ isOpen, onClose, panoramaUrl }: PanoramaViewerModalProps) {
+  const containerRef = useModalA11y(isOpen, onClose);
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={containerRef}
+          tabIndex={-1}
+          role="dialog"
+          aria-modal="true"
+          aria-label="360 degree panorama viewer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-lg flex flex-col"
+          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-lg flex flex-col outline-none"
         >
           {/* Header Controls */}
           <div className="flex items-center justify-between p-4 sm:p-6 text-white absolute top-0 left-0 right-0 z-50 pointer-events-none">

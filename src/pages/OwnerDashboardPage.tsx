@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import LandlordDashboardHeader from '../components/LandlordDashboardHeader';
 import ProfileStats, { ProfileStatItem } from '../components/ProfileStats';
@@ -24,6 +24,7 @@ import type { OwnerListingRow } from '../services/ownerListingsService';
 import { getListingTypeLabel, ListingType } from '../types/listing';
 import { supabase } from '../lib/supabase/client';
 import Skeleton from '../components/ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 interface OwnerDashboardPageProps {
   onBack: () => void;
@@ -91,9 +92,9 @@ function ListingRow({
       >
         <div className="w-14 h-14 rounded-xl overflow-hidden bg-neutral-100 dark:bg-stone-850 border border-neutral-200/60 dark:border-stone-800 shrink-0 flex items-center justify-center">
           {cover ? (
-            <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
           ) : (
-            <ImageOff className="w-5 h-5 text-neutral-350 dark:text-stone-600" />
+            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-600" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -111,7 +112,7 @@ function ListingRow({
         <div className="flex items-center justify-between text-[10.5px] font-bold text-neutral-500 dark:text-stone-400 px-0.5">
           <span className="flex items-center space-x-1"><Eye className="w-3.5 h-3.5" /><span>{listing.views_count} views</span></span>
           <span className="flex items-center space-x-1"><MessageSquare className="w-3.5 h-3.5" /><span>{listing.call_clicks_count + listing.whatsapp_clicks_count} contacts</span></span>
-          <span className={`flex items-center space-x-1 ${isLive ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-450'}`}>
+          <span className={`flex items-center space-x-1 ${isLive ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-550'}`}>
             {isLive ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Ban className="w-3.5 h-3.5" />}
             <span>{isLive ? 'Live' : 'Taken'}</span>
           </span>
@@ -200,7 +201,14 @@ function ListingRowSkeleton() {
 }
 
 export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoSafety, onSelectListing }: OwnerDashboardPageProps) {
-  const { listings, stats, isLoading, deleteListing, setAvailability } = useOwnerListings();
+  const { listings, stats, isLoading, error, deleteListing, setAvailability } = useOwnerListings();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showToast(error);
+    }
+  }, [error, showToast]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
@@ -277,7 +285,7 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
                 </div>
               ) : listings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-3">
-                  <Home className="w-8 h-8 text-neutral-350 dark:text-stone-600 mx-auto" />
+                  <Home className="w-8 h-8 text-neutral-550 dark:text-stone-600 mx-auto" />
                   <p className="text-[12px] font-bold text-neutral-500 dark:text-stone-400">
                     You haven't posted any vacancies yet.
                   </p>

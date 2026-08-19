@@ -55,7 +55,7 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
             <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
             <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
           </div>
-          <span className="text-[10px] text-neutral-450 dark:text-stone-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
+          <span className="text-[10px] text-neutral-550 dark:text-stone-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
             Vacancies Hub
           </span>
         </div>

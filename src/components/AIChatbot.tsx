@@ -8,8 +8,14 @@ interface Message {
   parts: { text: string }[];
 }
 
+const OPENED_KEY = 'kejafinder-chatbot-opened';
+
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showNudge, setShowNudge] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(OPENED_KEY) !== '1';
+  });
   const [messages, setMessages] = useState<Message[]>([{
     role: 'model',
     parts: [{ text: 'Hi! I\'m your KejaFinder AI Assistant. How can I help you find your perfect home today?' }]
@@ -63,11 +69,18 @@ export default function AIChatbot() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen(true);
+          setShowNudge(false);
+          localStorage.setItem(OPENED_KEY, '1');
+        }}
         className={`absolute bottom-28 right-6 z-[60] bg-emerald-600 text-white rounded-full p-4 shadow-lg ${isOpen ? 'hidden' : 'flex'} items-center justify-center`}
         aria-label="Open AI Assistant"
       >
         <MessageSquare className="w-6 h-6" />
+        {showNudge && (
+          <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-orange-500 border-2 border-white dark:border-stone-950 animate-pulse" />
+        )}
       </motion.button>
 
       {/* Chat Modal */}

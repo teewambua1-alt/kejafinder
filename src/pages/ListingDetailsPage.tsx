@@ -67,19 +67,23 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   }, [internalListingId, fbListing]);
 
   const allAvailableListings = React.useMemo(() => {
-    const mapped = allListings.map((listing: any) => ({
-      ...listing,
-      id: listing.id,
-      title: listing.title,
-      houseType: listing.type || listing.typeLabel || 'House',
-      rent: listing.rent || 10000,
-      deposit: listing.deposit || 10000,
-      location: listing.location,
-      estate: listing.estate || listing.town || listing.location,
-      imageUrl: listing.image || 'https://images.unsplash.com/photo-1542361345-89e58247f2d5?auto=format&fit=crop&w=600&q=80',
-      amenities: listing.amenities || [],
-      trustBadges: (listing.badges || []) as any,
-    })) as KejaListing[];
+    // Skip any listing missing real rent/deposit rather than fabricating a
+    // price -- "similar homes" comparisons need a real number to be honest.
+    const mapped = allListings
+      .filter((listing: any) => listing.rent && listing.deposit)
+      .map((listing: any) => ({
+        ...listing,
+        id: listing.id,
+        title: listing.title,
+        houseType: listing.type || listing.typeLabel || 'House',
+        rent: listing.rent,
+        deposit: listing.deposit,
+        location: listing.location,
+        estate: listing.estate || listing.town || listing.location,
+        imageUrl: listing.image || 'https://images.unsplash.com/photo-1542361345-89e58247f2d5?auto=format&fit=crop&w=600&q=80',
+        amenities: listing.amenities || [],
+        trustBadges: (listing.badges || []) as any,
+      })) as KejaListing[];
 
     const uniqueMap = new Map();
     mapped.forEach(l => uniqueMap.set(l.id, l));
@@ -324,7 +328,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
           <ListingTrustSafety
             listing={currentListing as any}
             onAvailabilityCheck={handleAskAvailability}
-            onReportSubmit={handleReportSubmit}
+            onOpenReport={() => setIsReportPanelOpen(true)}
           />
         </motion.div>
 

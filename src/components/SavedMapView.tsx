@@ -243,10 +243,12 @@ export default function SavedMapView({ listings, onUnsave }: SavedMapViewProps) 
               
               {/* Thumbnail image and metadata */}
               <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-neutral-100 dark:bg-stone-950 shrink-0 shadow-3xs">
-                <img 
-                  src={selectedListing.image} 
-                  alt={selectedListing.title} 
+                <img
+                  src={selectedListing.image}
+                  alt={selectedListing.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute bottom-1 right-1 px-1 bg-neutral-900/80 text-[8px] font-extrabold text-white rounded">
                   1/{selectedListing.imagesCount || 5}
@@ -310,28 +312,47 @@ export default function SavedMapView({ listings, onUnsave }: SavedMapViewProps) 
             <div className="flex justify-between items-center pt-2.5 border-t border-neutral-150/50 dark:border-stone-800/60 font-mono text-[9px] text-neutral-400 flex-wrap gap-2">
               <span className="flex items-center space-x-1 font-sans">
                 <Calendar className="w-3.5 h-3.5 text-neutral-400" />
-                <span>Saved on {selectedListing.savedAt || "June 2026"}</span>
+                <span>Saved on {selectedListing.savedAt || "Recently"}</span>
               </span>
 
               <div className="flex items-center space-x-2">
-                <motion.a
-                  whileTap={{ scale: 0.96 }}
-                  href={`tel:${selectedListing.contactPhone || "+254700000000"}`}
-                  className="h-7 px-3 rounded-lg border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 bg-white dark:bg-stone-850 text-[10px] font-sans font-black flex items-center space-x-1"
-                >
-                  <Phone className="w-3 h-3" />
-                  <span>Call</span>
-                </motion.a>
+                {selectedListing.contactPhone ? (
+                  <motion.a
+                    whileTap={{ scale: 0.96 }}
+                    href={`tel:${selectedListing.contactPhone}`}
+                    className="h-10 px-3 rounded-lg border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 bg-white dark:bg-stone-850 text-[10px] font-sans font-black flex items-center space-x-1"
+                  >
+                    <Phone className="w-3 h-3" />
+                    <span>Call</span>
+                  </motion.a>
+                ) : (
+                  <button
+                    disabled
+                    className="h-10 px-3 rounded-lg border border-neutral-200 dark:border-stone-700 text-neutral-400 dark:text-stone-600 text-[10px] font-sans font-black flex items-center space-x-1 cursor-not-allowed"
+                  >
+                    <Phone className="w-3 h-3" />
+                    <span>No phone</span>
+                  </button>
+                )}
 
-                <motion.a
-                  whileTap={{ scale: 0.96 }}
-                  href={`https://wa.me/${selectedListing.whatsappPhone || "254700000000"}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-7 px-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-sans font-black flex items-center"
-                >
-                  <span>WhatsApp</span>
-                </motion.a>
+                {selectedListing.whatsappPhone ? (
+                  <motion.a
+                    whileTap={{ scale: 0.96 }}
+                    href={`https://wa.me/${selectedListing.whatsappPhone}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="h-10 px-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-sans font-black flex items-center"
+                  >
+                    <span>WhatsApp</span>
+                  </motion.a>
+                ) : (
+                  <button
+                    disabled
+                    className="h-10 px-3.5 rounded-lg bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 text-[10px] font-sans font-black flex items-center cursor-not-allowed"
+                  >
+                    <span>No WhatsApp</span>
+                  </button>
+                )}
               </div>
             </div>
 

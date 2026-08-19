@@ -26,6 +26,8 @@ interface EmptyStateProps {
 export default function EmptyState({ icon: Icon, title, description, primaryAction, secondaryAction }: EmptyStateProps) {
   return (
     <motion.div
+      role="status"
+      aria-live="polite"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}

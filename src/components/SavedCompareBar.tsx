@@ -36,10 +36,12 @@ export default function SavedCompareBar({
                 layoutId={`compare-thumb-${lst.id}`}
                 className="w-8 h-8 rounded-lg overflow-hidden border border-white dark:border-stone-900 shadow-3xs bg-neutral-100 dark:bg-stone-950"
               >
-                <img 
-                  src={lst.image} 
-                  alt={lst.title} 
+                <img
+                  src={lst.image}
+                  alt={lst.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </motion.div>
             ))}
@@ -50,7 +52,7 @@ export default function SavedCompareBar({
             <span className="block text-[11.5px] font-black text-neutral-800 dark:text-neutral-50 tracking-tight leading-none">
               {selectedListings.length} {selectedListings.length === 1 ? 'Keja' : 'Kejas'} Selected
             </span>
-            <span className="block text-[9.5px] font-semibold text-neutral-450 dark:text-stone-400">
+            <span className="block text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400">
               Max 3 can be compared side-by-side
             </span>
           </div>
@@ -61,7 +63,7 @@ export default function SavedCompareBar({
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={onClear}
-            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-450 hover:text-neutral-600 dark:text-stone-400 dark:hover:text-stone-200 transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-550 hover:text-neutral-600 dark:text-stone-400 dark:hover:text-stone-200 transition-colors cursor-pointer"
             title="Clear compare selection"
             aria-label="Clear all compared listings"
           >

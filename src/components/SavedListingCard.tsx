@@ -13,7 +13,8 @@ import {
   RefreshCw,
   Tag,
   Zap,
-  Check
+  Check,
+  Footprints
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Listing } from '../types/listing';
@@ -171,11 +172,13 @@ export default function SavedListingCard({
         
         {/* Left Side: Thumbnail Image Area */}
         <div className="relative w-28 xs:w-32 sm:w-36 h-28 xs:h-32 sm:h-36 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-stone-950 shrink-0 shadow-3xs">
-          <img 
-            src={listing.image || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80'} 
+          <img
+            src={listing.image || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80'}
             alt={listing.title}
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
 
           {/* Image count translucent indicator */}
@@ -245,8 +248,9 @@ export default function SavedListingCard({
 
             {/* Distance from road helper indicator (if present) */}
             {listing.distanceFromRoad && (
-              <span className="inline-block text-[9.5px] font-bold text-neutral-400 dark:text-stone-500 mt-0.5 bg-neutral-50 dark:bg-stone-850 px-1 py-0.5 rounded">
-                🚶 {listing.distanceFromRoad}
+              <span className="inline-flex items-center gap-0.5 text-[9.5px] font-bold text-neutral-400 dark:text-stone-500 mt-0.5 bg-neutral-50 dark:bg-stone-850 px-1 py-0.5 rounded">
+                <Footprints className="w-2.5 h-2.5 stroke-[2.2] shrink-0" aria-hidden="true" />
+                {listing.distanceFromRoad}
               </span>
             )}
           </div>
@@ -300,7 +304,7 @@ export default function SavedListingCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between sm:space-x-3 sm:space-y-0 space-y-2.5 pt-2 border-t border-neutral-100 dark:border-stone-800/50">
         
         {/* Saved Date Indicators */}
-        <div className="flex items-center space-x-1 text-[9.5px] font-bold text-neutral-450 dark:text-stone-500 select-none pl-1">
+        <div className="flex items-center space-x-1 text-[9.5px] font-bold text-neutral-550 dark:text-stone-500 select-none pl-1">
           <Calendar className="w-3.5 h-3.5 text-neutral-400/80 stroke-[2]" />
           <span>{formatSavedDate(listing.savedAt)}</span>
         </div>
@@ -309,32 +313,53 @@ export default function SavedListingCard({
         <div className="grid grid-cols-2 gap-2 min-w-[190px] sm:min-w-[210px]" onClick={(e) => e.stopPropagation()}>
           
           {/* Transparent Call Link */}
-          <motion.a 
-            whileTap={{ scale: 0.97 }}
-            href={`tel:${listing.contactPhone || "+254700000000"}`}
-            className="flex items-center justify-center space-x-1 h-9 rounded-xl border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 bg-white/70 dark:bg-stone-850 hover:bg-emerald-500/5 text-[11px] font-extrabold transition-colors shadow-3xs"
-          >
-            <Phone className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Call</span>
-          </motion.a>
+          {listing.contactPhone ? (
+            <motion.a
+              whileTap={{ scale: 0.97 }}
+              href={`tel:${listing.contactPhone}`}
+              className="flex items-center justify-center space-x-1 h-10 rounded-xl border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 bg-white/70 dark:bg-stone-850 hover:bg-emerald-500/5 text-[11px] font-extrabold transition-colors shadow-3xs"
+            >
+              <Phone className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Call</span>
+            </motion.a>
+          ) : (
+            <button
+              disabled
+              aria-label="No phone number on file"
+              className="flex items-center justify-center space-x-1 h-10 rounded-xl border border-neutral-200 dark:border-stone-700 text-neutral-400 dark:text-stone-600 text-[11px] font-extrabold cursor-not-allowed"
+            >
+              <Phone className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>No phone</span>
+            </button>
+          )}
 
           {/* Primary WhatsApp Chat Link */}
-          <motion.a 
-            whileTap={{ scale: 0.97 }}
-            href={`https://wa.me/${listing.whatsappPhone || "254700000000"}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center space-x-1 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold transition-colors shadow-2xs"
-          >
-            <svg 
-              className="w-3.5 h-3.5 fill-white stroke-[0.3]" 
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          {listing.whatsappPhone ? (
+            <motion.a
+              whileTap={{ scale: 0.97 }}
+              href={`https://wa.me/${listing.whatsappPhone}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center space-x-1 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold transition-colors shadow-2xs"
             >
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.413 9.865-9.847 0-2.63-1.03-5.101-2.903-6.974-1.872-1.873-4.348-2.903-6.977-2.904-5.439 0-9.862 4.412-9.865 9.846-.001 1.662.436 3.284 1.272 4.721L1.251 22.361l4.577-1.2C7.3 22.1 8.8 22.5 10.3 22.5c.1 0 .1 0 0 0z" />
-            </svg>
-            <span>WhatsApp</span>
-          </motion.a>
+              <svg
+                className="w-3.5 h-3.5 fill-white stroke-[0.3]"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.413 9.865-9.847 0-2.63-1.03-5.101-2.903-6.974-1.872-1.873-4.348-2.903-6.977-2.904-5.439 0-9.862 4.412-9.865 9.846-.001 1.662.436 3.284 1.272 4.721L1.251 22.361l4.577-1.2C7.3 22.1 8.8 22.5 10.3 22.5c.1 0 .1 0 0 0z" />
+              </svg>
+              <span>WhatsApp</span>
+            </motion.a>
+          ) : (
+            <button
+              disabled
+              aria-label="No WhatsApp number on file"
+              className="flex items-center justify-center space-x-1 h-10 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 text-[11px] font-extrabold cursor-not-allowed"
+            >
+              <span>No WhatsApp</span>
+            </button>
+          )}
 
         </div>
 

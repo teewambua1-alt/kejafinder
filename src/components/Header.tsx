@@ -62,11 +62,6 @@ export default function Header({ onNotificationsClick, onProfileClick }: HeaderP
           aria-label="Open notifications"
         >
           <Bell className="w-5 h-5 text-neutral-700 dark:text-neutral-200 stroke-[2]" />
-          
-          {/* Subtle Orange Badge */}
-          <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1.5 rounded-full bg-orange-500 text-white font-sans text-[10px] font-bold flex items-center justify-center shadow-sm border border-white dark:border-stone-800">
-            2
-          </span>
         </button>
  
         {/* User Profile Avatar with thin green ring */}

@@ -12,7 +12,7 @@ function Section({ title, description, children }: { title: string; description?
     <div className="space-y-3">
       <div>
         <h2 className="text-xs font-black text-neutral-800 dark:text-stone-100 uppercase tracking-widest">{title}</h2>
-        {description && <p className="text-[10.5px] font-semibold text-neutral-450 dark:text-stone-500 mt-0.5">{description}</p>}
+        {description && <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-500 mt-0.5">{description}</p>}
       </div>
       {children}
     </div>
@@ -25,7 +25,7 @@ function Swatch({ name, className, hex }: { name: string; className: string; hex
       <div className={`w-full h-14 rounded-xl border border-neutral-200/50 dark:border-stone-800/50 ${className}`} />
       <div>
         <p className="text-[10px] font-black text-neutral-800 dark:text-stone-200">{name}</p>
-        {hex && <p className="text-[9px] font-semibold text-neutral-450 dark:text-stone-500 font-mono">{hex}</p>}
+        {hex && <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-500 font-mono">{hex}</p>}
       </div>
     </div>
   );
@@ -50,7 +50,7 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
           <h1 className="text-sm font-black text-neutral-850 dark:text-stone-100 uppercase tracking-wider leading-none">
             Design System
           </h1>
-          <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 mt-1">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">
             Phase 1 -- tokens and reusable primitives. Dev-only reference, not a public route.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
             {[2, 3, 4, 6, 8, 10, 12].map((n) => (
               <div key={n} className="flex flex-col items-center space-y-1">
                 <div className={`w-4 bg-emerald-500/70 rounded-sm`} style={{ height: `${n * 4}px` }} />
-                <span className="text-[9px] font-bold text-neutral-450 dark:text-stone-500">{n * 4}px</span>
+                <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-500">{n * 4}px</span>
               </div>
             ))}
           </div>
@@ -147,11 +147,11 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
           <div className="grid grid-cols-2 gap-3">
             <Card>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-100">Default card</p>
-              <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 mt-1">Static surface</p>
+              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">Static surface</p>
             </Card>
             <Card interactive onClick={() => {}}>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-100">Interactive card</p>
-              <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 mt-1">Hover / tap me</p>
+              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">Hover / tap me</p>
             </Card>
           </div>
         </Section>

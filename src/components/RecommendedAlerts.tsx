@@ -81,7 +81,7 @@ export default function RecommendedAlerts({ settings, onToggle }: RecommendedAle
         <h2 className="text-xs font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
           Recommended alerts
         </h2>
-        <p className="text-[10px] text-neutral-450 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
+        <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
           Get useful updates for homes you care about.
         </p>
       </div>

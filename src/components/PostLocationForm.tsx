@@ -88,7 +88,7 @@ export default function PostLocationForm({
                     : 'border-neutral-100 dark:border-neutral-800/80 focus:border-emerald-500/80 focus:ring-emerald-500/20'
                 }`}
               >
-                <option value="" disabled className="text-neutral-450">Select county</option>
+                <option value="" disabled className="text-neutral-550">Select county</option>
                 {COUNTIES_LIST.map((item) => (
                   <option key={item} value={item} className="text-neutral-800 dark:text-stone-100">
                     {item}

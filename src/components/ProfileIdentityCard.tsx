@@ -5,13 +5,10 @@ import {
   Phone,
   MapPin,
   Mail,
-  Pencil,
   ShieldCheck,
-  Clock,
-  AlertCircle
+  Clock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
 
 interface ProfileIdentityCardProps {
   isAdmin?: boolean;
@@ -19,11 +16,6 @@ interface ProfileIdentityCardProps {
 
 export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentityCardProps) {
   const { profile, user } = useAuth();
-  const { showToast } = useToast();
-
-  const handleEditClick = () => {
-    showToast('Edit profile form is coming soon!', { icon: AlertCircle });
-  };
 
   const fullName = profile?.full_name || (user?.user_metadata?.full_name as string | undefined) || "KejaFinder User";
   const photoURL = profile?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=10b981&color=fff`;
@@ -44,23 +36,16 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start space-x-4">
-            {/* Avatar block with circular overlap action pen */}
-            <div className="relative shrink-0 select-none">
+            {/* Avatar */}
+            <div className="shrink-0 select-none">
               <div className="w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-white dark:border-stone-800 shadow-xs bg-neutral-100 dark:bg-stone-800">
-                <img 
-                  src={photoURL} 
-                  alt={`${fullName} profile photo`} 
+                <img
+                  src={photoURL}
+                  alt={`${fullName} profile photo`}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <button 
-                onClick={handleEditClick}
-                className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-emerald-600 dark:bg-emerald-500 text-white flex items-center justify-center shadow-xs border border-white dark:border-stone-900 hover:bg-emerald-700 dark:hover:bg-emerald-400 active:scale-90 transition-transform cursor-pointer outline-none"
-                aria-label="Change profile photo"
-              >
-                <Pencil className="w-3 h-3" />
-              </button>
             </div>
 
             {/* Profile identity info texts */}
@@ -109,19 +94,6 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Edit Profile Button on Right/Widescreen */}
-          <div className="flex items-center md:self-center">
-            <motion.button
-              whileTap={{ scale: 0.96 }}
-              onClick={handleEditClick}
-              className="px-3.5 py-2 rounded-xl bg-white dark:bg-stone-800 hover:bg-neutral-50 dark:hover:bg-stone-750 border border-neutral-200/50 dark:border-stone-800/40 flex items-center space-x-2 shadow-3xs cursor-pointer select-none outline-none font-bold text-xs text-neutral-700 dark:text-stone-200 transition-colors w-full md:w-auto justify-center"
-              aria-label="Edit profile settings"
-            >
-              <Pencil className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500" />
-              <span>Edit Profile</span>
-            </motion.button>
           </div>
         </div>
 

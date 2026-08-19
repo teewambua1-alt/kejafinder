@@ -8,7 +8,9 @@ import {
   ArrowRight, 
   BookOpen,
   ArrowDownCircle,
-  TrendingUp
+  TrendingUp,
+  X,
+  Check
 } from 'lucide-react';
 
 interface AboutProblemSolutionProps {
@@ -104,7 +106,7 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
         <p className="text-[12px] font-bold text-neutral-600 dark:text-stone-300 leading-snug">
           Finding an affordable room should not mean wasting the whole day walking from plot to plot.
         </p>
-        <p className="text-[11px] font-semibold text-neutral-450 dark:text-stone-450 leading-relaxed">
+        <p className="text-[11px] font-semibold text-neutral-550 dark:text-stone-450 leading-relaxed">
           KejaFinder turns local vacancy searching into a faster, clearer, and safer digital flow.
         </p>
       </motion.div>
@@ -166,7 +168,7 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
         variants={itemVariants}
         className="bg-neutral-50/50 dark:bg-stone-900/20 border border-neutral-200 dark:border-stone-800/40 rounded-3xl p-4.5 space-y-3"
       >
-        <span className="text-[10px] font-black text-neutral-450 dark:text-stone-500 uppercase tracking-widest block text-center sm:text-left">
+        <span className="text-[10px] font-black text-neutral-550 dark:text-stone-500 uppercase tracking-widest block text-center sm:text-left">
           Quick Comparison
         </span>
 
@@ -174,13 +176,14 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {/* Before Column */}
             <div className="bg-amber-500/[0.03] dark:bg-amber-500/[0.01] border border-amber-500/10 dark:border-amber-900/15 rounded-2xl p-3.5 space-y-2">
-              <span className="text-[10px] font-black text-amber-700 dark:text-amber-500 uppercase tracking-wider block">
-                🔴 Before KejaFinder
+              <span className="flex items-center gap-1 text-[10px] font-black text-amber-700 dark:text-amber-500 uppercase tracking-wider">
+                <AlertCircle className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+                Before KejaFinder
               </span>
               <ul className="space-y-1.5 text-[10.5px] font-semibold text-neutral-510 dark:text-stone-400">
                 {comparisonBefore.map((item, idx) => (
                   <li key={idx} className="flex items-center space-x-1.5">
-                    <span className="text-amber-500">✕</span>
+                    <X className="w-3 h-3 stroke-[2.5] text-amber-500 shrink-0" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -189,13 +192,14 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
 
             {/* After Column */}
             <div className="bg-emerald-500/[0.03] dark:bg-emerald-500/[0.01] border border-emerald-500/10 dark:border-emerald-950/15 rounded-2xl p-3.5 space-y-2">
-              <span className="text-[10px] font-black text-emerald-700 dark:text-emerald-450 uppercase tracking-wider block">
-                🟢 After KejaFinder
+              <span className="flex items-center gap-1 text-[10px] font-black text-emerald-700 dark:text-emerald-450 uppercase tracking-wider">
+                <CheckCircle2 className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+                After KejaFinder
               </span>
               <ul className="space-y-1.5 text-[10.5px] font-semibold text-neutral-510 dark:text-stone-400">
                 {comparisonAfter.map((item, idx) => (
                   <li key={idx} className="flex items-center space-x-1.5">
-                    <span className="text-emerald-500">✓</span>
+                    <Check className="w-3 h-3 stroke-[2.5] text-emerald-500 shrink-0" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}

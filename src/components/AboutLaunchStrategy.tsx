@@ -108,7 +108,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <p className="text-[12px] font-bold text-neutral-650 dark:text-stone-300 leading-snug">
           KejaFinder should prove value in one area before expanding everywhere.
         </p>
-        <p className="text-[11px] font-semibold text-neutral-450 dark:text-stone-450 leading-relaxed">
+        <p className="text-[11px] font-semibold text-neutral-550 dark:text-stone-450 leading-relaxed">
           A focused local launch creates better listings, better trust, and better tenant results than a big empty platform.
         </p>
       </motion.div>
@@ -163,7 +163,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
             </motion.div>
           ))}
         </div>
-        <p className="text-[9px] font-semibold text-neutral-450 dark:text-stone-500 uppercase tracking-normal">
+        <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-500 uppercase tracking-normal">
           * Focused pilot Candidate list for initial physical area scouting campaigns.
         </p>
       </motion.div>
@@ -187,7 +187,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
           <span className="text-2xl font-black text-emerald-650 dark:text-emerald-400 tracking-tight leading-none">
             100
           </span>
-          <span className="text-[9px] font-bold text-neutral-450 dark:text-stone-450 uppercase tracking-widest mt-1">
+          <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-450 uppercase tracking-widest mt-1">
             Vacant Rooms
           </span>
         </div>

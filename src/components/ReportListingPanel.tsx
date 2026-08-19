@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X } from 'lucide-react';
 import { ReportReason } from '../types/listings';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 interface ReportListingPanelProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function ReportListingPanel({ isOpen, onClose, onSubmit }: Report
   const [selectedReason, setSelectedReason] = useState<ReportReason | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const containerRef = useModalA11y(isOpen, onClose);
 
   // Reset state when opened
   useEffect(() => {
@@ -55,18 +57,23 @@ export default function ReportListingPanel({ isOpen, onClose, onSubmit }: Report
             className="fixed inset-0 bg-neutral-950/60 dark:bg-black/70 backdrop-blur-sm z-50"
           />
           <motion.div
+            ref={containerRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Report listing"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md rounded-t-[2.5rem] p-6 shadow-2xl max-h-[90vh] overflow-y-auto border-t border-neutral-150/60 dark:border-stone-800/60 pb-[env(safe-area-inset-bottom)]"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md rounded-t-[2.5rem] p-6 shadow-2xl max-h-[90vh] overflow-y-auto border-t border-neutral-150/60 dark:border-stone-800/60 pb-[env(safe-area-inset-bottom)] outline-none"
           >
             {/* Drag Handle */}
             <div className="w-12 h-1.5 bg-neutral-200 dark:bg-stone-800 rounded-full mx-auto mb-6 flex-shrink-0" />
-            
+
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center bg-neutral-100 dark:bg-stone-800 rounded-full text-neutral-500 dark:text-stone-400 hover:bg-neutral-200 dark:hover:bg-stone-700 transition-colors"
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center bg-neutral-100 dark:bg-stone-800 rounded-full text-neutral-500 dark:text-stone-400 hover:bg-neutral-200 dark:hover:bg-stone-700 transition-colors"
               aria-label="Close report listing"
             >
               <X className="w-4 h-4" />

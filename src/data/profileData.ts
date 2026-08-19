@@ -19,51 +19,6 @@ export const profileActions: ProfileAction[] = [
     category: "account"
   },
   {
-    id: "notifications",
-    title: "Notifications",
-    description: "Search alerts and saved-home updates",
-    iconName: "Bell",
-    type: "normal",
-    feedbackMessage: "Notification settings coming soon.",
-    category: "account"
-  },
-  {
-    id: "preferred-locations",
-    title: "Preferred Locations",
-    description: "Areas you search often",
-    iconName: "MapPin",
-    type: "normal",
-    feedbackMessage: "Preferred locations coming soon.",
-    category: "account"
-  },
-  {
-    id: "budget-range",
-    title: "Budget Range",
-    description: "Your rent and deposit range",
-    iconName: "Wallet",
-    type: "normal",
-    feedbackMessage: "Budget settings coming soon.",
-    category: "account"
-  },
-  {
-    id: "house-types",
-    title: "House Types",
-    description: "Single room, bedsitter, 1 bedroom",
-    iconName: "Home",
-    type: "normal",
-    feedbackMessage: "House type preferences coming soon.",
-    category: "account"
-  },
-  {
-    id: "verification",
-    title: "Verification",
-    description: "Phone, location, and profile checks",
-    iconName: "ShieldCheck",
-    type: "normal",
-    feedbackMessage: "Verification center coming soon.",
-    category: "account"
-  },
-  {
     id: "help-center",
     title: "Help Center",
     description: "FAQs and support",
@@ -79,15 +34,6 @@ export const profileActions: ProfileAction[] = [
     iconName: "HelpCircle",
     type: "normal",
     feedbackMessage: "Opening about page...",
-    category: "support"
-  },
-  {
-    id: "language",
-    title: "Language",
-    description: "English",
-    iconName: "Globe",
-    type: "normal",
-    feedbackMessage: "Language settings coming soon.",
     category: "support"
   },
   {

@@ -59,7 +59,7 @@ export default function NotificationSafetyCard({
           whileTap={{ scale: 0.96 }}
           onClick={onDismiss}
           aria-label="Dismiss safety reminder"
-          className="py-1.5 px-4 rounded-xl text-[10.5px] font-extrabold uppercase tracking-wide text-neutral-450 dark:text-stone-400 hover:bg-neutral-150/40 dark:hover:bg-stone-850/40 border border-transparent hover:border-neutral-200/50 dark:hover:border-stone-800/30 cursor-pointer outline-none transition-all"
+          className="py-1.5 px-4 rounded-xl text-[10.5px] font-extrabold uppercase tracking-wide text-neutral-550 dark:text-stone-400 hover:bg-neutral-150/40 dark:hover:bg-stone-850/40 border border-transparent hover:border-neutral-200/50 dark:hover:border-stone-800/30 cursor-pointer outline-none transition-all"
         >
           Dismiss
         </motion.button>

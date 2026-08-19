@@ -59,6 +59,9 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
     whatsappPhone,
   } = listing;
 
+  const hasPhone = contactPhone.length > 0;
+  const hasWhatsapp = whatsappPhone.length > 0;
+
   // Amenity icon mapper helpers
   const renderAmenityIcon = (name: string) => {
     const iconClass = "w-3 h-3 text-neutral-500 mr-1";
@@ -104,6 +107,8 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
           alt={title}
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
 
         {/* FEATURED badge */}
@@ -238,26 +243,48 @@ export default function SearchResultCard({ listing, onSelectListing, viewMode = 
             className={`flex ${viewMode === 'grid' ? 'flex-row w-full' : 'flex-col w-[90px] xs:w-[100px] shrink-0'} gap-1.5`}
           >
             {/* Call button */}
-            <motion.a
-              href={`tel:${contactPhone}`}
-              whileTap={{ scale: 0.96 }}
-              className={`h-[34px] rounded-lg border border-emerald-600 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/10 text-emerald-650 dark:text-emerald-400 text-[11px] font-extrabold flex items-center justify-center space-x-1 shadow-3xs cursor-pointer select-none no-underline decoration-none outline-none ${viewMode === 'grid' ? 'flex-1' : ''}`}
-            >
-              <Phone className="w-3.5 h-3.5 stroke-[2.2] text-emerald-600 dark:text-emerald-400" />
-              {(viewMode === 'list' || true) && <span>Call</span>}
-            </motion.a>
+            {hasPhone ? (
+              <motion.a
+                href={`tel:${contactPhone}`}
+                whileTap={{ scale: 0.96 }}
+                className={`h-10 rounded-lg border border-emerald-600 hover:bg-emerald-50/20 dark:hover:bg-emerald-950/10 text-emerald-650 dark:text-emerald-400 text-[11px] font-extrabold flex items-center justify-center space-x-1 shadow-3xs cursor-pointer select-none no-underline decoration-none outline-none ${viewMode === 'grid' ? 'flex-1' : ''}`}
+              >
+                <Phone className="w-3.5 h-3.5 stroke-[2.2] text-emerald-600 dark:text-emerald-400" />
+                <span>Call</span>
+              </motion.a>
+            ) : (
+              <button
+                disabled
+                aria-label="No phone number on file"
+                className={`h-10 rounded-lg border border-neutral-200 dark:border-stone-700 text-neutral-400 dark:text-stone-600 text-[11px] font-extrabold flex items-center justify-center space-x-1 cursor-not-allowed ${viewMode === 'grid' ? 'flex-1' : ''}`}
+              >
+                <Phone className="w-3.5 h-3.5 stroke-[2.2]" />
+                <span>No phone</span>
+              </button>
+            )}
 
             {/* WhatsApp button */}
-            <motion.a
-              href={`https://wa.me/${whatsappPhone}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileTap={{ scale: 0.96 }}
-              className={`h-[34px] rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold flex items-center justify-center space-x-1 shadow-xs cursor-pointer select-none no-underline decoration-none outline-none ${viewMode === 'grid' ? 'flex-1' : ''}`}
-            >
-              <MessageCircle className="w-3.5 h-3.5 stroke-[2.2] text-white" />
-              {(viewMode === 'list' || true) && <span>Chat</span>}
-            </motion.a>
+            {hasWhatsapp ? (
+              <motion.a
+                href={`https://wa.me/${whatsappPhone}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileTap={{ scale: 0.96 }}
+                className={`h-10 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-extrabold flex items-center justify-center space-x-1 shadow-xs cursor-pointer select-none no-underline decoration-none outline-none ${viewMode === 'grid' ? 'flex-1' : ''}`}
+              >
+                <MessageCircle className="w-3.5 h-3.5 stroke-[2.2] text-white" />
+                <span>Chat</span>
+              </motion.a>
+            ) : (
+              <button
+                disabled
+                aria-label="No WhatsApp number on file"
+                className={`h-10 rounded-lg bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 text-[11px] font-extrabold flex items-center justify-center space-x-1 cursor-not-allowed ${viewMode === 'grid' ? 'flex-1' : ''}`}
+              >
+                <MessageCircle className="w-3.5 h-3.5 stroke-[2.2]" />
+                <span>No WhatsApp</span>
+              </button>
+            )}
           </div>
 
         </div>

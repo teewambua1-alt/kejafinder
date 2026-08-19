@@ -26,6 +26,8 @@ export default function SearchResultsList({ listings, onClearSearch, onSelectLis
   if (listings.length === 0) {
     return (
       <motion.div
+        role="status"
+        aria-live="polite"
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}

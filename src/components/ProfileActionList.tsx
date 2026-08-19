@@ -2,13 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import {
   User,
-  Bell,
-  MapPin,
-  Wallet,
-  Home,
-  ShieldCheck,
   HelpCircle,
-  Globe,
   LogOut,
   ChevronRight
 } from 'lucide-react';
@@ -29,13 +23,7 @@ export default function ProfileActionList({ onOpenPanel, onLogout }: ProfileActi
 
     switch (iconName) {
       case 'User': return <User {...iconProps} />;
-      case 'Bell': return <Bell {...iconProps} />;
-      case 'MapPin': return <MapPin {...iconProps} />;
-      case 'Wallet': return <Wallet {...iconProps} />;
-      case 'Home': return <Home {...iconProps} />;
-      case 'ShieldCheck': return <ShieldCheck {...iconProps} />;
       case 'HelpCircle': return <HelpCircle {...iconProps} />;
-      case 'Globe': return <Globe {...iconProps} />;
       case 'LogOut': return <LogOut {...iconProps} />;
       default: return <User {...iconProps} />;
     }
