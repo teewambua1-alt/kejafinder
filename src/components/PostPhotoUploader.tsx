@@ -245,7 +245,7 @@ export default function PostPhotoUploader({
             <p className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 max-w-[220px] mt-1.5 leading-relaxed">
               Add room, outside, toilet, kitchen, and compound photos.
             </p>
-            <span className="text-[8px] font-bold text-neutral-350 dark:text-stone-600 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
+            <span className="text-[8px] font-bold text-neutral-550 dark:text-stone-600 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
               JPG or PNG, up to 10MB each
             </span>
           </button>
@@ -376,7 +376,7 @@ export default function PostPhotoUploader({
                     </div>
                     
                     <div className="flex flex-col space-y-0.5">
-                      <span className="text-[9px] font-black uppercase text-neutral-350 dark:text-stone-500 tracking-wider select-none leading-none">
+                      <span className="text-[9px] font-black uppercase text-neutral-550 dark:text-stone-500 tracking-wider select-none leading-none">
                         Slot {index + 1}
                       </span>
                       <span className="text-[10px] font-extrabold text-neutral-500 dark:text-stone-400 select-none">

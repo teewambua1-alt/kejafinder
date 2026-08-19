@@ -61,7 +61,7 @@ export default function NotificationSettingsPanel({
               <h2 className="text-sm font-black text-neutral-850 dark:text-stone-100 uppercase tracking-wider leading-none">
                 Alert Subscriptions
               </h2>
-              <p className="text-[10px] text-neutral-450 dark:text-stone-500 font-semibold mt-1">
+              <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold mt-1">
                 Configure your real-time notification platforms.
               </p>
             </div>
@@ -236,7 +236,7 @@ export default function NotificationSettingsPanel({
                 className="grid grid-cols-2 gap-3.5 p-3.5 bg-neutral-50/50 dark:bg-stone-850/30 rounded-2xl border border-neutral-200/50 dark:border-stone-800"
               >
                 <div>
-                  <label className="block text-[9px] font-black text-neutral-450 dark:text-stone-550 uppercase tracking-wider mb-1">
+                  <label className="block text-[9px] font-black text-neutral-550 dark:text-stone-550 uppercase tracking-wider mb-1">
                     Start time
                   </label>
                   <input
@@ -247,7 +247,7 @@ export default function NotificationSettingsPanel({
                   />
                 </div>
                 <div>
-                  <label className="block text-[9px] font-black text-neutral-450 dark:text-stone-550 uppercase tracking-wider mb-1">
+                  <label className="block text-[9px] font-black text-neutral-550 dark:text-stone-550 uppercase tracking-wider mb-1">
                     End time
                   </label>
                   <input

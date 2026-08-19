@@ -5,6 +5,7 @@ import { KejaListing } from '../types/listings';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import PanoramaViewerModal from './PanoramaViewerModal';
 import { View } from 'lucide-react';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 interface ListingImageGalleryProps {
   listing: KejaListing;
@@ -17,6 +18,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isPanoramaOpen, setIsPanoramaOpen] = useState(false);
+  const lightboxRef = useModalA11y(isLightboxOpen, () => setIsLightboxOpen(false));
 
   const images = listing.images && listing.images.length > 0 ? listing.images : (listing.imageUrl ? [listing.imageUrl] : []);
 
@@ -141,7 +143,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                       : 'border-transparent opacity-60 hover:opacity-100 scale-95'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                   {isActive && (
                     <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none" />
                   )}
@@ -156,11 +158,16 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
       <AnimatePresence>
         {isLightboxOpen && (
           <motion.div
+            ref={lightboxRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${listing.title} photo gallery`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-lg flex flex-col"
+            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-lg flex flex-col outline-none"
           >
             {/* Header / Controls */}
             <div className="flex items-center justify-between p-4 sm:p-6 text-white absolute top-0 left-0 right-0 z-50">
@@ -241,7 +248,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                            : 'opacity-40 hover:opacity-100 scale-95'
                        }`}
                      >
-                       <img src={img} alt="" className="w-full h-full object-cover" />
+                       <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                      </button>
                    ))}
                  </div>

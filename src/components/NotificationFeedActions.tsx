@@ -19,7 +19,7 @@ export default function NotificationFeedActions({
     <div className="w-full bg-white/90 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-2.5xl p-4 shadow-3xs flex items-center justify-between gap-4 select-none">
       {/* Left: Unread status label */}
       <div className="flex flex-col">
-        <span className="text-[11px] font-black text-neutral-450 dark:text-stone-400 uppercase tracking-wider leading-none">
+        <span className="text-[11px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-wider leading-none">
           Status Overview
         </span>
         <span className="text-xs font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight mt-1">

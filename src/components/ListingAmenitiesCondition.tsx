@@ -1,17 +1,12 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { 
-  Sparkles, 
-  Droplets, 
-  Zap, 
-  DoorClosed, 
-  Bath, 
-  Square, 
-  ShieldCheck, 
-  Route, 
-  Bus, 
-  Wifi, 
-  Car, 
+import {
+  Droplets,
+  Zap,
+  DoorClosed,
+  Bath,
+  Square,
+  ShieldCheck,
   Info,
   Home
 } from 'lucide-react';
@@ -28,19 +23,19 @@ export default function ListingAmenitiesCondition({ listing, onAskAmenities }: L
     show: { opacity: 1, y: 0 }
   };
 
-  // Ensure fallback values if amenities array is empty
-  const defaultAmenities = [
-    { label: listing.waterStatus || 'Water 24/7', icon: Droplets, highlight: true },
-    { label: listing.electricityType || 'Token electricity', icon: Zap, highlight: true },
-    { label: listing.toiletType || 'Private toilet', icon: DoorClosed },
-    { label: listing.bathroomType || 'Private bathroom', icon: Bath },
-    { label: listing.floorType || 'Tiled floor', icon: Square },
-    { label: listing.securityText || 'Secure gate', icon: ShieldCheck },
-    { label: 'Near main road', icon: Route },
-    { label: 'Near bus stage', icon: Bus },
-    { label: 'Wi-Fi nearby', icon: Wifi },
-    { label: 'Parking nearby', icon: Car }
+  // Only show amenities the poster actually specified -- no fabricated defaults.
+  type AmenityRow = { value?: string; icon: React.ComponentType<{ className?: string }>; highlight?: boolean };
+  const knownAmenities: AmenityRow[] = [
+    { value: listing.waterStatus, icon: Droplets, highlight: true },
+    { value: listing.electricityType, icon: Zap, highlight: true },
+    { value: listing.toiletType, icon: DoorClosed },
+    { value: listing.bathroomType, icon: Bath },
+    { value: listing.floorType, icon: Square },
+    { value: listing.securityText, icon: ShieldCheck }
   ];
+  const providedAmenities = knownAmenities.filter(
+    (a): a is AmenityRow & { value: string } => Boolean(a.value)
+  );
 
   return (
     <motion.div 
@@ -63,24 +58,30 @@ export default function ListingAmenitiesCondition({ listing, onAskAmenities }: L
 
       {/* 2. Amenities Grid */}
       <motion.div variants={rowVariants} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/60 dark:border-stone-800/60 rounded-3xl p-5 shadow-sm">
-        <div className="grid grid-cols-2 gap-3">
-          {defaultAmenities.map((amenity, idx) => {
-            const Icon = amenity.icon;
-            return (
-              <div 
-                key={idx} 
-                className="flex items-center space-x-2.5 p-2.5 rounded-2xl border border-neutral-150 dark:border-stone-800 bg-neutral-50/50 dark:bg-stone-850/50"
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${amenity.highlight ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-white dark:bg-stone-800 text-neutral-600 dark:text-stone-300 shadow-sm border border-neutral-100 dark:border-stone-700'}`}>
-                  <Icon className="w-4 h-4" />
+        {providedAmenities.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3">
+            {providedAmenities.map((amenity, idx) => {
+              const Icon = amenity.icon;
+              return (
+                <div
+                  key={idx}
+                  className="flex items-center space-x-2.5 p-2.5 rounded-2xl border border-neutral-150 dark:border-stone-800 bg-neutral-50/50 dark:bg-stone-850/50"
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${amenity.highlight ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-white dark:bg-stone-800 text-neutral-600 dark:text-stone-300 shadow-sm border border-neutral-100 dark:border-stone-700'}`}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-neutral-700 dark:text-stone-300 leading-tight">
+                    {amenity.value}
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-neutral-700 dark:text-stone-300 leading-tight">
-                  {amenity.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-xs font-semibold text-neutral-500 dark:text-stone-400 italic">
+            Not specified by the poster -- confirm with the caretaker.
+          </p>
+        )}
 
         {onAskAmenities && (
           <motion.button 
@@ -106,42 +107,42 @@ export default function ListingAmenitiesCondition({ listing, onAskAmenities }: L
               <Droplets className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Water</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.waterStatus || 'Water 24/7'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.waterStatus || 'Not specified'}</span>
           </div>
           <div className="flex items-center justify-between border-b border-neutral-100 dark:border-stone-800 pb-3">
             <div className="flex items-center space-x-3">
               <Zap className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Electricity</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.electricityType || 'Token meter'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.electricityType || 'Not specified'}</span>
           </div>
           <div className="flex items-center justify-between border-b border-neutral-100 dark:border-stone-800 pb-3">
             <div className="flex items-center space-x-3">
               <DoorClosed className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Toilet</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.toiletType || 'Private toilet'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.toiletType || 'Not specified'}</span>
           </div>
           <div className="flex items-center justify-between border-b border-neutral-100 dark:border-stone-800 pb-3">
             <div className="flex items-center space-x-3">
               <Bath className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Bathroom</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.bathroomType || 'Private bathroom'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.bathroomType || 'Not specified'}</span>
           </div>
           <div className="flex items-center justify-between border-b border-neutral-100 dark:border-stone-800 pb-3">
             <div className="flex items-center space-x-3">
               <Square className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Floor</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.floorType || 'Tiled floor'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.floorType || 'Not specified'}</span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <ShieldCheck className="w-4.5 h-4.5 text-neutral-400" />
               <span className="text-sm font-bold text-neutral-600 dark:text-stone-400">Security</span>
             </div>
-            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.securityText || 'Secure gate'}</span>
+            <span className="text-sm font-black text-neutral-850 dark:text-stone-100">{listing.securityText || 'Not specified'}</span>
           </div>
         </div>
       </motion.div>
@@ -153,33 +154,26 @@ export default function ListingAmenitiesCondition({ listing, onAskAmenities }: L
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Room condition</p>
-            <p className="text-xs font-black text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              Clean and ready
-            </p>
+            <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Floor level</p>
+            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.floorLevel || 'Not specified'}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Floor level</p>
-            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.floorLevel || 'Ground floor'}</p>
+            <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Ventilation</p>
+            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.ventilationText || 'Not specified'}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Ventilation</p>
-            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.ventilationText || 'Good airflow'}</p>
+            <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Lighting</p>
+            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.lightingText || 'Not specified'}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Lighting</p>
-            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.lightingText || 'Natural light'}</p>
+            <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Noise level</p>
+            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.noiseLevel || 'Not specified'}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Noise level</p>
-            <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.noiseLevel || 'Moderate'}</p>
-          </div>
-          <div>
-            <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Compound</p>
+            <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Compound</p>
             <p className="text-xs font-black text-neutral-800 dark:text-stone-200 flex items-center gap-1.5">
               <Home className="w-3.5 h-3.5 text-neutral-400" />
-              {listing.compoundText || 'Shared compound'}
+              {listing.compoundText || 'Not specified'}
             </p>
           </div>
         </div>
@@ -191,7 +185,9 @@ export default function ListingAmenitiesCondition({ listing, onAskAmenities }: L
           Description
         </h3>
         <p className="text-sm font-medium text-neutral-600 dark:text-stone-350 leading-relaxed">
-          {listing.description || 'Affordable bedsitter available in Syokimau near Gateway Mall. The room has a private toilet, token electricity, water access, tiled floor, and is close to the main road.'}
+          {listing.description || (
+            <span className="italic text-neutral-400 dark:text-stone-500">No description provided yet.</span>
+          )}
         </p>
       </motion.div>
 

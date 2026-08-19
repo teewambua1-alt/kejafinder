@@ -2,8 +2,18 @@ import { useState } from 'react';
 import { ShieldCheck, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
+const DISMISS_KEY = 'kejafinder-safety-banner-dismissed';
+
 export default function SafetyBanner() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return localStorage.getItem(DISMISS_KEY) !== '1';
+  });
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+    localStorage.setItem(DISMISS_KEY, '1');
+  };
 
   return (
     <AnimatePresence>
@@ -33,7 +43,7 @@ export default function SafetyBanner() {
         </div>
 
         {/* 2. Text Message Content in the Middle */}
-        <div className="flex-1 flex flex-col pr-6">
+        <div className="flex-1 flex flex-col pr-9">
           <h4 className="font-sans text-[13px] font-extrabold text-neutral-800 dark:text-neutral-50 leading-tight tracking-tight">
             Stay safe on KejaFinder
           </h4>
@@ -44,9 +54,9 @@ export default function SafetyBanner() {
 
         {/* 3. Close Dismiss Button on the Top-Right */}
         <button
-          onClick={() => setIsVisible(false)}
+          onClick={handleDismiss}
           id="btn-close-safety"
-          className="absolute top-3.5 right-3.5 w-6 h-6 rounded-full bg-neutral-200/40 dark:bg-stone-800/80 hover:bg-neutral-200/70 dark:hover:bg-stone-750/90 active:scale-90 text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-200 flex items-center justify-center transition-all cursor-pointer outline-none border-none animate-none"
+          className="absolute top-2 right-2 w-10 h-10 rounded-full bg-neutral-200/40 dark:bg-stone-800/80 hover:bg-neutral-200/70 dark:hover:bg-stone-750/90 active:scale-90 text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-200 flex items-center justify-center transition-all cursor-pointer outline-none border-none animate-none"
           aria-label="Dismiss safety message"
         >
           <X className="w-3.5 h-3.5 stroke-[2.5]" />

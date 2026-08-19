@@ -10,9 +10,11 @@ import FeaturedListings from './components/FeaturedListings';
 import FreshVacancies from './components/FreshVacancies';
 import PopularLocations from './components/PopularLocations';
 import SafetyBanner from './components/SafetyBanner';
+import HomeIntroBanner from './components/HomeIntroBanner';
 import PullToRefreshIndicator from './components/PullToRefreshIndicator';
 import { useListings } from './hooks/useListings';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
+import { useToast } from './context/ToastContext';
 import type { SearchFilters } from './components/SearchFilterSheet';
 import type { SortOption } from './components/SortDropdown';
 import type { SavedSearch } from './hooks/useSavedSearches';
@@ -33,11 +35,18 @@ const TestModePage = lazy(() => import('./pages/TestModePage'));
 const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage'));
 
 export default function App() {
-  const { listings: allListings, isLoading, refreshListings } = useListings();
+  const { listings: allListings, isLoading, error: listingsError, refreshListings } = useListings();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeFilterChip, setActiveFilterChip] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (listingsError) {
+      showToast(listingsError);
+    }
+  }, [listingsError, showToast]);
 
   // Search and Saved each fetch their own listings independently (separate
   // hook instances), so pulling to refresh on those tabs needs to call
@@ -248,7 +257,13 @@ export default function App() {
       pullToRefreshHandlers={pullToRefreshHandlers}
       pullToRefreshIndicator={<PullToRefreshIndicator pullDistance={pullDistance} isRefreshing={isRefreshing} />}
     >
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="flex-1 flex items-center justify-center py-24">
+            <div className="w-8 h-8 border-3 border-emerald-500/30 border-t-emerald-600 rounded-full animate-spin" />
+          </div>
+        }
+      >
       <AnimatePresence mode="wait">
       <motion.div
         key={activeTab}
@@ -266,6 +281,9 @@ export default function App() {
           <div className="md:hidden">
             <Header onNotificationsClick={() => setActiveTab('notifications')} onProfileClick={() => setActiveTab('profile')} />
           </div>
+
+          {/* First-time, signed-out visitor explainer -- shows once, ever */}
+          <HomeIntroBanner />
 
           {/* 1. Hero Search */}
           <HeroSearch
@@ -287,6 +305,7 @@ export default function App() {
             selectedCategory={selectedCategory}
             onClearFilters={handleClearFilters}
             onSelectListing={openListingDetails}
+            onSeeAll={() => setActiveTab('search')}
             isLoading={isLoading}
           />
 
@@ -341,8 +360,6 @@ export default function App() {
           onOpenSupport={openSupportPage}
           onOpenOwnerDashboard={openOwnerDashboard}
           onOpenAdminDashboard={openAdminDashboard}
-          onOpenTestMode={openTestMode}
-          onOpenDesignSystem={openDesignSystem}
         />
       ) : activeTab === 'auth' ? (
         <AuthPage onBack={closeAuthPage} onTabChange={setActiveTab} />

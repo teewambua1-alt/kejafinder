@@ -82,7 +82,7 @@ export default function ProfileTrustStatus({ isPhoneVerified, isIdVerified, hasE
         <h3 className="text-xs font-black text-neutral-800 dark:text-stone-255 uppercase tracking-wider">
           Trust & Verification
         </h3>
-        <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 leading-relaxed">
+        <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 leading-relaxed">
           Build trust when searching, saving, or posting homes.
         </p>
       </div>

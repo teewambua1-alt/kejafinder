@@ -153,7 +153,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
         <p className="text-[12px] font-bold text-neutral-650 dark:text-stone-300 leading-snug">
           KejaFinder is built for the people who make local rentals work every day.
         </p>
-        <p className="text-[11px] font-semibold text-neutral-450 dark:text-stone-450 leading-relaxed">
+        <p className="text-[11px] font-semibold text-neutral-550 dark:text-stone-450 leading-relaxed">
           From tenants searching for rooms to caretakers updating vacancies, every user needs simple, trusted tools.
         </p>
       </motion.div>
@@ -185,7 +185,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
                     <h4 className="text-[12px] font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight flex items-center space-x-1.5">
                       <span>{group.title}</span>
                       {group.isSubtle && (
-                        <span className="text-[8px] font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-450 dark:text-stone-500 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
+                        <span className="text-[8px] font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-500 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
                           MVP Roles
                         </span>
                       )}

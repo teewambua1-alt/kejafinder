@@ -57,14 +57,6 @@ export default function SimilarHomesSection({
     }
   };
 
-  const handleSave = (id: string, isSaved: boolean) => {
-    if (setListingFeedback) {
-      setListingFeedback(isSaved ? "Listing removed from saved." : "Listing saved locally.");
-    }
-    // Note: since this is local dummy data and we don't have a global state editor passed here
-    // for save toggling, we just show feedback for prototype purposes.
-  };
-
   const rowVariants = {
     hidden: { opacity: 0, y: 5 },
     show: { opacity: 1, y: 0 }
@@ -102,7 +94,6 @@ export default function SimilarHomesSection({
               <SimilarHomeCard
                 listing={listing}
                 onView={() => onOpenListingDetails(listing.id)}
-                onSave={handleSave}
               />
             </div>
           ))}

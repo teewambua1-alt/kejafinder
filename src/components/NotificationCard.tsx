@@ -109,11 +109,13 @@ export default function NotificationCard({ notification, onActionClick, onDismis
         <div className="shrink-0">
           {imageUrl ? (
             <div className="w-12 h-12 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-stone-800 border border-neutral-250/25 dark:border-stone-800 shadow-3xs">
-              <img 
-                src={imageUrl} 
-                alt="Notification preview" 
+              <img
+                src={imageUrl}
+                alt="Notification preview"
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           ) : (
@@ -130,7 +132,7 @@ export default function NotificationCard({ notification, onActionClick, onDismis
             <span className={`text-[9.5px] font-black uppercase tracking-wider ${
               category === 'safety' || isImportant
                 ? 'text-orange-650 dark:text-orange-400'
-                : 'text-neutral-450 dark:text-stone-400'
+                : 'text-neutral-550 dark:text-stone-400'
             }`}>
               {category === 'verification' ? 'scout verified' : category}
             </span>
@@ -171,7 +173,7 @@ export default function NotificationCard({ notification, onActionClick, onDismis
         </div>
 
         {/* Far-Right Indicator arrow */}
-        <div className="self-center text-neutral-350 dark:text-stone-600 shrink-0">
+        <div className="self-center text-neutral-550 dark:text-stone-600 shrink-0">
           <ChevronRight className="w-4 h-4 stroke-[2.2] group-hover/card:translate-x-0.5 transition-transform" />
         </div>
       </div>

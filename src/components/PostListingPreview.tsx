@@ -150,7 +150,7 @@ export default function PostListingPreview({
             <span>Deposit: <span className="text-neutral-800 dark:text-neutral-200">{formattedDeposit}</span></span>
             {draft.distanceFromRoad && (
               <span className="flex items-center">
-                <Dot className="w-4 h-4 text-neutral-350" />
+                <Dot className="w-4 h-4 text-neutral-550" />
                 <span>{draft.distanceFromRoad} from road</span>
               </span>
             )}

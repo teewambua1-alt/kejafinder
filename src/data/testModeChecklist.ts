@@ -39,9 +39,9 @@ export const initialTestItems: TestItem[] = [
   // Poster journey
   { id: "p1", title: "Post vacancy step form opens", description: "Multi-step flow is accessible.", status: "working", area: "poster", actionLabel: "Go Post", actionKey: "post" },
   { id: "p2", title: "House details entered", description: "Form fields allow text input.", status: "working", area: "poster" },
-  { id: "p3", title: "Location entered", description: "Area input with mock map.", status: "working", area: "poster" },
+  { id: "p3", title: "Location entered", description: "Area input plus a real interactive map -- drag the pin, tap the map, or use device location.", status: "working", area: "poster" },
   { id: "p4", title: "Amenities selected", description: "Toggles for amenities work.", status: "working", area: "poster" },
-  { id: "p5", title: "Photos mock upload works locally", description: "Placeholders can be added.", status: "prototype_only", area: "poster" },
+  { id: "p5", title: "Photos upload to Supabase Storage", description: "Photos upload on save/submit and sync to the public bucket once a listing is approved.", status: "working", area: "poster" },
   { id: "p6", title: "Contact details entered", description: "Phone and email fields editable.", status: "working", area: "poster" },
   { id: "p7", title: "Review step appears", description: "Summary before posting.", status: "working", area: "poster" },
   { id: "p8", title: "Post Vacancy writes to Supabase", description: "Saves draft and pending_review listings for signed-in poster roles.", status: "working", area: "poster" },
@@ -57,12 +57,12 @@ export const initialTestItems: TestItem[] = [
   // Prototype-only systems
   { id: "pr1", title: "Auth uses Supabase Auth", description: "Email/password Supabase Auth is active; signup requires email confirmation.", status: "working", area: "support", actionLabel: "Go Auth", actionKey: "auth" },
   { id: "pr2", title: "OTP is bypassed", description: "Phone verification is skipped or bypassed in test mode.", status: "prototype_only", area: "support" },
-  { id: "pr3", title: "Dashboard is mock only", description: "Landlord dashboard has no real stats.", status: "prototype_only", area: "support" },
+  { id: "pr3", title: "Dashboard shows real stats", description: "Landlord dashboard reads real listings and stats from Supabase, with working delete/availability actions.", status: "working", area: "support" },
   { id: "pr4", title: "Support is mock only", description: "No real tickets created.", status: "prototype_only", area: "support" },
   { id: "pr5", title: "Supabase listing reads are integrated", description: "Home, Search, and Listing Details load approved listings from Supabase.", status: "working", area: "support" },
   { id: "pr6", title: "Saved listings persistence", description: "Saved homes persist to Supabase for signed-in users.", status: "working", area: "support" },
   { id: "pr7", title: "Storage uploads", description: "Listing photos upload to Supabase Storage; sync to public bucket happens on admin approval.", status: "working", area: "support" },
-  { id: "pr8", title: "Admin approval missing", description: "Listings must be manually approved via Supabase (no admin UI yet).", status: "missing", area: "support" },
+  { id: "pr8", title: "Admin approval has a real UI", description: "Admin dashboard lets admins approve or reject pending listings via a real Supabase RPC.", status: "working", area: "support" },
 
   // UX and performance
   { id: "ux1", title: "Mobile bottom nav works", description: "Tab switching functions properly.", status: "working", area: "ux" },

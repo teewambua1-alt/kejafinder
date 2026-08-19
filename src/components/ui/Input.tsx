@@ -80,7 +80,7 @@ export default function Input({
         </span>
       )}
       {!error && hint && (
-        <span className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 pl-1">{hint}</span>
+        <span className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 pl-1">{hint}</span>
       )}
     </div>
   );

@@ -8,7 +8,8 @@ import {
   Check, 
   ShieldCheck, 
   Calendar,
-  AlertCircle
+  AlertCircle,
+  Footprints
 } from 'lucide-react';
 
 interface SavedCompareSheetProps {
@@ -124,10 +125,12 @@ export default function SavedCompareSheet({
                     {/* Visual Media with Title and Location */}
                     <div className="space-y-2.5">
                       <div className="relative h-24 rounded-xl overflow-hidden bg-neutral-200 dark:bg-stone-950">
-                        <img 
-                          src={listing.image} 
-                          alt={listing.title} 
+                        <img
+                          src={listing.image}
+                          alt={listing.title}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-600 border border-emerald-500/20 text-[8.5px] font-mono font-black uppercase text-white rounded-md tracking-wider">
                           {formatHouseType(listing.type)}
@@ -209,8 +212,9 @@ export default function SavedCompareSheet({
                           <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest leading-none">
                             Accessibility
                           </span>
-                          <span className="text-[10px] font-semibold text-neutral-600 dark:text-stone-300">
-                            🚶 {listing.distanceFromRoad}
+                          <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-neutral-600 dark:text-stone-300">
+                            <Footprints className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+                            {listing.distanceFromRoad}
                           </span>
                         </div>
                       )}
@@ -218,22 +222,31 @@ export default function SavedCompareSheet({
                       {/* Saved Dates */}
                       <div className="flex items-center space-x-1 pt-1 text-[9px] font-bold text-neutral-400 dark:text-stone-500">
                         <Calendar className="w-3 h-3 stroke-[2]" />
-                        <span>Saved: {listing.savedAt || "June 2026"}</span>
+                        <span>Saved: {listing.savedAt || "Recently"}</span>
                       </div>
 
                     </div>
 
                     {/* Small Actions CTA block */}
                     <div className="pt-2 border-t border-neutral-100 dark:border-stone-850/50">
-                      <motion.a
-                        whileTap={{ scale: 0.96 }}
-                        href={`https://wa.me/${listing.whatsappPhone || "254700000000"}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full h-8 flex items-center justify-center space-x-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10.5px] rounded-xl transition-colors shadow-3xs"
-                      >
-                        <span>Contact caretaker</span>
-                      </motion.a>
+                      {listing.whatsappPhone ? (
+                        <motion.a
+                          whileTap={{ scale: 0.96 }}
+                          href={`https://wa.me/${listing.whatsappPhone}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-10 flex items-center justify-center space-x-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10.5px] rounded-xl transition-colors shadow-3xs"
+                        >
+                          <span>Contact caretaker</span>
+                        </motion.a>
+                      ) : (
+                        <button
+                          disabled
+                          className="w-full h-10 flex items-center justify-center space-x-1 bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 font-extrabold text-[10.5px] rounded-xl cursor-not-allowed"
+                        >
+                          <span>No WhatsApp on file</span>
+                        </button>
+                      )}
                     </div>
 
                   </motion.div>

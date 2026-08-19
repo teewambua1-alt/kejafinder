@@ -670,6 +670,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onReset={handleReset}
+              onGoDashboard={() => onTabChange?.('landlord-dashboard')}
               onSaveDraft={async () => {
                 if (canSubmitListing) {
                   return await saveDraft(mapPostVacancyFormToSupabaseListing(draft), photoPreviews);

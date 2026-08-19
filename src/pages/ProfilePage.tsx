@@ -24,13 +24,11 @@ interface ProfilePageProps {
   onOpenSupport?: () => void;
   onOpenOwnerDashboard?: () => void;
   onOpenAdminDashboard?: () => void;
-  onOpenTestMode?: () => void;
-  onOpenDesignSystem?: () => void;
 }
 
 const POSTER_ROLES = ['landlord', 'caretaker', 'agent', 'scout'];
 
-export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenOwnerDashboard, onOpenAdminDashboard, onOpenTestMode, onOpenDesignSystem }: ProfilePageProps) {
+export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenOwnerDashboard, onOpenAdminDashboard }: ProfilePageProps) {
   const { user: currentUser, profile, signOut } = useAuth();
   const { showToast } = useToast();
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
@@ -179,9 +177,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
           onOpenSafety={onOpenSafety}
           onOpenOwnerDashboard={onOpenOwnerDashboard}
           onOpenAdminDashboard={onOpenAdminDashboard}
-          onOpenTestMode={onOpenTestMode}
-          onOpenDesignSystem={onOpenDesignSystem}
-          showPostVacancy={!profile || isPosterRole}
+          showPostVacancy={isPosterRole}
           showOwnerDashboard={isPosterRole}
           showAdminDashboard={isAdmin}
         />

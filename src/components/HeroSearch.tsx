@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface HeroSearchProps {
@@ -45,18 +45,9 @@ export default function HeroSearch({ searchQuery, onSearchChange, onSearchSubmit
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search estate, area, landmark..."
-            className="w-full bg-transparent text-base text-neutral-800 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-stone-500 outline-none pr-14 py-2"
+            aria-label="Search estate, area, landmark"
+            className="w-full bg-transparent text-base text-neutral-800 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-stone-500 outline-none pr-3 py-2"
           />
-
-          {/* Filter Icon Button on the Right */}
-          <button
-            type="button"
-            id="btn-filters"
-            className="absolute right-2.5 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 active:scale-95 transition-all outline-none"
-            aria-label="Filter Vacancies"
-          >
-            <SlidersHorizontal className="w-5 h-5 stroke-[2.2]" />
-          </button>
         </div>
       </form>
     </motion.div>

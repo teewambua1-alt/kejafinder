@@ -41,8 +41,10 @@ export default function DesktopNavbar({
   const [query, setQuery] = useState('');
 
   const initial = profile?.full_name?.trim()?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase();
-  // Tenant accounts can't submit vacancies -- see BottomNav's identical gate.
-  const navLinks = profile?.role === 'tenant' ? BASE_NAV_LINKS : [...BASE_NAV_LINKS, POST_NAV_LINK];
+  // Only signed-in landlords/caretakers/agents/scouts can submit vacancies
+  // -- see BottomNav's identical gate.
+  const canPost = !!profile && profile.role !== 'tenant';
+  const navLinks = canPost ? [...BASE_NAV_LINKS, POST_NAV_LINK] : BASE_NAV_LINKS;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +112,7 @@ export default function DesktopNavbar({
         <div className="flex items-center space-x-2.5 shrink-0">
           <button
             onClick={toggleTheme}
-            className="w-9 h-9 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
+            className="w-10 h-10 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
             aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {isDark ? <Sun className="w-4.5 h-4.5 text-amber-400 stroke-[2]" /> : <Moon className="w-4.5 h-4.5 text-neutral-600 stroke-[2]" />}
@@ -118,7 +120,7 @@ export default function DesktopNavbar({
 
           <button
             onClick={onNotificationsClick}
-            className="relative w-9 h-9 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
+            className="relative w-10 h-10 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
             aria-label="Open notifications"
           >
             <Bell className="w-4.5 h-4.5 stroke-[2]" />
@@ -127,7 +129,7 @@ export default function DesktopNavbar({
           <div className="relative">
             <button
               onClick={() => setIsProfileMenuOpen((v) => !v)}
-              className="relative w-9 h-9 rounded-full p-[2px] bg-emerald-600/10 border border-emerald-500/35 shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer outline-none"
+              className="relative w-10 h-10 rounded-full p-[2px] bg-emerald-600/10 border border-emerald-500/35 shadow-xs flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer outline-none"
               aria-label="Open profile menu"
               aria-expanded={isProfileMenuOpen}
             >
@@ -137,7 +139,7 @@ export default function DesktopNavbar({
                 ) : user && initial ? (
                   <span className="text-xs font-black text-emerald-700 dark:text-emerald-400">{initial}</span>
                 ) : (
-                  <UserCircle className="w-5 h-5 text-neutral-450 dark:text-stone-500" />
+                  <UserCircle className="w-5 h-5 text-neutral-550 dark:text-stone-500" />
                 )}
               </div>
             </button>

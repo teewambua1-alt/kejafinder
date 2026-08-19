@@ -184,7 +184,7 @@ export default function ListingLocationDetails({ listing, onAskDirections, onOpe
               <Navigation className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Landmark</p>
+              <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Landmark</p>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.landmark}</p>
             </div>
           </div>
@@ -196,7 +196,7 @@ export default function ListingLocationDetails({ listing, onAskDirections, onOpe
               <Footprints className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Main Road</p>
+              <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Main Road</p>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.distanceFromRoad}</p>
             </div>
           </div>
@@ -208,7 +208,7 @@ export default function ListingLocationDetails({ listing, onAskDirections, onOpe
               <BusFront className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Nearby Stage</p>
+              <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Nearby Stage</p>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.nearbyStage}</p>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function ListingLocationDetails({ listing, onAskDirections, onOpe
               <Route className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold text-neutral-450 dark:text-stone-500 tracking-wider mb-0.5">Road Access</p>
+              <p className="text-[10px] uppercase font-bold text-neutral-550 dark:text-stone-500 tracking-wider mb-0.5">Road Access</p>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-200">{listing.roadAccessText}</p>
             </div>
           </div>

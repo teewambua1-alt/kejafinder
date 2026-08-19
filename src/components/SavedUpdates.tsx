@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   ExternalLink,
   ChevronRight,
-  Info
+  Info,
+  MapPin
 } from 'lucide-react';
 import { SavedUpdate, SavedUpdateType } from '../data/savedUpdates';
 import { useToast } from '../context/ToastContext';
@@ -230,8 +231,9 @@ export default function SavedUpdates({
                       {item.message}
                     </p>
 
-                    <span className="block text-[10px] text-neutral-400 dark:text-stone-500 font-semibold truncate pt-0.5">
-                      📍 {item.location}
+                    <span className="flex items-center gap-1 text-[10px] text-neutral-400 dark:text-stone-500 font-semibold truncate pt-0.5">
+                      <MapPin className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+                      {item.location}
                     </span>
 
                   </div>
@@ -358,8 +360,9 @@ export default function SavedUpdates({
         </div>
 
         {/* Small mockup footnote */}
-        <div className="pt-2 border-t border-neutral-100 dark:border-stone-800 text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 font-mono text-center">
-          ⚡ Alerts configuration is prototype-only for now.
+        <div className="flex items-center justify-center gap-1 pt-2 border-t border-neutral-100 dark:border-stone-800 text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 font-mono text-center">
+          <Info className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
+          Alerts configuration is prototype-only for now.
         </div>
 
       </div>

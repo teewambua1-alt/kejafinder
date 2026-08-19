@@ -24,6 +24,9 @@ interface ListingStickyContactBarProps {
  * peek through as it scrolls past underneath; a full-bleed band can't leak.
  */
 export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallClick, onWhatsAppClick }: ListingStickyContactBarProps) {
+  const hasPhone = phone.length > 0;
+  const hasWhatsapp = whatsapp.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,32 +40,54 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
             <p className="text-sm font-black text-emerald-600 dark:text-emerald-500 leading-none truncate">
               KSh {rent.toLocaleString()}
             </p>
-            <p className="text-2xs font-semibold text-neutral-450 dark:text-stone-500 leading-none mt-0.5">/month</p>
+            <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 leading-none mt-0.5">/month</p>
           </div>
 
-          <motion.a
-            whileTap={{ scale: 0.96 }}
-            href={`tel:${phone.replace(/\s+/g, '')}`}
-            onClick={onCallClick}
-            className="flex-1 h-11 rounded-xl border border-emerald-500 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
-            aria-label="Call about this listing"
-          >
-            <Phone className="w-4 h-4 stroke-[2.2]" />
-            <span>Call</span>
-          </motion.a>
+          {hasPhone ? (
+            <motion.a
+              whileTap={{ scale: 0.96 }}
+              href={`tel:${phone.replace(/\s+/g, '')}`}
+              onClick={onCallClick}
+              className="flex-1 h-11 rounded-xl border border-emerald-500 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
+              aria-label="Call about this listing"
+            >
+              <Phone className="w-4 h-4 stroke-[2.2]" />
+              <span>Call</span>
+            </motion.a>
+          ) : (
+            <button
+              disabled
+              className="flex-1 h-11 rounded-xl border border-neutral-200 dark:border-stone-700 text-neutral-400 dark:text-stone-600 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
+              aria-label="No phone number on file"
+            >
+              <Phone className="w-4 h-4 stroke-[2.2]" />
+              <span>No phone</span>
+            </button>
+          )}
 
-          <motion.a
-            whileTap={{ scale: 0.96 }}
-            href={`https://wa.me/${whatsapp}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onWhatsAppClick}
-            className="flex-1 h-11 rounded-xl bg-emerald-600 dark:bg-emerald-600 text-white flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
-            aria-label="WhatsApp about this listing"
-          >
-            <MessageCircle className="w-4 h-4 stroke-[2.2]" />
-            <span>WhatsApp</span>
-          </motion.a>
+          {hasWhatsapp ? (
+            <motion.a
+              whileTap={{ scale: 0.96 }}
+              href={`https://wa.me/${whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onWhatsAppClick}
+              className="flex-1 h-11 rounded-xl bg-emerald-600 dark:bg-emerald-600 text-white flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
+              aria-label="WhatsApp about this listing"
+            >
+              <MessageCircle className="w-4 h-4 stroke-[2.2]" />
+              <span>WhatsApp</span>
+            </motion.a>
+          ) : (
+            <button
+              disabled
+              className="flex-1 h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
+              aria-label="No WhatsApp number on file"
+            >
+              <MessageCircle className="w-4 h-4 stroke-[2.2]" />
+              <span>No WhatsApp</span>
+            </button>
+          )}
         </div>
       </div>
     </motion.div>

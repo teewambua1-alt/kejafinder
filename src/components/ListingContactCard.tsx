@@ -29,8 +29,10 @@ export default function ListingContactCard({ listing, onFeedback, onCallClick, o
 
   const name = listing.contactName || listing.caretakerName || 'Caretaker';
   const role = listing.contactRole || 'caretaker';
-  const phone = listing.contactPhone || listing.caretakerPhone || '+254000000000';
-  const whatsapp = listing.whatsappPhone || '254000000000';
+  const phone = listing.contactPhone || listing.caretakerPhone || '';
+  const whatsapp = listing.whatsappPhone || '';
+  const hasPhone = phone.length > 0;
+  const hasWhatsapp = whatsapp.length > 0;
   const title = listing.title || 'the listing';
 
   const initials = name
@@ -103,14 +105,16 @@ export default function ListingContactCard({ listing, onFeedback, onCallClick, o
             
             <div className="text-sm font-bold text-neutral-600 dark:text-stone-300 mb-1 flex items-center gap-2">
               <Phone className="w-3.5 h-3.5" />
-              {phone}
-              <button 
-                onClick={handleCopy}
-                className="p-1 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-md text-neutral-400 transition-colors ml-1"
-                aria-label="Copy phone number"
-              >
-                <Copy className="w-3.5 h-3.5" />
-              </button>
+              {hasPhone ? phone : <span className="italic text-neutral-400 dark:text-stone-500 font-semibold">Not provided</span>}
+              {hasPhone && (
+                <button
+                  onClick={handleCopy}
+                  className="p-1 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-md text-neutral-400 transition-colors ml-1"
+                  aria-label="Copy phone number"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
             
             <p className="text-[10px] sm:text-xs font-semibold text-neutral-500 dark:text-stone-500 flex items-center gap-1.5 leading-snug">
@@ -141,66 +145,90 @@ export default function ListingContactCard({ listing, onFeedback, onCallClick, o
 
       {/* 3. Action Buttons */}
       <motion.div variants={rowVariants} className="flex gap-3">
-        <motion.a
-          whileTap={{ scale: 0.97 }}
-          href={`tel:${phone.replace(/\s+/g, '')}`}
-          onClick={onCallClick}
-          className="flex-1 bg-neutral-850 dark:bg-stone-100 text-white dark:text-stone-900 py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm"
-          aria-label={`Call ${role} ${name}`}
-        >
-          <Phone className="w-4.5 h-4.5" />
-          <span>Call caretaker</span>
-        </motion.a>
+        {hasPhone ? (
+          <motion.a
+            whileTap={{ scale: 0.97 }}
+            href={`tel:${phone.replace(/\s+/g, '')}`}
+            onClick={onCallClick}
+            className="flex-1 bg-neutral-850 dark:bg-stone-100 text-white dark:text-stone-900 py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm"
+            aria-label={`Call ${role} ${name}`}
+          >
+            <Phone className="w-4.5 h-4.5" />
+            <span>Call caretaker</span>
+          </motion.a>
+        ) : (
+          <button
+            disabled
+            className="flex-1 bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 cursor-not-allowed"
+            aria-label="No phone number on file"
+          >
+            <Phone className="w-4.5 h-4.5" />
+            <span>No phone on file</span>
+          </button>
+        )}
 
-        <motion.a
-          whileTap={{ scale: 0.97 }}
-          href={getWhatsAppMessage('available')}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onWhatsAppClick}
-          className="flex-1 bg-emerald-600 dark:bg-emerald-500 text-white py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors"
-          aria-label={`WhatsApp ${role} ${name}`}
-        >
-          <MessageCircle className="w-4.5 h-4.5" />
-          <span>WhatsApp</span>
-        </motion.a>
-      </motion.div>
-
-      {/* 4. Quick Prompts */}
-      <motion.div variants={rowVariants} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/60 dark:border-stone-800/60 rounded-3xl p-5 shadow-sm space-y-3">
-        <h4 className="text-[11px] font-black tracking-wider uppercase text-neutral-805 dark:text-stone-200">
-          Ask quickly via WhatsApp
-        </h4>
-        <div className="flex flex-col gap-2">
-          <a
+        {hasWhatsapp ? (
+          <motion.a
+            whileTap={{ scale: 0.97 }}
             href={getWhatsAppMessage('available')}
             target="_blank"
             rel="noopener noreferrer"
             onClick={onWhatsAppClick}
-            className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
+            className="flex-1 bg-emerald-600 dark:bg-emerald-500 text-white py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 shadow-sm hover:bg-emerald-700 dark:hover:bg-emerald-600 transition-colors"
+            aria-label={`WhatsApp ${role} ${name}`}
           >
-            "Is it still available?"
-          </a>
-          <a
-            href={getWhatsAppMessage('view')}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onWhatsAppClick}
-            className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
+            <MessageCircle className="w-4.5 h-4.5" />
+            <span>WhatsApp</span>
+          </motion.a>
+        ) : (
+          <button
+            disabled
+            className="flex-1 bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 py-3.5 rounded-2xl text-[12px] uppercase font-black tracking-wider flex items-center justify-center gap-2 cursor-not-allowed"
+            aria-label="No WhatsApp number on file"
           >
-            "Can I view today?"
-          </a>
-          <a
-            href={getWhatsAppMessage('directions')}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onWhatsAppClick}
-            className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
-          >
-            "Send exact directions"
-          </a>
-        </div>
+            <MessageCircle className="w-4.5 h-4.5" />
+            <span>No WhatsApp on file</span>
+          </button>
+        )}
       </motion.div>
+
+      {/* 4. Quick Prompts */}
+      {hasWhatsapp && (
+        <motion.div variants={rowVariants} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-150/60 dark:border-stone-800/60 rounded-3xl p-5 shadow-sm space-y-3">
+          <h4 className="text-[11px] font-black tracking-wider uppercase text-neutral-805 dark:text-stone-200">
+            Ask quickly via WhatsApp
+          </h4>
+          <div className="flex flex-col gap-2">
+            <a
+              href={getWhatsAppMessage('available')}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onWhatsAppClick}
+              className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
+            >
+              "Is it still available?"
+            </a>
+            <a
+              href={getWhatsAppMessage('view')}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onWhatsAppClick}
+              className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
+            >
+              "Can I view today?"
+            </a>
+            <a
+              href={getWhatsAppMessage('directions')}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onWhatsAppClick}
+              className="px-4 py-2.5 bg-neutral-50 dark:bg-stone-850 hover:bg-neutral-100 dark:hover:bg-stone-800 rounded-xl text-xs font-bold text-neutral-700 dark:text-stone-300 text-left transition-colors border border-neutral-200/50 dark:border-stone-700/50"
+            >
+              "Send exact directions"
+            </a>
+          </div>
+        </motion.div>
+      )}
 
       {/* 5. Contact safety note */}
       <motion.div variants={rowVariants} className="bg-orange-50/80 dark:bg-orange-950/20 border border-orange-100/80 dark:border-orange-900/30 rounded-2xl p-4 shadow-sm flex items-start space-x-3">

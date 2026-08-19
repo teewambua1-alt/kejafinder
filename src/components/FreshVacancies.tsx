@@ -10,15 +10,17 @@ interface FreshVacanciesProps {
   selectedCategory: string;
   onClearFilters: () => void;
   onSelectListing?: (id: string) => void;
+  onSeeAll?: () => void;
   isLoading?: boolean;
 }
 
-export default function FreshVacancies({ 
-  listings, 
-  searchQuery, 
-  selectedCategory, 
+export default function FreshVacancies({
+  listings,
+  searchQuery,
+  selectedCategory,
   onClearFilters,
   onSelectListing,
+  onSeeAll,
   isLoading = false
 }: FreshVacanciesProps) {
   return (
@@ -34,8 +36,9 @@ export default function FreshVacancies({
           Recently added
         </h2>
         
-        <button 
+        <button
           id="btn-see-all-vacancies"
+          onClick={onSeeAll}
           className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400 text-xs font-bold hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline transition-all cursor-pointer outline-none bg-transparent border-none"
         >
           <span>See all</span>

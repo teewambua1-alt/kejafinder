@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import LandlordDashboardHeader from '../components/LandlordDashboardHeader';
 import ProfileStats, { ProfileStatItem } from '../components/ProfileStats';
@@ -20,6 +20,7 @@ import type { AdminListingRow } from '../services/adminService';
 import { getListingTypeLabel, ListingType } from '../types/listing';
 import { supabase } from '../lib/supabase/client';
 import Skeleton from '../components/ui/Skeleton';
+import { useToast } from '../context/ToastContext';
 
 interface AdminDashboardPageProps {
   onBack: () => void;
@@ -67,9 +68,9 @@ function PendingListingCard({
       <div className="flex items-center space-x-3">
         <div className="w-14 h-14 rounded-xl overflow-hidden bg-neutral-100 dark:bg-stone-850 border border-neutral-200/60 dark:border-stone-800 shrink-0 flex items-center justify-center">
           {cover ? (
-            <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
           ) : (
-            <ImageOff className="w-5 h-5 text-neutral-350 dark:text-stone-600" />
+            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-600" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -146,7 +147,14 @@ function PendingListingCardSkeleton() {
 
 export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) {
   const { isAdmin, isLoading: isCheckingAdmin } = useIsAdmin();
-  const { stats, pendingListings, openReports, pendingVerifications, recentActions, isLoading, approveListing, rejectListing } = useAdminDashboard(isAdmin);
+  const { stats, pendingListings, openReports, pendingVerifications, recentActions, isLoading, error, approveListing, rejectListing } = useAdminDashboard(isAdmin);
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showToast(error);
+    }
+  }, [error, showToast]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 15 },
@@ -223,7 +231,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                 </div>
               ) : pendingListings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-2">
-                  <Inbox className="w-7 h-7 text-neutral-350 dark:text-stone-600 mx-auto" />
+                  <Inbox className="w-7 h-7 text-neutral-550 dark:text-stone-600 mx-auto" />
                   <p className="text-[12px] font-bold text-neutral-500 dark:text-stone-400">Nothing waiting for review right now.</p>
                 </div>
               ) : (
@@ -297,7 +305,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                           <span className="font-black text-neutral-850 dark:text-stone-100">{action.adminName || 'An admin'}</span>{' '}
                           {action.action.replace(/_/g, ' ')}d a {action.target_type}
                         </p>
-                        {action.notes && <p className="text-[10px] font-semibold text-neutral-450 dark:text-stone-500 mt-0.5 truncate">{action.notes}</p>}
+                        {action.notes && <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-0.5 truncate">{action.notes}</p>}
                       </div>
                       <span className="text-[9px] font-bold text-neutral-400 dark:text-stone-500 shrink-0">
                         {new Date(action.created_at).toLocaleDateString()}

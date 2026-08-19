@@ -68,11 +68,13 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
               <div className="space-y-2.5">
                 {/* Compact Thumbnail Container */}
                 <div className="relative w-full h-28 rounded-xl overflow-hidden bg-neutral-100 dark:bg-stone-950">
-                  <img 
-                    src={item.image} 
+                  <img
+                    src={item.image}
                     alt={item.title}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
 
                   {/* House type overlay tag */}
@@ -120,8 +122,9 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
                   </div>
 
                   {item.badges && item.badges[0] && (
-                    <span className="text-[8.5px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/20 px-1 py-0.5 rounded border border-emerald-500/10">
-                      ✔ {item.badges[0]}
+                    <span className="inline-flex items-center gap-0.5 text-[8.5px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/20 px-1 py-0.5 rounded border border-emerald-500/10">
+                      <Check className="w-2.5 h-2.5 stroke-[3] shrink-0" aria-hidden="true" />
+                      {item.badges[0]}
                     </span>
                   )}
                 </div>

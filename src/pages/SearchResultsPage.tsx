@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Map as MapIcon, List, LocateFixed } from 'lucide-react';
 import Header from '../components/Header';
 import SearchTopBar from '../components/SearchTopBar';
-import SearchMapPreview from '../components/SearchMapPreview';
 import SearchFilterChips from '../components/SearchFilterChips';
 import SearchHouseTypeChips from '../components/SearchHouseTypeChips';
 import ResultsSummary from '../components/ResultsSummary';
@@ -268,6 +267,14 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
   // unsupported/empty) instead of the normal results list, reusing the exact
   // same copy and EmptyState pattern Home's NearbyListings.tsx established.
   const renderResults = (vm: 'list' | 'grid') => {
+    if (!isNearestSort && isLoading) {
+      return (
+        <div className={vm === 'grid' ? 'grid grid-cols-2 gap-3' : 'flex flex-col gap-4'}>
+          {Array.from({ length: vm === 'grid' ? 4 : 3 }).map((_, i) => <ListingCardSkeleton key={i} />)}
+        </div>
+      );
+    }
+
     if (isNearestSort) {
       if (nearbyPermissionState === 'denied') {
         return (
@@ -398,9 +405,22 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
             <SearchHouseTypeChips selectedType={selectedHouseTypeChip} onSelectType={handleSelectHouseTypeChip} />
           </motion.div>
 
-          {/* 4. Map Preview */}
+          {/* 4. Map Preview -- real listings on a real map, tap to expand */}
           <motion.div variants={itemVariants} className="w-full">
-            <SearchMapPreview />
+            <button
+              type="button"
+              onClick={() => setViewMode('map')}
+              aria-label="Open full map view"
+              className="relative w-full h-40 rounded-2xl overflow-hidden border border-neutral-100 dark:border-neutral-800/80 shadow-xs cursor-pointer text-left"
+            >
+              <div className="absolute inset-0 pointer-events-none">
+                <SearchFullMap listings={sortedListings} variant="panel" scrollWheelZoom={false} />
+              </div>
+              <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 dark:bg-stone-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-xs border border-neutral-150/50 dark:border-neutral-800/60 flex items-center space-x-1.5">
+                <MapIcon className="w-3.5 h-3.5 text-neutral-700 dark:text-stone-300" />
+                <span className="text-[10px] font-black text-neutral-700 dark:text-stone-300 uppercase tracking-wider">Expand map</span>
+              </div>
+            </button>
           </motion.div>
 
           {/* 5. Results Summary Row */}

@@ -77,7 +77,7 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
           className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all cursor-pointer outline-none ${
             isInitialSaved 
               ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/45 text-rose-500 shadow-sm' 
-              : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150/50 dark:border-stone-800/50 text-neutral-450 dark:text-stone-400 hover:text-rose-500 dark:hover:text-rose-450'
+              : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150/50 dark:border-stone-800/50 text-neutral-550 dark:text-stone-400 hover:text-rose-500 dark:hover:text-rose-450'
           }`}
           aria-label="Save listing"
         >

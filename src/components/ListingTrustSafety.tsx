@@ -15,18 +15,16 @@ import {
   Flag,
   CalendarCheck
 } from 'lucide-react';
-import { KejaListing, ReportReason } from '../types/listings';
-import ReportListingPanel from './ReportListingPanel';
+import { KejaListing } from '../types/listings';
 
 interface ListingTrustSafetyProps {
   listing: KejaListing;
   onAvailabilityCheck?: () => void;
-  onReportSubmit?: (reason: ReportReason, message: string) => void;
+  onOpenReport?: () => void;
 }
 
-export default function ListingTrustSafety({ listing, onAvailabilityCheck, onReportSubmit }: ListingTrustSafetyProps) {
+export default function ListingTrustSafety({ listing, onAvailabilityCheck, onOpenReport }: ListingTrustSafetyProps) {
   const [hasAskedAvailability, setHasAskedAvailability] = useState(false);
-  const [showReportPanel, setShowReportPanel] = useState(false);
 
   const rowVariants = {
     hidden: { opacity: 0, y: 5 },
@@ -45,13 +43,6 @@ export default function ListingTrustSafety({ listing, onAvailabilityCheck, onRep
     setHasAskedAvailability(true);
     if (onAvailabilityCheck) {
       onAvailabilityCheck();
-    }
-  };
-
-  const handleReportSubmit = (reason: ReportReason, message: string) => {
-    setShowReportPanel(false);
-    if (onReportSubmit) {
-      onReportSubmit(reason, message);
     }
   };
 
@@ -199,9 +190,9 @@ export default function ListingTrustSafety({ listing, onAvailabilityCheck, onRep
           <p className="text-[11px] font-medium text-neutral-500 dark:text-stone-400 leading-snug">
             Flag wrong price, fake listing, already taken house, or unsafe request.
           </p>
-          <motion.button 
+          <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={() => setShowReportPanel(true)}
+            onClick={() => onOpenReport?.()}
             className="w-full mt-2 py-3 rounded-xl border border-neutral-200 dark:border-stone-700 text-[11px] uppercase tracking-wider font-bold text-neutral-700 dark:text-stone-300 hover:bg-neutral-50 dark:hover:bg-stone-800 transition-colors flex items-center justify-center gap-2"
             aria-label="Report this listing"
           >
@@ -210,12 +201,6 @@ export default function ListingTrustSafety({ listing, onAvailabilityCheck, onRep
           </motion.button>
         </motion.div>
       </div>
-
-      <ReportListingPanel 
-        isOpen={showReportPanel}
-        onClose={() => setShowReportPanel(false)}
-        onSubmit={handleReportSubmit}
-      />
     </motion.div>
   );
 }
