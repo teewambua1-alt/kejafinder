@@ -54,14 +54,14 @@ export default function AuthTrustSafetyOnboarding({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-3xl border border-neutral-200/60 dark:border-stone-800/60 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-6 shadow-sm">
+      <div className="pt-1">
         <div className="flex items-center gap-2.5 mb-2">
           <span className="w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-4.5 h-4.5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" aria-hidden="true" />
           </span>
-          <h2 className="text-2xl font-black tracking-tight leading-tight text-neutral-850 dark:text-stone-100">
+          <h1 className="text-[26px] font-black tracking-tight leading-[1.15] text-neutral-850 dark:text-stone-100">
             Before you start
-          </h2>
+          </h1>
         </div>
         <p className="mb-5 text-[13px] font-semibold text-neutral-600 dark:text-stone-300">
           {roleNote}

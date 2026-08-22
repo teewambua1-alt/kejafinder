@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Check } from 'lucide-react';
 import AuthHeader from '../components/AuthHeader';
 import AuthWelcomeChoice from '../components/AuthWelcomeChoice';
+import AuthPitch from '../components/AuthPitch';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import AuthPhoneLoginForm from '../components/AuthPhoneLoginForm';
 import AuthSignupBasicsForm from '../components/AuthSignupBasicsForm';
 import AuthRoleSelection from '../components/AuthRoleSelection';
@@ -35,6 +37,9 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
   const m = useMotion();
 
   const [authMode, setAuthMode] = useState<AuthMode>('welcome');
+  // At lg+ the pitch owns the left column and carries no heading, so the
+  // welcome step supplies the page's h1 on its side of the split.
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const [authDraftUser, setAuthDraftUser] = useState<Partial<AuthDraftUser>>({});
 
   /**
@@ -56,7 +61,14 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
    * and focus lands on <body> instead.
    */
   const focusStep = useCallback((node: HTMLDivElement | null) => {
-    node?.focus();
+    if (!node) return;
+    // preventScroll matters here: the header is `sticky top-0` inside the
+    // scroller, and a plain focus() scrolls the focused element flush to the
+    // scroller's top -- i.e. underneath the sticky header, clipping the first
+    // 15px of every step's heading. Focus for assistive tech, then put the
+    // scroll position where a new step belongs: at the start.
+    node.focus({ preventScroll: true });
+    node.closest('[data-auth-scroll]')?.scrollTo({ top: 0 });
   }, []);
 
   const handleShowFeedback = useCallback((msg: string) => {
@@ -133,10 +145,36 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
       <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none z-0" />
       <div className="absolute top-40 left-1/4 w-72 h-72 bg-emerald-300/10 dark:bg-emerald-300/5 rounded-full blur-3xl pointer-events-none z-0" />
 
-      <AuthHeader onBack={handleBack} />
+      {/* One scroll container, with the header inside it.
+        *
+        * AuthHeader is `sticky top-0`, but it used to sit OUTSIDE this
+        * scroller -- so it stuck to AppShell's scroll box while the form
+        * scrolled in a second, nested box beneath it. Every auth screen's
+        * heading was clipped by 11px behind the header, and nested scroll
+        * regions fight the main scroll gesture. Inside the scroller the header
+        * occupies flow space, so nothing can start underneath it. */}
+      <div data-auth-scroll className="flex-1 overflow-y-auto no-scrollbar z-10 pb-12">
+        <AuthHeader onBack={handleBack} />
 
-      <div className="flex-1 overflow-y-auto no-scrollbar z-10 px-6 py-6 pb-12">
-        <div className="max-w-md mx-auto flex flex-col gap-6">
+        {/* Two columns at lg+, one below. The desktop flow used to centre a
+          * max-w-md form in 1440px of empty page under two stacked headers;
+          * the pitch now fills the left column and stays visible while the
+          * form is filled in. On mobile the pitch appears only on the welcome
+          * step -- repeating it above every form would bury the fields. */}
+        <div className="mx-auto grid w-full max-w-md gap-10 px-6 pt-6 lg:max-w-5xl lg:grid-cols-2 lg:gap-16 lg:pt-14">
+          {/* Rendered, not just CSS-hidden. `hidden lg:block` left a mounted
+            * (and therefore queryable) heading on every mobile sub-step. */}
+          {(isDesktop || authMode === 'welcome') && (
+          <div className={authMode === 'welcome' ? 'contents lg:block' : 'hidden lg:block'}>
+            {/* At lg+ the pitch is always visible, so the step on the right
+              * owns the page's h1 and this drops out of the outline. On mobile
+              * the pitch only renders on the welcome step, where it *is* the
+              * heading. Getting this wrong gave desktop welcome two h1s. */}
+            <AuthPitch headingLevel={isDesktop ? 'p' : 'h1'} />
+          </div>
+          )}
+
+          <div className="flex flex-col gap-6 lg:min-w-0">
           {signupStepIndex >= 0 && (
             <AuthStepProgress steps={SIGNUP_STEP_LABELS} current={signupStepIndex} />
           )}
@@ -156,7 +194,7 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
                 <AuthWelcomeChoice
                   onSetAuthMode={setAuthMode}
                   onGoHome={goHome}
-                  onGoPost={() => onTabChange?.('post')}
+                  showHeading={isDesktop}
                 />
               )}
 
@@ -194,6 +232,7 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
               )}
             </motion.div>
           </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

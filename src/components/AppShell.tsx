@@ -20,6 +20,13 @@ interface AppShellProps {
     onTouchEnd?: (e: React.TouchEvent<HTMLDivElement>) => void;
   };
   pullToRefreshIndicator?: React.ReactNode;
+  /**
+   * Hides BottomNav and the assistant so one task owns the screen. Auth uses
+   * it: signing up while a tab bar offers four ways to leave, and a chat
+   * bubble sits over the submit button, is not a flow -- it is a distraction
+   * with a form in it.
+   */
+  focusMode?: boolean;
 }
 
 /**
@@ -48,6 +55,7 @@ export default function AppShell({
   onSearchSubmit,
   pullToRefreshHandlers,
   pullToRefreshIndicator,
+  focusMode = false,
 }: AppShellProps) {
   const { isDark } = useTheme();
 
@@ -68,7 +76,10 @@ export default function AppShell({
         {/* Subtle internal decor background gradient -- mobile only */}
         <div className="md:hidden absolute top-20 left-10 w-40 h-40 bg-emerald-200/10 rounded-full filter blur-xl pointer-events-none" />
 
-        {/* Sticky tablet/desktop navbar -- hidden on mobile (renders its own md:block internally) */}
+        {/* Sticky tablet/desktop navbar -- hidden on mobile (renders its own md:block internally).
+            Suppressed in focusMode: the auth flow has its own header, and two
+            stacked headers each showing the KejaFinder wordmark read as a bug. */}
+        {!focusMode && (
         <DesktopNavbar
           activeTab={activeTab}
           onTabChange={onTabChange}
@@ -78,6 +89,7 @@ export default function AppShell({
           onOpenDesignSystem={onOpenDesignSystem}
           onSearchSubmit={onSearchSubmit}
         />
+        )}
 
         {/* Content Viewport: independently scrolling fixed-height box on mobile
             (pb-28 clears the bottom nav); on md+ it's part of the normal page
@@ -91,12 +103,14 @@ export default function AppShell({
         </div>
 
         {/* Mobile-only bottom navigation (unchanged component, just hidden at md+) */}
-        <div className="md:hidden">
-          <BottomNav activeTab={activeTab} onTabChange={onTabChange} />
-        </div>
+        {!focusMode && (
+          <div className="md:hidden">
+            <BottomNav activeTab={activeTab} onTabChange={onTabChange} />
+          </div>
+        )}
 
         {/* AI Assistant Chatbot */}
-        <AIChatbot />
+        {!focusMode && <AIChatbot />}
 
         {/* PWA Install Prompt */}
         <InstallPrompt />

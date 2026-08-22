@@ -218,6 +218,7 @@ export default function App() {
 
   return (
     <AppShell
+      focusMode={activeTab === 'auth'}
       activeTab={activeTab === 'listing-details' || activeTab === 'about' ? previousTab : activeTab}
       onTabChange={(tab) => {
         setSelectedListingId(null);

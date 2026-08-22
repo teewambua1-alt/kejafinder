@@ -61,10 +61,10 @@ export default function AuthRoleSelection({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-3xl border border-neutral-200/60 dark:border-stone-800/60 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-6 shadow-sm">
-        <h2 className="text-2xl font-black tracking-tight leading-tight text-neutral-850 dark:text-stone-100">
+      <div className="pt-1">
+        <h1 className="text-[26px] font-black tracking-tight leading-[1.15] text-neutral-850 dark:text-stone-100">
           How will you use KejaFinder?
-        </h2>
+        </h1>
         {/* Was "You can change this later", which is not true: profiles.role is
             set once by the auth trigger and the client has no UPDATE grant. */}
         <p className="mt-1.5 mb-6 text-[13px] font-semibold text-neutral-600 dark:text-stone-300">

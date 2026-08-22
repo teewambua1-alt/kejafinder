@@ -11,7 +11,7 @@ export default function AuthHeader({ onBack }: AuthHeaderProps) {
     <motion.header
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 bg-white/80 dark:bg-stone-950/80 backdrop-blur-xl border-b border-neutral-200/50 dark:border-stone-800/40"
+      className="sticky top-0 z-50 flex items-center justify-between px-4 py-4 bg-white dark:bg-stone-950 border-b border-neutral-150 dark:border-stone-800"
     >
       <div className="flex items-center">
         <motion.button
