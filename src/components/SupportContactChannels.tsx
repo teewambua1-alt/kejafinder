@@ -24,7 +24,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
     {
       id: 'whatsapp',
       title: 'WhatsApp support',
-      desc: 'Useful for quick support later, but not automated in this prototype.',
+      desc: 'Replies are handled by a person, so allow some time.',
       status: 'Planned',
       icon: MessageSquare,
       statusColor: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
@@ -35,7 +35,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
       desc: 'Best for longer issues, verification requests, or documentation later.',
       status: 'Planned',
       icon: Mail,
-      statusColor: 'bg-blue-50 text-blue-600 dark:bg-blue-950/30 dark:text-blue-400'
+      statusColor: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
     },
     {
       id: 'safety',
@@ -52,7 +52,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
     "Listing corrections should be reviewed.",
     "Fake or outdated listings should be flagged.",
     "Support should not ask for your M-Pesa PIN.",
-    "KejaFinder does not collect rent or deposit in this prototype."
+    "KejaFinder has no payment system and never handles rent or deposits."
   ];
 
   return (
@@ -80,7 +80,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
                     {channel.title}
                   </h4>
                 </div>
-                <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${channel.statusColor}`}>
+                <span className={`px-2 py-0.5 rounded-full text-2xs font-bold uppercase tracking-wider ${channel.statusColor}`}>
                   {channel.status}
                 </span>
               </div>
@@ -101,7 +101,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
           {expectations.map((text, i) => (
             <li key={i} className="flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-500 shrink-0 mt-0.5 stroke-[2.5]" />
-              <span className="text-[11.5px] font-bold text-emerald-800/80 dark:text-emerald-200/80 leading-snug">
+              <span className="text-[11.5px] font-bold text-emerald-800 dark:text-emerald-200 leading-snug">
                 {text}
               </span>
             </li>
@@ -122,7 +122,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
           <motion.button
             type="button"
             whileTap={{ scale: 0.97 }}
-            onClick={() => onShowFeedback("WhatsApp support is not active in this prototype.")}
+            onClick={() => onShowFeedback("WhatsApp support isn't open yet — use the email address above.")}
             className="flex-1 flex items-center justify-center space-x-2 bg-[#25D366]/10 text-[#128C7E] dark:text-[#25D366] border border-[#25D366]/30 py-2.5 rounded-xl text-[11px] font-bold uppercase shadow-sm transition-colors hover:bg-[#25D366]/20"
           >
             <ExternalLink className="w-3.5 h-3.5" />

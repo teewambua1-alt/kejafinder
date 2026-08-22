@@ -93,7 +93,7 @@ export default function SearchTopBar({
                 type="button"
                 onClick={handleClear}
                 aria-label="Clear search"
-                className="grid h-7 w-7 place-items-center rounded-full text-neutral-550 transition-colors hover:bg-neutral-100 hover:text-neutral-800 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100"
+                className="grid h-7 w-7 place-items-center rounded-full text-neutral-700 transition-colors hover:bg-neutral-100 hover:text-neutral-800 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100"
               >
                 <X className="h-4 w-4 stroke-[2.4]" aria-hidden="true" />
               </button>

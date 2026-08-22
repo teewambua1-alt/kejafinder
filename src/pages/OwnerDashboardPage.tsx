@@ -40,7 +40,7 @@ function publicThumbUrl(storagePath: string): string {
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   draft: { label: 'Draft', className: 'bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-400 border-neutral-200 dark:border-stone-700' },
-  pending_review: { label: 'Pending Review', className: 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/40' },
+  pending_review: { label: 'Pending Review', className: 'bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-900/40' },
   approved: { label: 'Approved', className: 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40' },
   rejected: { label: 'Rejected', className: 'bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/40' },
 };
@@ -103,7 +103,7 @@ function ListingRow({
             {getListingTypeLabel(listing.house_type as ListingType)} · KSh {Number(listing.monthly_rent).toLocaleString()}/mo
           </p>
         </div>
-        <span className={`shrink-0 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${badge.className}`}>
+        <span className={`shrink-0 px-2 py-1 rounded-lg text-2xs font-black uppercase tracking-wider border ${badge.className}`}>
           {badge.label}
         </span>
       </motion.button>
@@ -155,7 +155,7 @@ function ListingRow({
       )}
 
       {listing.moderation_status === 'pending_review' && (
-        <div className="flex items-center space-x-2 text-[10.5px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50/60 dark:bg-amber-950/10 rounded-xl px-3 py-2">
+        <div className="flex items-center space-x-2 text-[10.5px] font-bold text-orange-700 dark:text-orange-400 bg-orange-50/60 dark:bg-orange-950/10 rounded-xl px-3 py-2">
           <Clock className="w-3.5 h-3.5 shrink-0" />
           <span>Waiting for admin review -- usually within 2 hours.</span>
         </div>
@@ -319,7 +319,7 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
                 <h4 className="text-[11.5px] font-black text-orange-900 dark:text-orange-300 leading-tight mb-1">
                   Never send deposit before physically viewing the house and confirming the caretaker or landlord.
                 </h4>
-                <p className="text-[10.5px] font-medium text-orange-800/80 dark:text-orange-400/80 leading-snug">
+                <p className="text-[10.5px] font-medium text-orange-800 dark:text-orange-400 leading-snug">
                   Clear listings and honest contact details help renters stay safe.
                 </p>
               </div>

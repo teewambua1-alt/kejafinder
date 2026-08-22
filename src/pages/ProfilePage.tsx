@@ -104,7 +104,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
     >
       {/* Visual background ambient blur spots */}
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-500/5 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-20 right-1/4 w-72 h-72 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-20 right-1/4 w-72 h-72 bg-orange-500/5 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* 1. Real Profile Header */}
       <ProfileHeader

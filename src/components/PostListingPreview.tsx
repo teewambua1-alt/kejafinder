@@ -96,21 +96,21 @@ export default function PostListingPreview({
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-center p-6 space-y-2 select-none">
-              <div className="w-11 h-11 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-550 dark:text-stone-400">
+              <div className="w-11 h-11 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-700 dark:text-stone-400">
                 <ImagePlus className="w-5.5 h-5.5 stroke-[2]" />
               </div>
               <p className="text-[11px] font-bold text-neutral-500 dark:text-stone-400">
                 Cover photo preview
               </p>
-              <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 max-w-[190px]">
+              <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 max-w-[190px]">
                 Add at least one photo above to populate this card.
               </p>
             </div>
           )}
 
           {/* Glowing Status availability tag on the top left */}
-          <div className="absolute top-3 left-3 flex items-center bg-black/50 backdrop-blur-md border border-white/5 text-white px-2.5 py-1 rounded-full text-[9px] font-bold tracking-tight shadow-sm space-x-1">
-            <Calendar className="w-3 h-3 text-amber-400" />
+          <div className="absolute top-3 left-3 flex items-center bg-black/50 backdrop-blur-md border border-white/5 text-white px-2.5 py-1 rounded-full text-2xs font-bold tracking-tight shadow-sm space-x-1">
+            <Calendar className="w-3 h-3 text-orange-400" />
             <span>
               {draft.availabilityDate ? `Available from ${draft.availabilityDate}` : 'Available Soon'}
             </span>
@@ -118,7 +118,7 @@ export default function PostListingPreview({
 
           {/* Floating Rent marker on bottom right */}
           <div className="absolute bottom-3 right-3 bg-emerald-600/90 backdrop-blur-md text-white font-black text-xs px-3 py-1.5 rounded-xl shadow-md tracking-tight">
-            {formattedRent} <span className="text-[9px] font-medium text-emerald-100">/mo</span>
+            {formattedRent} <span className="text-2xs font-medium text-emerald-100">/mo</span>
           </div>
         </div>
 
@@ -138,7 +138,7 @@ export default function PostListingPreview({
 
             {/* Availability / Verification request pill */}
             {hasVerificationOption && (
-              <div className="flex items-center space-x-1 bg-emerald-500/10 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full border border-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[9px] font-extrabold tracking-tight shrink-0 shadow-3xs uppercase">
+              <div className="flex items-center space-x-1 bg-emerald-500/10 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full border border-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-2xs font-extrabold tracking-tight shrink-0 shadow-3xs uppercase">
                 <ShieldCheck className="w-2.5 h-2.5" />
                 <span>Verified requested</span>
               </div>
@@ -162,7 +162,7 @@ export default function PostListingPreview({
               {draft.amenities.map((amenityId) => (
                 <div 
                   key={amenityId} 
-                  className="flex items-center space-x-1 bg-stone-100/50 dark:bg-stone-850 border border-neutral-250/20 dark:border-neutral-850 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded-md text-[9px] font-bold"
+                  className="flex items-center space-x-1 bg-stone-100/50 dark:bg-stone-850 border border-neutral-250/20 dark:border-neutral-850 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded-md text-2xs font-bold"
                 >
                   <Check className="w-2.5 h-2.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
                   <span className="truncate max-w-[90px]">
@@ -172,7 +172,7 @@ export default function PostListingPreview({
               ))}
             </div>
           ) : (
-            <div className="text-[9px] font-bold text-neutral-550 dark:text-stone-400 bg-neutral-500/5 p-2 rounded-xl border border-neutral-200/50 dark:border-stone-850/50 flex items-center space-x-1">
+            <div className="text-2xs font-bold text-neutral-550 dark:text-stone-400 bg-neutral-500/5 p-2 rounded-xl border border-neutral-200/50 dark:border-stone-850/50 flex items-center space-x-1">
               <span>No amenities selected in Step 2.</span>
             </div>
           )}

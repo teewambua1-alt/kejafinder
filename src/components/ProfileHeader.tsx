@@ -75,7 +75,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
           aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
           {isDark ? (
-            <Sun className="w-4.5 h-4.5 text-amber-400 stroke-[2]" />
+            <Sun className="w-4.5 h-4.5 text-orange-400 stroke-[2]" />
           ) : (
             <Moon className="w-4.5 h-4.5 text-neutral-600 stroke-[2]" />
           )}
@@ -89,7 +89,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         >
           <Bell className="w-4.5 h-4.5 text-neutral-700 dark:text-neutral-200 stroke-[2]" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-700 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
+            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-700 text-white font-sans text-2xs font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}

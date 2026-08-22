@@ -58,7 +58,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
     <div className="flex-1 flex flex-col relative animate-fadeIn bg-neutral-50/50 dark:bg-stone-900/10 min-h-full -mx-6 -mt-6">
       {/* Background soft blurs */}
       <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none z-0" />
-      <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl pointer-events-none z-0" />
+      <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-orange-500/5 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none z-0" />
 
       <AboutHeader onBack={onBack} />
 
@@ -131,7 +131,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
               <h3 className="text-xs font-black text-neutral-800 dark:text-stone-250 uppercase tracking-wider">
                 Platform Roadmap
               </h3>
-              <span className="text-[9px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest bg-neutral-100 dark:bg-stone-850 px-2 py-0.5 rounded-lg border border-neutral-200/40 dark:border-stone-800/30">
+              <span className="text-2xs font-black text-neutral-700 dark:text-stone-400 uppercase tracking-widest bg-neutral-100 dark:bg-stone-850 px-2 py-0.5 rounded-lg border border-neutral-200/40 dark:border-stone-800/30">
                 Foundations Live
               </span>
             </div>
@@ -158,7 +158,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
                         <h4 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight">
                           {pt.title}
                         </h4>
-                        <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-neutral-550 dark:text-stone-400 font-mono tracking-widest">
+                        <span className="text-2xs font-bold px-1.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-neutral-700 dark:text-stone-400 font-mono tracking-widest">
                           {pt.version}
                         </span>
                       </div>

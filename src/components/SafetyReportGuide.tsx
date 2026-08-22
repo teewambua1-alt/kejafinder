@@ -30,7 +30,7 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
   };
 
   const handleReport = () => {
-    onShowFeedback('Report flow is available inside Listing Details in this prototype.');
+    onShowFeedback('Open a listing and use Report listing to send it to our team.');
   };
 
   const reportReasons = [
@@ -149,7 +149,7 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
         </h4>
         <ol className="space-y-2">
           {['KejaFinder records the report.', 'Repeated reports can flag a listing for review.', 'Outdated or suspicious listings can be hidden later.', 'Admins will review reports in the real MVP.'].map((step, idx) => (
-            <li key={idx} className="flex items-start text-[12px] font-medium text-emerald-900/80 dark:text-emerald-100/80">
+            <li key={idx} className="flex items-start text-[12px] font-medium text-emerald-900 dark:text-emerald-100">
               <span className="font-bold text-emerald-700 dark:text-emerald-400 mr-2 shrink-0">{idx + 1}.</span>
               <span>{step}</span>
             </li>
@@ -175,18 +175,6 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
         </p>
       </motion.div>
 
-      {/* Safety Note */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 shadow-sm flex items-start space-x-3">
-        <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-[13px] font-black text-orange-800 dark:text-orange-300 leading-snug mb-1">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </p>
-          <p className="text-[11px] font-semibold text-orange-700/80 dark:text-orange-400/80 leading-snug">
-            If someone pressures you to pay before viewing, report the listing and stop the conversation.
-          </p>
-        </div>
-      </motion.div>
 
       {/* Quick Action Button */}
       <motion.div variants={itemVariants}>

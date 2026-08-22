@@ -37,7 +37,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
           Get help with listings, safety, posting, contact issues, or suspicious rental requests.
         </p>
         <p className="text-[10px] font-medium text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 py-1.5 px-3 rounded-full inline-block mt-2">
-          Support tools are prototype-only for now. Real support workflows will be added later.
+          Reporting a listing reaches our team today. Other requests go by email.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
             title: 'Posting help',
             desc: 'Help for landlords, caretakers, agents, and area scouts.',
             icon: Home,
-            action: () => onShowFeedback('Posting support is prototype-only for now.'),
+            action: () => onShowFeedback('Email us about posting and a person will reply.'),
             color: 'blue'
           },
           {
@@ -72,7 +72,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
             title: 'Account help',
             desc: 'Login, phone verification, profile, or saved listings questions.',
             icon: UserRound,
-            action: () => onShowFeedback('Account support is prototype-only for now.'),
+            action: () => onShowFeedback('Email us about your account and a person will reply.'),
             color: 'indigo'
           }
         ].map((item) => {
@@ -88,8 +88,8 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center
                 ${item.color === 'orange' ? 'bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400' :
                   item.color === 'emerald' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700' :
-                  item.color === 'blue' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-500' :
-                  'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500'
+                  item.color === 'blue' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700' :
+                  'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700'
                 }`}
               >
                 <Icon className="w-4 h-4 stroke-[2.2]" />
@@ -123,7 +123,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
           onClick={handleSafety}
           className="flex-1 h-12 bg-white dark:bg-stone-800 text-neutral-800 dark:text-stone-200 border border-neutral-200/80 dark:border-stone-700 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-sm hover:bg-neutral-50 dark:hover:bg-stone-750 transition-colors cursor-pointer"
         >
-          <BookOpen className="w-4 h-4 text-amber-500" />
+          <BookOpen className="w-4 h-4 text-orange-700 dark:text-orange-400" />
           <span>Read safety tips</span>
         </motion.button>
       </div>

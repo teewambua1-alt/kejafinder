@@ -40,7 +40,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       title: "Landlords",
       desc: "Property owners who want to fill vacant rooms without relying only on paper signs.",
       icon: Building2,
-      iconBg: "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400",
+      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400",
       needs: [
         "Post vacancies easily",
         "Reach more tenants",
@@ -53,7 +53,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       title: "Caretakers",
       desc: "Local managers who know which rooms are vacant and speak directly with tenants.",
       icon: ClipboardList,
-      iconBg: "bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400",
+      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400",
       needs: [
         "Post quickly",
         "Receive direct messages",
@@ -66,7 +66,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       title: "Agents",
       desc: "Rental agents who can post listings with clear fees and transparent contact details.",
       icon: Briefcase,
-      iconBg: "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
+      iconBg: "bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400",
       needs: [
         "Show clear fees upfront",
         "Build reliable client trust",
@@ -79,7 +79,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       title: "Area scouts",
       desc: "Trusted local people who can help collect and check vacancy details later.",
       icon: MapPin,
-      iconBg: "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400",
+      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400",
       needs: [
         "Confirm availability",
         "Check actual photos",
@@ -182,14 +182,14 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
                     <IconComponent className="w-4.5 h-4.5 stroke-[2.2]" />
                   </div>
                   <div>
-                    <h4 className="text-[12px] font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight flex items-center space-x-1.5">
+                    <h3 className="text-[12px] font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight flex items-center space-x-1.5">
                       <span>{group.title}</span>
                       {group.isSubtle && (
-                        <span className="text-[8px] font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
+                        <span className="text-2xs font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-700 dark:text-stone-400 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
                           MVP Roles
                         </span>
                       )}
-                    </h4>
+                    </h3>
                     <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-none mt-0.5">
                       {group.needs.length} Core Needs
                     </p>
@@ -203,7 +203,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
 
               {/* Needs List */}
               <div className="space-y-2 border-t border-neutral-100 dark:border-stone-850/50 pt-3">
-                <span className="text-[8px] font-black text-neutral-550 dark:text-stone-550 uppercase tracking-widest block">
+                <span className="text-2xs font-black text-neutral-550 dark:text-stone-550 uppercase tracking-widest block">
                   Key Requirements:
                 </span>
                 <div className="flex flex-wrap gap-1" role="list">
@@ -211,7 +211,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
                     <span
                       key={idx}
                       role="listitem"
-                      className="text-[9.5px] font-bold px-2 py-0.5 bg-neutral-50 dark:bg-stone-850 text-neutral-650 dark:text-stone-300 border border-neutral-150/50 dark:border-stone-800/50 rounded-md truncate max-w-full"
+                      className="text-2xs font-bold px-2 py-0.5 bg-neutral-50 dark:bg-stone-850 text-neutral-650 dark:text-stone-300 border border-neutral-150/50 dark:border-stone-800/50 rounded-md truncate max-w-full"
                     >
                       {need}
                     </span>
@@ -232,9 +232,9 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
           <Users className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
         </div>
         <div className="space-y-1">
-          <h4 className="text-[11.5px] font-black text-neutral-850 dark:text-stone-105 uppercase tracking-wide">
+          <h3 className="text-[11.5px] font-black text-neutral-850 dark:text-stone-105 uppercase tracking-wide">
             Built for ordinary renters
-          </h4>
+          </h3>
           <p className="text-[11px] font-semibold text-neutral-510 dark:text-stone-400 leading-relaxed">
             KejaFinder is not only for high-end apartments. It is designed for single rooms, bedsitters, mabati houses, studios, student rooms, low-cost homes, and small estate rentals.
           </p>
@@ -244,11 +244,11 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       {/* 4. Trust Balance Note */}
       <motion.div
         variants={itemVariants}
-        className="bg-amber-500/[0.03] dark:bg-amber-500/[0.02] border border-amber-500/12 dark:border-amber-900/15 rounded-2.5xl p-4.5 flex items-start space-x-3 shadow-5xs"
+        className="bg-orange-500/[0.03] dark:bg-orange-500/[0.02] border border-orange-500/12 dark:border-orange-900/15 rounded-2.5xl p-4.5 flex items-start space-x-3 shadow-5xs"
       >
-        <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5" />
+        <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-orange-500 shrink-0 stroke-[2.2] mt-0.5" />
         <p className="text-[10.5px] font-bold text-neutral-700 dark:text-stone-305 leading-relaxed">
-          Posting should stay simple, but trust checks, community reports, and listing freshness must protect renters first. <strong className="text-amber-700 dark:text-amber-500 uppercase tracking-tight">Trust before growth.</strong>
+          Posting should stay simple, but trust checks, community reports, and listing freshness must protect renters first. <strong className="text-orange-700 dark:text-orange-500 uppercase tracking-tight">Trust before growth.</strong>
         </p>
       </motion.div>
 

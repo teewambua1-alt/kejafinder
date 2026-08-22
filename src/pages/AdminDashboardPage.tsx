@@ -258,7 +258,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                     <div key={report.id} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-xl p-3.5">
                       <p className="text-[11.5px] font-black text-neutral-800 dark:text-stone-100 capitalize">{report.reason.replace(/_/g, ' ')}</p>
                       {report.message && <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400 mt-0.5">{report.message}</p>}
-                      <p className="text-[9.5px] font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(report.created_at).toLocaleDateString()}</p>
+                      <p className="text-2xs font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(report.created_at).toLocaleDateString()}</p>
                     </div>
                   ))}
                 </div>
@@ -279,7 +279,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                   {pendingVerifications.map((vr) => (
                     <div key={vr.id} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-xl p-3.5">
                       <p className="text-[11.5px] font-black text-neutral-800 dark:text-stone-100 capitalize">{vr.request_type.replace(/_/g, ' ')} verification</p>
-                      <p className="text-[9.5px] font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(vr.created_at).toLocaleDateString()}</p>
+                      <p className="text-2xs font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(vr.created_at).toLocaleDateString()}</p>
                     </div>
                   ))}
                 </div>
@@ -307,7 +307,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                         </p>
                         {action.notes && <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 mt-0.5 truncate">{action.notes}</p>}
                       </div>
-                      <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-400 shrink-0">
+                      <span className="text-2xs font-bold text-neutral-550 dark:text-stone-400 shrink-0">
                         {new Date(action.created_at).toLocaleDateString()}
                       </span>
                     </div>

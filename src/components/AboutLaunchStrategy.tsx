@@ -8,8 +8,7 @@ import {
   ShieldCheck, 
   TrendingUp, 
   Search, 
-  PlusCircle, 
-  AlertTriangle 
+  PlusCircle 
 } from 'lucide-react';
 
 interface AboutLaunchStrategyProps {
@@ -120,9 +119,9 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
       >
         <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-450">
           <Target className="w-5 h-5 stroke-[2.2]" />
-          <h4 className="text-[11.5px] font-black uppercase tracking-wider">
+          <h3 className="text-[11.5px] font-black uppercase tracking-wider">
             Our launch approach
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-2 leading-relaxed">
@@ -149,21 +148,21 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
               whileTap={{ scale: 0.96 }}
               className={`px-3 py-1.5 rounded-full text-[10.5px] font-bold tracking-tight border flex items-center space-x-1.5 shadow-4xs select-none ${
                 area.type === "first-focus"
-                  ? "bg-amber-500/[0.1] text-amber-800 dark:text-amber-400 border-amber-500/30"
+                  ? "bg-orange-500/[0.1] text-orange-800 dark:text-orange-400 border-orange-500/30"
                   : "bg-white dark:bg-stone-900 text-neutral-600 dark:text-stone-300 border-neutral-200/50 dark:border-stone-850"
               }`}
             >
-              <MapPin className={`w-3.5 h-3.5 ${area.type === "first-focus" ? "text-amber-600 dark:text-amber-400" : "text-emerald-700 dark:text-emerald-400"}`} />
+              <MapPin className={`w-3.5 h-3.5 ${area.type === "first-focus" ? "text-orange-700 dark:text-orange-400" : "text-emerald-700 dark:text-emerald-400"}`} />
               <span>{area.name}</span>
               {area.type === "first-focus" && (
-                <span className="text-[8px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 px-1 py-0.2 rounded-md">
+                <span className="text-2xs font-black uppercase tracking-wider bg-orange-500/10 text-orange-700 dark:text-orange-400 px-1 py-0.2 rounded-md">
                   First focus
                 </span>
               )}
             </motion.div>
           ))}
         </div>
-        <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 uppercase tracking-normal">
+        <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 uppercase tracking-normal">
           * Focused pilot Candidate list for initial physical area scouting campaigns.
         </p>
       </motion.div>
@@ -174,10 +173,10 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5 shadow-3xs flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <div className="space-y-2 max-w-xs">
-          <h4 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider flex items-center space-x-2">
+          <h3 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider flex items-center space-x-2">
             <TrendingUp className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             <span>First serious milestone</span>
-          </h4>
+          </h3>
           <p className="text-[11px] font-semibold text-neutral-500 dark:text-stone-400 leading-snug">
             Before scaling, KejaFinder should aim to collect 100 real vacant rooms in one focused area.
           </p>
@@ -187,7 +186,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
           <span className="text-2xl font-black text-emerald-700 dark:text-emerald-400 tracking-tight leading-none">
             100
           </span>
-          <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-450 uppercase tracking-widest mt-1">
+          <span className="text-2xs font-bold text-neutral-550 dark:text-stone-450 uppercase tracking-widest mt-1">
             Vacant Rooms
           </span>
         </div>
@@ -198,7 +197,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         variants={itemVariants}
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5.5 shadow-3xs space-y-3"
       >
-        <span className="text-[9px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
+        <span className="text-2xs font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
           Milestone Listing Requirements
         </span>
         <div className="grid grid-cols-2 gap-2.5" role="list">
@@ -217,10 +216,10 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5.5 shadow-3xs space-y-4"
       >
         <div className="flex items-center space-x-2 pb-1 border-b border-neutral-100 dark:border-stone-850/50">
-          <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <h4 className="text-[12px] font-black text-neutral-805 dark:text-stone-105 uppercase tracking-wider">
+          <div className="w-2.5 h-2.5 rounded-full bg-orange-700" />
+          <h3 className="text-[12px] font-black text-neutral-805 dark:text-stone-105 uppercase tracking-wider">
             Manual validation first
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-3" role="list">
@@ -235,7 +234,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
             </div>
           ))}
         </div>
-        <p className="text-[9px] font-medium text-neutral-550 dark:text-stone-400 italic mt-1 leading-snug">
+        <p className="text-2xs font-medium text-neutral-550 dark:text-stone-400 italic mt-1 leading-snug">
           * To ensure maximum truthfulness, listing collection starts by visiting rental plots manually before creating large automated syndications later.
         </p>
       </motion.div>
@@ -247,9 +246,9 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
       >
         <div className="flex items-center space-x-2 text-neutral-800 dark:text-stone-100">
           <ListChecks className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
-          <h4 className="text-[11.5px] font-black uppercase tracking-wider">
+          <h3 className="text-[11.5px] font-black uppercase tracking-wider">
             Why local focus matters
-          </h4>
+          </h3>
         </div>
 
         <ul className="space-y-2.5" role="list">
@@ -275,26 +274,11 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400 leading-relaxed">
           KejaFinder should grow area by area after listings are useful, contact details work, reports are handled, and renters trust the experience.
         </p>
-        <strong className="text-[9.5px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block pt-1">
+        <strong className="text-2xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block pt-1">
           Trust before growth.
         </strong>
       </motion.div>
 
-      {/* 9. Safety Alert Warning */}
-      <motion.div
-        variants={itemVariants}
-        className="bg-amber-500/[0.04] dark:bg-amber-500/[0.02] border border-amber-500/15 dark:border-amber-900/20 rounded-2.5xl p-4.5 flex items-start space-x-3.5 shadow-4xs"
-      >
-        <AlertTriangle className="w-5.5 h-5.5 text-amber-600 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5" />
-        <div className="space-y-1">
-          <p className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-500 leading-tight">
-            “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
-          </p>
-          <p className="text-[10px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
-            Even in pilot areas, physical viewing remains part of safe renting.
-          </p>
-        </div>
-      </motion.div>
 
       {/* 10. CTA Actions */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-2.5">

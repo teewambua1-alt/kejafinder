@@ -119,7 +119,7 @@ export default function DesktopNavbar({
             className="w-10 h-10 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
             aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            {isDark ? <Sun className="w-4.5 h-4.5 text-amber-400 stroke-[2]" /> : <Moon className="w-4.5 h-4.5 text-neutral-600 stroke-[2]" />}
+            {isDark ? <Sun className="w-4.5 h-4.5 text-orange-400 stroke-[2]" /> : <Moon className="w-4.5 h-4.5 text-neutral-600 stroke-[2]" />}
           </button>
 
           <button

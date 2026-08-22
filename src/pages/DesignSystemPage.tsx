@@ -63,7 +63,7 @@ function Swatch({ name, className, hex }: { name: string; className: string; hex
       <div className={`w-full h-14 rounded-xl border border-neutral-200/50 dark:border-stone-800/50 ${className}`} />
       <div>
         <p className="text-[10px] font-black text-neutral-800 dark:text-stone-200">{name}</p>
-        {hex && <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 font-mono">{hex}</p>}
+        {hex && <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 font-mono">{hex}</p>}
       </div>
     </div>
   );
@@ -134,7 +134,7 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
             {[2, 3, 4, 6, 8, 10, 12].map((n) => (
               <div key={n} className="flex flex-col items-center space-y-1">
                 <div className={`w-4 bg-emerald-500/70 rounded-sm`} style={{ height: `${n * 4}px` }} />
-                <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-400">{n * 4}px</span>
+                <span className="text-2xs font-bold text-neutral-550 dark:text-stone-400">{n * 4}px</span>
               </div>
             ))}
           </div>
@@ -219,14 +219,14 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
         <Section title="Shadows &amp; Radius">
           <div className="grid grid-cols-3 gap-3">
             {(['shadow-5xs', 'shadow-4xs', 'shadow-3xs', 'shadow-2xs', 'shadow-xs', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-2xl'] as const).map((s) => (
-              <div key={s} className={`h-14 rounded-xl bg-white dark:bg-stone-900 flex items-center justify-center text-[9px] font-bold text-neutral-500 dark:text-stone-400 ${s}`}>
+              <div key={s} className={`h-14 rounded-xl bg-white dark:bg-stone-900 flex items-center justify-center text-2xs font-bold text-neutral-500 dark:text-stone-400 ${s}`}>
                 {s}
               </div>
             ))}
           </div>
           <div className="grid grid-cols-4 gap-3 pt-1">
             {(['rounded-lg', 'rounded-xl', 'rounded-2xl', 'rounded-2.5xl', 'rounded-3xl', 'rounded-full'] as const).map((r) => (
-              <div key={r} className={`h-14 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-[8px] font-bold text-emerald-700 dark:text-emerald-400 ${r}`}>
+              <div key={r} className={`h-14 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-2xs font-bold text-emerald-700 dark:text-emerald-400 ${r}`}>
                 {r}
               </div>
             ))}

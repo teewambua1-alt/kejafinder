@@ -77,7 +77,7 @@ export default function TestFlowChecklist({ items, onToggleStatus, onActionClick
                   <button
                     type="button"
                     onClick={() => onToggleStatus(item.id)}
-                    className={`shrink-0 px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider transition-colors ${statusColors[item.status]}`}
+                    className={`shrink-0 px-2 py-1 rounded text-2xs font-black uppercase tracking-wider transition-colors ${statusColors[item.status]}`}
                     aria-label={`Status: ${statusLabels[item.status]}. Click to change.`}
                   >
                     {statusLabels[item.status]}

@@ -16,7 +16,6 @@ import {
   RefreshCw, 
   Flag, 
   ArrowRight,
-  AlertTriangle
 } from 'lucide-react';
 
 interface AboutHowItWorksProps {
@@ -40,21 +39,21 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
       title: "Filter by budget and type",
       desc: "Choose single room, bedsitter, mabati, studio, one bedroom, or other local rental types.",
       icon: SlidersHorizontal,
-      color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       step: 3,
       title: "Compare listing details",
       desc: "Check rent, deposit, photos, water, electricity, toilet type, location, and trust badges.",
       icon: ListChecks,
-      color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       step: 4,
       title: "Call or WhatsApp",
       desc: "Contact the caretaker, landlord, or agent directly.",
       icon: PhoneCall,
-      color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40"
+      color: "text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40"
     },
     {
       step: 5,
@@ -78,21 +77,21 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
       title: "Upload clear photos",
       desc: "Inside room, house exterior, shared / private toilet, and compound photos help tenants trust your listing.",
       icon: Image,
-      color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       step: 3,
       title: "Submit for review",
       desc: "All submitted listings will be reviewed in the MVP stage to keep KejaFinder active with real vacancies.",
       icon: ClipboardCheck,
-      color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       step: 4,
       title: "Respond to renters",
       desc: "Tenants find listings and call or text directly to arrange physical property visits.",
       icon: MessageCircle,
-      color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40"
+      color: "text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40"
     },
     {
       step: 5,
@@ -170,9 +169,9 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
       >
         <div className="flex items-center space-x-2 pb-1 border-b border-neutral-100 dark:border-stone-850/50">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-700 animate-pulse" />
-          <h4 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
+          <h3 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
             For Tenants
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-3.5" role="list">
@@ -203,10 +202,10 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5.5 shadow-3xs space-y-4"
       >
         <div className="flex items-center space-x-2 pb-1 border-b border-neutral-100 dark:border-stone-850/50">
-          <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-          <h4 className="text-[12px] font-black text-neutral-855 dark:text-stone-100 uppercase tracking-wider">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
+          <h3 className="text-[12px] font-black text-neutral-855 dark:text-stone-100 uppercase tracking-wider">
             For Landlords &amp; Caretakers
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-3.5" role="list">
@@ -238,9 +237,9 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
       >
         <div className="flex items-center space-x-2 text-neutral-800 dark:text-stone-100">
           <BadgeCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
-          <h4 className="text-[11.5px] font-black uppercase tracking-wider">
+          <h3 className="text-[11.5px] font-black uppercase tracking-wider">
             Trust Actions Built Into The Flow
-          </h4>
+          </h3>
         </div>
 
         <ul className="space-y-2.5" role="list">
@@ -260,7 +259,7 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
         variants={itemVariants}
         className="bg-neutral-100/60 dark:bg-stone-900/40 border border-neutral-250/20 dark:border-stone-800/40 rounded-2.5xl p-4.5"
       >
-        <span className="text-[8.5px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block text-center mb-3">
+        <span className="text-2xs font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block text-center mb-3">
           Rental Journey Flow Timeline
         </span>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-center" role="navigation" aria-label="Journey summary indicators">
@@ -280,30 +279,9 @@ export default function AboutHowItWorks({ onGoSearch, onGoPost, onShowFeedback }
             4. Visit
           </div>
           <ArrowRight className="w-3.5 h-3.5 text-neutral-550 rotate-90 sm:rotate-0" />
-          <div className="px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 rounded-lg text-[10px] font-black uppercase tracking-tight text-amber-700 dark:text-amber-400">
-            5. Pay Safely
-          </div>
         </div>
       </motion.div>
 
-      {/* 6. Safety Warning Admonition */}
-      <motion.div
-        variants={itemVariants}
-        className="bg-amber-500/[0.04] dark:bg-amber-500/[0.02] border border-amber-500/15 dark:border-amber-900/20 rounded-2.5xl p-4.5 flex items-start space-x-3.5 shadow-4xs"
-      >
-        <AlertTriangle className="w-5.5 h-5.5 text-amber-600 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5 animate-pulse" />
-        <div className="space-y-1">
-          <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-500 block">
-            Safe Renting Guarantee Rule
-          </span>
-          <p className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-500 leading-tight">
-            “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
-          </p>
-          <p className="text-[10px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
-            KejaFinder helps you find options faster, but physical viewing remains part of safe renting.
-          </p>
-        </div>
-      </motion.div>
 
       {/* 7. CTA Action triggers */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-2.5">

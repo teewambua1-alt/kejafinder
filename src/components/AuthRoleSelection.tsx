@@ -98,7 +98,7 @@ export default function AuthRoleSelection({
                   className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                     isSelected
                       ? 'bg-emerald-100 dark:bg-emerald-800/40 text-emerald-700 dark:text-emerald-400'
-                      : 'bg-neutral-100 dark:bg-stone-900 text-neutral-500 dark:text-stone-400'
+                      : 'bg-neutral-100 dark:bg-stone-900 text-neutral-700 dark:text-stone-400'
                   }`}
                 >
                   <Icon className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />

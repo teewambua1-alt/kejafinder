@@ -167,14 +167,14 @@ export default function PostPhotoUploader({
         text: 'Add at least one real photo to continue.',
         type: 'warning',
         icon: AlertTriangle,
-        colorClass: 'bg-amber-500/5 text-amber-700 dark:text-amber-500 border-amber-500/10'
+        colorClass: 'bg-orange-500/5 text-orange-700 dark:text-orange-500 border-orange-500/10'
       };
     } else if (count <= 2) {
       return {
         text: 'More photos can help tenants trust your listing.',
         type: 'warning',
         icon: AlertTriangle,
-        colorClass: 'bg-amber-500/5 text-amber-700 dark:text-amber-500 border-amber-500/10'
+        colorClass: 'bg-orange-500/5 text-orange-700 dark:text-orange-500 border-orange-500/10'
       };
     } else {
       return {
@@ -242,10 +242,10 @@ export default function PostPhotoUploader({
             <h4 className="text-[12px] font-extrabold text-neutral-800 dark:text-stone-200 tracking-tight">
               Upload house photos
             </h4>
-            <p className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 max-w-[220px] mt-1.5 leading-relaxed">
+            <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 max-w-[220px] mt-1.5 leading-relaxed">
               Add room, outside, toilet, kitchen, and compound photos.
             </p>
-            <span className="text-[8px] font-bold text-neutral-550 dark:text-stone-400 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
+            <span className="text-2xs font-bold text-neutral-700 dark:text-stone-400 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
               JPG or PNG, up to 10MB each
             </span>
           </button>
@@ -253,7 +253,7 @@ export default function PostPhotoUploader({
           <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4 flex flex-col items-center text-center space-y-1">
             <CheckCircle2 className="w-6 h-6 text-emerald-700" />
             <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400">All photos added</h4>
-            <p className="text-[10px] font-medium text-emerald-700/80 dark:text-emerald-500/80 leading-relaxed max-w-[210px]">
+            <p className="text-[10px] font-medium text-emerald-700 dark:text-emerald-500 leading-relaxed max-w-[210px]">
               You have added the maximum limit of {MAX_PHOTOS} photos. Remove some if you want to swap them.
             </p>
           </div>
@@ -268,7 +268,7 @@ export default function PostPhotoUploader({
         )}
 
         {localNote && (
-          <div className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl flex items-start space-x-2 text-amber-700 dark:text-amber-500">
+          <div className="p-3 bg-orange-500/5 border border-orange-500/15 rounded-xl flex items-start space-x-2 text-orange-700 dark:text-orange-500">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.2] mt-0.5" />
             <span className="text-[10.5px] font-extrabold leading-tight">{localNote}</span>
           </div>
@@ -328,12 +328,12 @@ export default function PostPhotoUploader({
                     {/* Labels badge */}
                     <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
                       {index === 0 ? (
-                        <span className="flex items-center space-x-0.5 bg-emerald-700 border border-emerald-500/20 text-white px-1.5 py-0.5 rounded-md text-[8px] font-black tracking-wide uppercase shadow-3xs">
+                        <span className="flex items-center space-x-0.5 bg-emerald-700 border border-emerald-500/20 text-white px-1.5 py-0.5 rounded-md text-2xs font-black tracking-wide uppercase shadow-3xs">
                           <Sparkles className="w-2.5 h-2.5" />
                           <span>Cover / Room</span>
                         </span>
                       ) : (
-                        <span className="bg-stone-900/80 backdrop-blur-md text-stone-200 border border-white/5 px-1.5 py-0.5 rounded-md text-[8.5px] font-extrabold tracking-tight">
+                        <span className="bg-stone-900/80 backdrop-blur-md text-stone-200 border border-white/5 px-1.5 py-0.5 rounded-md text-2xs font-extrabold tracking-tight">
                           {label}
                         </span>
                       )}
@@ -344,7 +344,7 @@ export default function PostPhotoUploader({
                       <button
                         type="button"
                         onClick={() => handleSetCover(index)}
-                        className="absolute bottom-2 right-2 flex items-center justify-center bg-white/95 text-stone-900 hover:bg-neutral-50 px-1.5 py-1 rounded-lg text-[8.5px] font-black tracking-tight cursor-pointer shadow-sm border border-neutral-200"
+                        className="absolute bottom-2 right-2 flex items-center justify-center bg-white/95 text-stone-900 hover:bg-neutral-50 px-1.5 py-1 rounded-lg text-2xs font-black tracking-tight cursor-pointer shadow-sm border border-neutral-200"
                       >
                         Set cover
                       </button>
@@ -371,12 +371,12 @@ export default function PostPhotoUploader({
                     aria-label="Add photo"
                     className="aspect-square rounded-2xl border border-dashed border-neutral-200 dark:border-stone-800 bg-white/15 dark:bg-stone-800/15 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-neutral-550 hover:text-emerald-800 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all text-center focus:outline-hidden"
                   >
-                    <div className="w-7.5 h-7.5 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center shadow-3xs text-neutral-550 group-hover:text-emerald-800 transition-colors">
+                    <div className="w-7.5 h-7.5 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center shadow-3xs text-neutral-700 group-hover:text-emerald-800 transition-colors">
                       <Plus className="w-4 h-4 stroke-[2.5]" />
                     </div>
                     
                     <div className="flex flex-col space-y-0.5">
-                      <span className="text-[9px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider select-none leading-none">
+                      <span className="text-2xs font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider select-none leading-none">
                         Slot {index + 1}
                       </span>
                       <span className="text-[10px] font-extrabold text-neutral-500 dark:text-stone-400 select-none">

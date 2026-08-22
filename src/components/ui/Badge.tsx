@@ -14,7 +14,7 @@ const VARIANT_CLASSES: Record<BadgeVariant, string> = {
   warning: 'bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border-orange-100/60 dark:border-orange-900/30',
   danger: 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border-red-100/60 dark:border-red-900/30',
   info: 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-100/60 dark:border-blue-900/30',
-  neutral: 'bg-neutral-100 dark:bg-stone-800 text-neutral-500 dark:text-stone-400 border-transparent',
+  neutral: 'bg-neutral-100 dark:bg-stone-800 text-neutral-700 dark:text-stone-400 border-transparent',
 };
 
 /**
@@ -26,7 +26,7 @@ export default function Badge({ children, variant = 'neutral', className }: Badg
   return (
     <span
       className={cn(
-        'inline-flex items-center text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border shrink-0',
+        'inline-flex items-center text-2xs font-black uppercase tracking-widest px-2 py-0.5 rounded-full border shrink-0',
         VARIANT_CLASSES[variant],
         className
       )}

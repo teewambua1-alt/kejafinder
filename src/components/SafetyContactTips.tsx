@@ -8,7 +8,6 @@ import {
   Eye, 
   Image, 
   Copy, 
-  AlertTriangle, 
   PhoneCall,
   ShieldCheck,
   CheckCircle2,
@@ -41,10 +40,10 @@ export default function SafetyContactTips({
       navigator.clipboard.writeText(text).then(() => {
         onShowFeedback('Message copied.');
       }).catch(() => {
-        onShowFeedback('Copy not available in this prototype.');
+        onShowFeedback('Could not copy on this browser.');
       });
     } else {
-      onShowFeedback('Copy not available in this prototype.');
+      onShowFeedback('Could not copy on this browser.');
     }
   };
 
@@ -193,7 +192,7 @@ export default function SafetyContactTips({
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => handleCopy(template.text)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-500 dark:text-stone-400 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-700 dark:text-stone-400 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
                 aria-label={`Copy ${template.title.toLowerCase()}`}
               >
                 <Copy className="w-3.5 h-3.5" />
@@ -201,22 +200,6 @@ export default function SafetyContactTips({
             </div>
           ))}
         </div>
-      </motion.div>
-
-      {/* Suspicious Contact Warning Signs */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-3xl p-5 shadow-sm">
-        <h4 className="text-[14px] font-black text-orange-900 dark:text-orange-200 tracking-tight mb-3 flex items-center">
-          <AlertTriangle className="w-4 h-4 mr-2 text-orange-700 dark:text-orange-400" />
-          Stop if they say this
-        </h4>
-        <ul className="space-y-2">
-          {warnings.map((warning, idx) => (
-            <li key={idx} className="flex items-start text-[12px] font-semibold text-orange-900/80 dark:text-orange-200/80 leading-snug">
-              <XCircle className="w-4 h-4 text-orange-700 dark:text-orange-400 mr-2 shrink-0 mt-0.5" />
-              <span>{warning}</span>
-            </li>
-          ))}
-        </ul>
       </motion.div>
 
       {/* Call Safety Tips */}
@@ -239,9 +222,6 @@ export default function SafetyContactTips({
       <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/50 rounded-2xl p-5 shadow-sm">
         <div className="flex items-start space-x-3 mb-2">
           <ShieldAlert className="w-6 h-6 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
-          <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 leading-snug tracking-tight">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </h4>
         </div>
         <div className="pl-9">
           <p className="text-[11px] font-semibold text-neutral-700 dark:text-stone-300 leading-relaxed">

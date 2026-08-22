@@ -60,7 +60,7 @@ export default function PostTrustToggles({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowPhoneVerification 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <PhoneCall className="w-4 h-4 stroke-[2]" />
             </div>
@@ -68,7 +68,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Allow phone verification
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 We may confirm this number before showing trust badges.
               </span>
             </div>
@@ -97,7 +97,7 @@ export default function PostTrustToggles({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               requestLocationCheck 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <MapPin className="w-4 h-4 stroke-[2]" />
             </div>
@@ -105,7 +105,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Request location check
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 KejaFinder can review the location details before approval.
               </span>
             </div>
@@ -134,7 +134,7 @@ export default function PostTrustToggles({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               requestScoutVerification 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <CheckSquare className="w-4 h-4 stroke-[2]" />
             </div>
@@ -142,7 +142,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Request scout verification
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 A local scout may physically check the house later.
               </span>
             </div>
@@ -171,7 +171,7 @@ export default function PostTrustToggles({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               remindToUpdate 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <Clock className="w-4 h-4 stroke-[2]" />
             </div>
@@ -179,7 +179,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Remind me to update availability
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Fresh listings help renters avoid wasted visits.
               </span>
             </div>

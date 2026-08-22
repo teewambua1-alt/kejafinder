@@ -37,31 +37,31 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
       title: "Fresh listings",
       desc: "Vacancies should be updated or set to expire later if caretakers don't confirm availability.",
       icon: Clock,
-      color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/45"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
     },
     {
       title: "Report suspicious posts",
       desc: "Users should be able to report fake, wrong, duplicate, unsafe, or already-taken homes instantly.",
       icon: Flag,
-      color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/45"
+      color: "text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/45"
     },
     {
       title: "Useful local details",
       desc: "Estate name, landmarks, stage distance, water availability, toilet setup, and direct contact numbers.",
       icon: MapPin,
-      color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/45"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
     },
     {
       title: "Honest trust badges",
       desc: "Tags should explain exactly what was verified without promising fake guaranteed safety.",
       icon: BadgeCheck,
-      color: "text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/45"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
     },
     {
       title: "Physical viewing first",
       desc: "Users must physically view a house and confirm caretaker identities before paying any token.",
       icon: Eye,
-      color: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/45"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
     }
   ];
 
@@ -134,9 +134,9 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         
         <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-400">
           <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
-          <h4 className="text-[12px] font-black uppercase tracking-wider">
+          <h3 className="text-[12px] font-black uppercase tracking-wider">
             Our promise
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-2.5">
@@ -183,9 +183,9 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
       >
         <div className="flex items-center space-x-2 text-neutral-850 dark:text-stone-100">
           <BadgeCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
-          <h4 className="text-[11.5px] font-black uppercase tracking-wider">
+          <h3 className="text-[11.5px] font-black uppercase tracking-wider">
             What badges should mean
-          </h4>
+          </h3>
         </div>
 
         <div className="space-y-2.5" role="list">
@@ -210,15 +210,15 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
       {/* 5. Strong Warning Reminder */}
       <motion.div
         variants={itemVariants}
-        className="bg-amber-500/[0.04] dark:bg-amber-500/[0.02] border border-amber-500/18 dark:border-amber-900/25 rounded-2.5xl p-4.5 space-y-2 shadow-4xs"
+        className="bg-orange-500/[0.04] dark:bg-orange-500/[0.02] border border-orange-500/18 dark:border-orange-900/25 rounded-2.5xl p-4.5 space-y-2 shadow-4xs"
       >
-        <div className="flex items-center space-x-2 text-amber-700 dark:text-amber-500">
+        <div className="flex items-center space-x-2 text-orange-700 dark:text-orange-500">
           <AlertTriangle className="w-5 h-5 shrink-0 stroke-[2.2] animate-pulse" />
-          <h4 className="text-[11px] font-black uppercase tracking-wider">
+          <h3 className="text-[11px] font-black uppercase tracking-wider">
             Critical Safety Warning
-          </h4>
+          </h3>
         </div>
-        <p className="text-[10.5px] font-black uppercase text-amber-700 dark:text-amber-500 leading-snug">
+        <p className="text-[10.5px] font-black uppercase text-orange-700 dark:text-orange-500 leading-snug">
           “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
         </p>
         <p className="text-[10px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
@@ -234,7 +234,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
           className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Read safety tips"
         >
-          <BookOpen className="w-4 h-4 stroke-[2.2] text-amber-500" />
+          <BookOpen className="w-4 h-4 stroke-[2.2] text-orange-700 dark:text-orange-400" />
           <span>Read safety tips</span>
         </motion.button>
 

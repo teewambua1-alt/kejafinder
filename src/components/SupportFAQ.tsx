@@ -14,12 +14,12 @@ export default function SupportFAQ() {
     {
       id: 'reports',
       question: 'How do I report a fake listing?',
-      answer: 'Use the report issue form on this page or the Report Listing action inside Listing Details. In this prototype, reports are local only.'
+      answer: 'Open the listing and use Report listing. Your report is sent to the KejaFinder team, who review it and can take the listing down.'
     },
     {
       id: 'deposits',
       question: 'Does KejaFinder collect deposits?',
-      answer: 'No. KejaFinder does not collect rent, deposits, booking fees, viewing fees, or agent fees in this prototype.'
+      answer: 'No. KejaFinder has no payment system and never handles rent, deposits, booking fees, viewing fees or agent fees. Anyone asking you to pay through KejaFinder is a scam.'
     },
     {
       id: 'pay_before',
@@ -29,7 +29,7 @@ export default function SupportFAQ() {
     {
       id: 'whatsapp',
       question: 'Can I contact support on WhatsApp?',
-      answer: 'WhatsApp support is planned later. This prototype does not send support messages automatically.'
+      answer: 'Not yet. Email is the way to reach us for now, and a person reads every message.'
     },
     {
       id: 'posting_help',
@@ -49,7 +49,7 @@ export default function SupportFAQ() {
     {
       id: 'hours',
       question: 'Is support available 24/7?',
-      answer: 'Not in this prototype. Real support hours and response expectations will be defined later.'
+      answer: "We do not publish response times yet, so please do not wait on a reply before acting on a safety concern — report the listing."
     }
   ];
 
@@ -109,8 +109,8 @@ export default function SupportFAQ() {
         })}
         
         <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 text-center">
-          <p className="text-[10px] font-bold text-emerald-800/80 dark:text-emerald-400/80 uppercase tracking-widest">
-            Support tools are still prototype-only. Safety comes first: view physically before paying.
+          <p className="text-[10px] font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-widest">
+            Reporting a listing works today. For anything else, email us — and never pay before you have seen the house.
           </p>
         </div>
       </div>

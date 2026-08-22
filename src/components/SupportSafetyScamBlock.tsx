@@ -59,8 +59,8 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
             <h4 className="text-[12px] font-black tracking-tight text-orange-900 dark:text-orange-200 mb-1">
               Never send deposit before physically viewing the house and confirming the caretaker or landlord.
             </h4>
-            <p className="text-[11px] font-bold text-orange-800/80 dark:text-orange-300/80 leading-snug">
-              KejaFinder does not collect rent, deposits, booking fees, viewing fees, or agent fees in this prototype.
+            <p className="text-[11px] font-bold text-orange-800 dark:text-orange-300 leading-snug">
+              KejaFinder has no payment system and never handles rent, deposits, booking fees, viewing fees or agent fees.
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
             onClick={handleSafety}
             className="flex-1 h-11 bg-white dark:bg-stone-800 text-neutral-800 dark:text-stone-200 border border-neutral-300 dark:border-stone-700 font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm hover:bg-neutral-50 dark:hover:bg-stone-700 transition-colors"
           >
-            <BookOpen className="w-4 h-4 text-amber-500" />
+            <BookOpen className="w-4 h-4 text-orange-700 dark:text-orange-400" />
             <span>Read Safety Page</span>
           </motion.button>
 

@@ -52,7 +52,7 @@ export default function SavedCompareBar({
             <span className="block text-[11.5px] font-black text-neutral-800 dark:text-neutral-50 tracking-tight leading-none">
               {selectedListings.length} {selectedListings.length === 1 ? 'Keja' : 'Kejas'} Selected
             </span>
-            <span className="block text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400">
+            <span className="block text-2xs font-semibold text-neutral-550 dark:text-stone-400">
               Max 3 can be compared side-by-side
             </span>
           </div>
@@ -63,7 +63,7 @@ export default function SavedCompareBar({
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={onClear}
-            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-550 hover:text-neutral-600 dark:text-stone-400 dark:hover:text-stone-200 transition-colors cursor-pointer"
+            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-700 hover:text-neutral-600 dark:text-stone-400 dark:hover:text-stone-200 transition-colors cursor-pointer"
             title="Clear compare selection"
             aria-label="Clear all compared listings"
           >

@@ -114,7 +114,7 @@ export function CardPhoto({
 
       {/* Real photo count only -- never a fabricated "1/8". */}
       {count > 1 && (
-        <span className="absolute bottom-2 right-2 z-10 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-[9px] text-white font-mono font-bold tracking-wider">
+        <span className="absolute bottom-2 right-2 z-10 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs text-2xs text-white font-mono font-bold tracking-wider">
           1/{count}
         </span>
       )}
@@ -384,7 +384,7 @@ export function ContactActions({
           disabled
           className={cn(
             base,
-            'bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 cursor-not-allowed border-none'
+            'bg-neutral-100 dark:bg-stone-850 text-neutral-700 dark:text-stone-400 cursor-not-allowed border-none'
           )}
         >
           No WhatsApp

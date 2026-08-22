@@ -330,7 +330,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
               <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0 relative">
                 <Bell className="w-4.5 h-4.5 stroke-[2.2]" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-700 text-[9px] font-black text-white rounded-full flex items-center justify-center border-2 border-white dark:border-stone-900 animate-pulse">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-700 text-2xs font-black text-white rounded-full flex items-center justify-center border-2 border-white dark:border-stone-900 animate-pulse">
                     {unreadCount}
                   </span>
                 )}
@@ -387,7 +387,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           <div className="space-y-6 animate-scaleIn">
             {/* 3. Compact No-results state */}
             <div className="bg-white/60 dark:bg-stone-900/40 backdrop-blur-md rounded-2.5xl border border-dashed border-neutral-250 dark:border-neutral-800 p-6 py-8 shadow-3xs text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-550 dark:text-stone-400">
+              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-700 dark:text-stone-400">
                 <Search className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div className="space-y-1">

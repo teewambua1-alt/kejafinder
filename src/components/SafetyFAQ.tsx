@@ -4,7 +4,6 @@ import {
   HelpCircle, 
   ChevronDown, 
   ChevronUp, 
-  AlertTriangle,
   Search,
   Headset
 } from 'lucide-react';
@@ -52,7 +51,7 @@ export default function SafetyFAQ({
     {
       id: 'deposit',
       question: 'Does KejaFinder collect deposits?',
-      answer: 'No. KejaFinder does not collect rent, deposits, booking fees, viewing fees, or agent fees in this prototype. Always view the house physically and confirm the caretaker or landlord before paying anyone.'
+      answer: 'No. KejaFinder has no payment system and never handles rent, deposits, booking fees, viewing fees or agent fees. Anyone asking you to pay through KejaFinder is a scam. Always view the house and confirm the caretaker or landlord in person before paying anyone.'
     },
     {
       id: 'pay_before',
@@ -82,7 +81,7 @@ export default function SafetyFAQ({
     {
       id: 'report',
       question: 'How do I report a listing?',
-      answer: 'Use Report Listing when a house is already taken, fake, wrongly priced, in the wrong location, using wrong photos, unsafe, duplicated, or asking for suspicious payments. Report submission is prototype-only for now.'
+      answer: 'Use Report Listing when a house is already taken, fake, wrongly priced, in the wrong location, using wrong photos, unsafe, duplicated, or asking for suspicious payments. Reports go to the KejaFinder team for review.'
     },
     {
       id: 'recent',
@@ -164,27 +163,12 @@ export default function SafetyFAQ({
         </div>
       </motion.div>
 
-      {/* Main Safety Reminder */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/50 rounded-2xl p-5 shadow-sm">
-        <div className="flex items-start space-x-3 mb-2">
-          <AlertTriangle className="w-6 h-6 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
-          <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 leading-snug tracking-tight">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </h4>
-        </div>
-        <div className="pl-9">
-          <p className="text-[11px] font-semibold text-neutral-700 dark:text-stone-300 leading-relaxed">
-            Use the Safety Page as a checklist before contacting, visiting, or paying anyone.
-          </p>
-        </div>
-      </motion.div>
-
       {/* Support CTA Card */}
       <motion.div variants={itemVariants} className="bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100/60 dark:border-emerald-900/20 rounded-2xl p-5 shadow-sm text-center">
         <h4 className="text-[14px] font-black text-emerald-900 dark:text-emerald-100 tracking-tight mb-2">
           Still unsure?
         </h4>
-        <p className="text-[12px] font-semibold text-emerald-800/80 dark:text-emerald-300/80 mb-4 px-2">
+        <p className="text-[12px] font-semibold text-emerald-800 dark:text-emerald-300 mb-4 px-2">
           If something feels wrong, pause before paying and report the listing.
         </p>
         

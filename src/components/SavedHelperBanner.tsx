@@ -20,7 +20,7 @@ export default function SavedHelperBanner() {
       {/* Main typography items */}
       <div className="flex-1 min-w-0 space-y-1.5 pr-2">
         <div className="flex items-center space-x-1.5">
-          <span className="text-[9.5px] font-black uppercase text-emerald-800 dark:text-emerald-400 tracking-widest leading-none">
+          <span className="text-2xs font-black uppercase text-emerald-800 dark:text-emerald-400 tracking-widest leading-none">
             Trust & Safety Tip
           </span>
           <span className="h-1 w-1 rounded-full bg-emerald-300 dark:bg-emerald-700 shrink-0"></span>

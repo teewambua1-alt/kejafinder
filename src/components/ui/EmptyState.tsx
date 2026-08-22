@@ -12,6 +12,12 @@ interface EmptyStateAction {
 interface EmptyStateProps {
   icon: LucideIcon;
   title: string;
+  /**
+   * `h2` by default: an empty state almost always stands in for a page's main
+   * content, directly under its h1, and `h3` there skips a level. Pass `h3`
+   * when it sits inside an already-headed section.
+   */
+  headingLevel?: 'h2' | 'h3';
   description?: string;
   primaryAction?: EmptyStateAction;
   secondaryAction?: EmptyStateAction;
@@ -23,7 +29,7 @@ interface EmptyStateProps {
  * CTAs) so every list/feed in the app can share one honest, on-brand empty
  * state instead of a blank screen or a one-off per page.
  */
-export default function EmptyState({ icon: Icon, title, description, primaryAction, secondaryAction }: EmptyStateProps) {
+export default function EmptyState({ icon: Icon, title, description, primaryAction, secondaryAction, headingLevel: Heading = 'h2' }: EmptyStateProps) {
   return (
     <motion.div
       role="status"
@@ -39,7 +45,7 @@ export default function EmptyState({ icon: Icon, title, description, primaryActi
       </div>
 
       <div className="space-y-1.5">
-        <h3 className="text-base font-extrabold text-neutral-800 dark:text-stone-300">{title}</h3>
+        <Heading className="text-base font-extrabold text-neutral-800 dark:text-stone-300">{title}</Heading>
         {description && (
           <p className="text-xs text-neutral-550 dark:text-stone-400 max-w-[250px] mx-auto leading-relaxed">
             {description}

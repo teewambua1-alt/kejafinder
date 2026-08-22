@@ -79,8 +79,8 @@ export default function PostAmenitiesGrid({
 
       {/* Soft warning if no amenities are selected */}
       {warning && (
-        <div className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider bg-amber-500/5 px-3 py-2 rounded-xl border border-amber-500/10 flex items-center space-x-1.5 leading-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+        <div className="text-[10px] font-bold text-orange-700 dark:text-orange-500 uppercase tracking-wider bg-orange-500/5 px-3 py-2 rounded-xl border border-orange-500/10 flex items-center space-x-1.5 leading-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-700 animate-pulse" />
           <span>{warning}</span>
         </div>
       )}
@@ -108,7 +108,7 @@ export default function PostAmenitiesGrid({
                 className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                   isSelected
                     ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450'
-                    : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550 dark:text-stone-550'
+                    : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700 dark:text-stone-550'
                 }`}
               >
                 <Icon className="w-4 h-4 stroke-[2.2]" />

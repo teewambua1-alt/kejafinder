@@ -116,7 +116,7 @@ export default function TestModePage({
             <p className="text-[13px] font-semibold text-neutral-500 dark:text-stone-400 leading-relaxed max-w-[280px] mx-auto">
               Check what works, what needs fixing, and what should be improved before the next build stage.
             </p>
-            <p className="inline-block mt-2 text-[9px] font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/20 py-1.5 px-3 rounded-full border border-indigo-100 dark:border-indigo-900/30">
+            <p className="inline-block mt-2 text-2xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/20 py-1.5 px-3 rounded-full border border-indigo-100 dark:border-indigo-900/30">
               This is an internal prototype audit page. It does not submit data anywhere.
             </p>
           </motion.div>
