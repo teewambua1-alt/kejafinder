@@ -68,7 +68,7 @@ export default function TestIssueBoard() {
             <div className="flex items-center space-x-2.5">
               <div className={`p-2 rounded-xl flex items-center justify-center ${
                 sec.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400' :
-                sec.color === 'orange' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400' :
+                sec.color === 'orange' ? 'bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-400' :
                 'bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400'
               }`}>
                 <Icon className="w-4 h-4 stroke-[2.2]" />

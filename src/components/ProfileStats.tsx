@@ -13,12 +13,25 @@ interface ProfileStatsProps {
 }
 
 const COLOR_VARIANTS = [
-  { bg: 'bg-rose-50 dark:bg-rose-950/20', text: 'text-rose-600 dark:text-rose-450', border: 'border-rose-100 dark:border-rose-900/30' },
-  { bg: 'bg-teal-50 dark:bg-teal-950/20', text: 'text-teal-600 dark:text-teal-450', border: 'border-teal-100 dark:border-teal-900/30' },
-  { bg: 'bg-amber-50 dark:bg-amber-950/20', text: 'text-amber-600 dark:text-amber-450', border: 'border-amber-100 dark:border-amber-900/30' },
-  { bg: 'bg-emerald-50 dark:bg-emerald-950/20', text: 'text-emerald-600 dark:text-emerald-450', border: 'border-emerald-100 dark:border-emerald-900/30' },
-  { bg: 'bg-sky-50 dark:bg-sky-950/20', text: 'text-sky-600 dark:text-sky-450', border: 'border-sky-100 dark:border-sky-900/30' },
+  { bg: 'bg-rose-50 dark:bg-rose-950/20', text: 'text-rose-600 dark:text-rose-400', border: 'border-rose-100 dark:border-rose-900/30' },
+  { bg: 'bg-teal-50 dark:bg-teal-950/20', text: 'text-teal-600 dark:text-teal-400', border: 'border-teal-100 dark:border-teal-900/30' },
+  { bg: 'bg-amber-50 dark:bg-amber-950/20', text: 'text-amber-600 dark:text-amber-400', border: 'border-amber-100 dark:border-amber-900/30' },
+  { bg: 'bg-emerald-50 dark:bg-emerald-950/20', text: 'text-emerald-700 dark:text-emerald-450', border: 'border-emerald-100 dark:border-emerald-900/30' },
+  { bg: 'bg-sky-50 dark:bg-sky-950/20', text: 'text-sky-600 dark:text-sky-400', border: 'border-sky-100 dark:border-sky-900/30' },
 ];
+
+/**
+ * Column count per stat count. Mobile never exceeds three across, so a label
+ * still has room to read; the wider layouts open up from there.
+ */
+const GRID_COLS: Record<number, string> = {
+  1: 'grid-cols-1',
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-2 sm:grid-cols-4',
+  5: 'grid-cols-2 xs:grid-cols-3 sm:grid-cols-5',
+  6: 'grid-cols-3 sm:grid-cols-6',
+};
 
 // Purely presentational -- every value is real data computed by the caller
 // per the signed-in account's actual role (Tenant/Landlord/Caretaker/Agent/
@@ -52,7 +65,11 @@ export default function ProfileStats({ stats }: ProfileStatsProps) {
       className="w-full bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-800/40 rounded-3xl p-4 sm:p-4.5 shadow-3xs hover:shadow-2xs transition-shadow"
       id="profile-stats-widget"
     >
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {/* Columns derived from the count, not fixed at 4. A poster account has
+        * five stats, so `sm:grid-cols-4` left one orphan on its own row at
+        * tablet+ and `grid-cols-2` left one orphan on mobile. Tenants have two,
+        * which sat in a 4-column grid with half the row empty. */}
+      <div className={`grid gap-4 ${GRID_COLS[Math.min(stats.length, 6)] ?? 'grid-cols-3'}`}>
         {stats.map((stat, index) => {
           const config = COLOR_VARIANTS[index % COLOR_VARIANTS.length];
           const IconComp = stat.icon;
@@ -74,7 +91,7 @@ export default function ProfileStats({ stats }: ProfileStatsProps) {
                 {stat.value}
               </span>
 
-              <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold text-neutral-550 dark:text-stone-450 text-center leading-tight mt-1 line-clamp-1 max-w-full">
+              <span className="text-3xs sm:text-2xs font-bold text-neutral-550 dark:text-stone-450 text-center leading-tight mt-1 line-clamp-1 max-w-full">
                 {stat.label}
               </span>
             </motion.div>

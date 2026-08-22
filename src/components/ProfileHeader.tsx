@@ -52,14 +52,14 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
       {/* KejaFinder Logo */}
       <div className="flex items-center space-x-2.5">
         <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center shadow-2xs">
-          <MapPinHouse className="w-5.5 h-5.5 text-emerald-600 dark:text-emerald-500 stroke-[2.2]" />
+          <MapPinHouse className="w-5.5 h-5.5 text-emerald-700 dark:text-emerald-500 stroke-[2.2]" />
         </div>
         <div className="flex flex-col">
           <div className="text-xl tracking-tight leading-none font-sans font-extrabold select-none">
-            <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
+            <span className="text-emerald-700 dark:text-emerald-500">Keja</span>
             <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
           </div>
-          <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
+          <span className="text-[10px] text-neutral-550 dark:text-neutral-400 font-medium font-sans mt-0.5 tracking-wider uppercase">
             Vacancies Hub
           </span>
         </div>
@@ -89,7 +89,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         >
           <Bell className="w-4.5 h-4.5 text-neutral-700 dark:text-neutral-200 stroke-[2]" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-500 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
+            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-700 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-800">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -99,7 +99,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
         <motion.button 
           whileTap={{ scale: 0.95 }}
           onClick={onSettingsClick}
-          className="relative w-9 h-9 rounded-full bg-white dark:bg-stone-800/95 border border-neutral-200/50 dark:border-stone-800 flex items-center justify-center text-emerald-600 dark:text-emerald-500 shadow-2xs hover:bg-neutral-50 dark:hover:bg-stone-750/90 transition-all cursor-pointer outline-none"
+          className="relative w-9 h-9 rounded-full bg-white dark:bg-stone-800/95 border border-neutral-200/50 dark:border-stone-800 flex items-center justify-center text-emerald-700 dark:text-emerald-500 shadow-2xs hover:bg-neutral-50 dark:hover:bg-stone-750/90 transition-all cursor-pointer outline-none"
           aria-label="Open settings"
         >
           <Settings className="w-4.5 h-4.5 stroke-[2.2]" />
@@ -120,7 +120,7 @@ export default function ProfileHeader({ onNotificationsClick, onSettingsClick }:
               referrerPolicy="no-referrer"
             />
           </div>
-          {user && <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />}
+          {user && <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-700 rounded-full border border-white dark:border-stone-800" />}
         </button>
       </div>
     </motion.header>

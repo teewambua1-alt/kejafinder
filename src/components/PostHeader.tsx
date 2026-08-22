@@ -25,14 +25,14 @@ export default function PostHeader({
         {/* KejaFinder Logo */}
         <div className="flex items-center space-x-2.5">
           <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center shadow-xs">
-            <MapPinHouse className="w-5.5 h-5.5 text-emerald-600 dark:text-emerald-500 stroke-[2.2]" />
+            <MapPinHouse className="w-5.5 h-5.5 text-emerald-700 dark:text-emerald-500 stroke-[2.2]" />
           </div>
           <div className="flex flex-col">
             <div className="text-xl tracking-tight leading-none font-sans font-extrabold select-none">
-              <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
+              <span className="text-emerald-700 dark:text-emerald-500">Keja</span>
               <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
             </div>
-            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
+            <span className="text-[10px] text-neutral-550 dark:text-neutral-400 font-medium font-sans mt-0.5 tracking-wider uppercase">
               Vacancies Hub
             </span>
           </div>
@@ -70,7 +70,7 @@ export default function PostHeader({
                 <path d="M6 26.5C6 21.2533 10.2533 17 15.5 17H16.5C21.7467 17 26 21.2533 26 26.5V28H6V26.5Z" className="fill-neutral-600 dark:fill-stone-400" />
               </svg>
             </div>
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-stone-800" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-700 rounded-full border-2 border-white dark:border-stone-800" />
           </button>
         </div>
       </motion.div>

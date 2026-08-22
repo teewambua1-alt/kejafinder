@@ -70,7 +70,7 @@ function PendingListingCard({
           {cover ? (
             <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
           ) : (
-            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-600" />
+            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-400" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -106,7 +106,7 @@ function PendingListingCard({
             whileTap={{ scale: 0.97 }}
             disabled={isBusy}
             onClick={handleApprove}
-            className="flex-1 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5 disabled:opacity-60"
+            className="flex-1 h-9 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5 disabled:opacity-60"
           >
             <Check className="w-3.5 h-3.5" />
             <span>{isBusy ? 'Working...' : 'Approve'}</span>
@@ -180,7 +180,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
         <div className="w-full h-full flex flex-col bg-white dark:bg-stone-950 shadow-2xl xl:max-w-[440px] xl:h-[850px] xl:my-auto xl:rounded-[40px] xl:overflow-hidden relative xl:border xl:border-neutral-200/50 dark:xl:border-stone-800">
           <LandlordDashboardHeader onBack={onBack} />
           <div className="flex-1 flex flex-col items-center justify-center text-center px-8 space-y-3">
-            <ShieldAlert className="w-10 h-10 text-orange-500" />
+            <ShieldAlert className="w-10 h-10 text-orange-700 dark:text-orange-400" />
             <h2 className="text-base font-black text-neutral-800 dark:text-stone-100">Admin access required</h2>
             <p className="text-[12px] font-semibold text-neutral-500 dark:text-stone-400">
               Your account isn't an admin, so there's nothing real to show here.
@@ -204,7 +204,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
           <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6">
             <motion.div variants={itemVariants} className="text-center space-y-2">
               <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center mx-auto">
-                <ShieldAlert className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                <ShieldAlert className="w-6 h-6 text-orange-700 dark:text-orange-400" />
               </div>
               <h2 className="text-2xl font-black text-neutral-800 dark:text-stone-100 tracking-tight leading-tight">
                 Admin dashboard
@@ -231,7 +231,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                 </div>
               ) : pendingListings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-2">
-                  <Inbox className="w-7 h-7 text-neutral-550 dark:text-stone-600 mx-auto" />
+                  <Inbox className="w-7 h-7 text-neutral-550 dark:text-stone-400 mx-auto" />
                   <p className="text-[12px] font-bold text-neutral-500 dark:text-stone-400">Nothing waiting for review right now.</p>
                 </div>
               ) : (
@@ -258,7 +258,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                     <div key={report.id} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-xl p-3.5">
                       <p className="text-[11.5px] font-black text-neutral-800 dark:text-stone-100 capitalize">{report.reason.replace(/_/g, ' ')}</p>
                       {report.message && <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400 mt-0.5">{report.message}</p>}
-                      <p className="text-[9.5px] font-bold text-neutral-400 dark:text-stone-500 mt-1">{new Date(report.created_at).toLocaleDateString()}</p>
+                      <p className="text-[9.5px] font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(report.created_at).toLocaleDateString()}</p>
                     </div>
                   ))}
                 </div>
@@ -279,7 +279,7 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                   {pendingVerifications.map((vr) => (
                     <div key={vr.id} className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-xl p-3.5">
                       <p className="text-[11.5px] font-black text-neutral-800 dark:text-stone-100 capitalize">{vr.request_type.replace(/_/g, ' ')} verification</p>
-                      <p className="text-[9.5px] font-bold text-neutral-400 dark:text-stone-500 mt-1">{new Date(vr.created_at).toLocaleDateString()}</p>
+                      <p className="text-[9.5px] font-bold text-neutral-550 dark:text-stone-400 mt-1">{new Date(vr.created_at).toLocaleDateString()}</p>
                     </div>
                   ))}
                 </div>
@@ -305,9 +305,9 @@ export default function AdminDashboardPage({ onBack }: AdminDashboardPageProps) 
                           <span className="font-black text-neutral-850 dark:text-stone-100">{action.adminName || 'An admin'}</span>{' '}
                           {action.action.replace(/_/g, ' ')}d a {action.target_type}
                         </p>
-                        {action.notes && <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-0.5 truncate">{action.notes}</p>}
+                        {action.notes && <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 mt-0.5 truncate">{action.notes}</p>}
                       </div>
-                      <span className="text-[9px] font-bold text-neutral-400 dark:text-stone-500 shrink-0">
+                      <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-400 shrink-0">
                         {new Date(action.created_at).toLocaleDateString()}
                       </span>
                     </div>

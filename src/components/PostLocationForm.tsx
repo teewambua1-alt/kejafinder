@@ -52,14 +52,14 @@ export default function PostLocationForm({
     >
       {/* Description Title Header */}
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <MapPin className="w-4.5 h-4.5 stroke-[2.2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
           <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Location Details
           </h3>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Add clear local details so tenants can find the house easily.
           </p>
         </div>
@@ -71,7 +71,7 @@ export default function PostLocationForm({
           {/* County Selection */}
           <div className="flex flex-col space-y-1.5 flex-1">
             <label htmlFor="county-select" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-              County <span className="text-emerald-500">*</span>
+              County <span className="text-emerald-700">*</span>
             </label>
             <div className="relative flex items-center">
               <select
@@ -81,7 +81,7 @@ export default function PostLocationForm({
                 aria-invalid={!!errors.county}
                 aria-describedby={errors.county ? "county-error-msg" : undefined}
                 className={`w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 appearance-none focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all cursor-pointer font-sans ${
-                  county === '' ? 'text-neutral-400 dark:text-stone-600' : ''
+                  county === '' ? 'text-neutral-550 dark:text-stone-400' : ''
                 } ${
                   errors.county
                     ? 'border-red-400 dark:border-red-900/80 focus:ring-red-500/20'
@@ -95,7 +95,7 @@ export default function PostLocationForm({
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-400 dark:text-stone-500 pointer-events-none stroke-[2.2]" />
+              <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-550 dark:text-stone-400 pointer-events-none stroke-[2.2]" />
             </div>
             {errors.county && (
               <span id="county-error-msg" className="text-[10px] font-bold text-red-500 pl-1 uppercase tracking-wider">
@@ -107,7 +107,7 @@ export default function PostLocationForm({
           {/* Town / Area Input */}
           <div className="flex flex-col space-y-1.5 flex-1">
             <label htmlFor="town-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-              Town / Area <span className="text-emerald-500">*</span>
+              Town / Area <span className="text-emerald-700">*</span>
             </label>
             <div className="relative flex items-center">
               <input
@@ -118,7 +118,7 @@ export default function PostLocationForm({
                 placeholder="e.g. Syokimau, Athi River, Rongai"
                 aria-invalid={!!errors.town}
                 aria-describedby={errors.town ? "town-error-msg" : undefined}
-                className={`w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-405 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
+                className={`w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
                   errors.town
                     ? 'border-red-400 dark:border-red-900/80 focus:ring-red-500/20'
                     : 'border-neutral-100 dark:border-neutral-800/80 focus:border-emerald-500/80 focus:ring-emerald-500/20'
@@ -136,7 +136,7 @@ export default function PostLocationForm({
         {/* Estate Field */}
         <div className="flex flex-col space-y-1.5">
           <label htmlFor="estate-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-            Estate <span className="text-emerald-500">*</span>
+            Estate <span className="text-emerald-700">*</span>
           </label>
           <div className="relative flex items-center">
             <input
@@ -147,7 +147,7 @@ export default function PostLocationForm({
               placeholder="e.g. Gateway Mall Area, Kwa Chief"
               aria-invalid={!!errors.estate}
               aria-describedby={errors.estate ? "estate-error-msg" : undefined}
-              className={`w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-405 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
+              className={`w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
                 errors.estate
                   ? 'border-red-400 dark:border-red-900/80 focus:ring-red-500/20'
                   : 'border-neutral-100 dark:border-neutral-800/80 focus:border-emerald-500/80 focus:ring-emerald-500/20'
@@ -164,10 +164,10 @@ export default function PostLocationForm({
         {/* Nearby Landmark */}
         <div className="flex flex-col space-y-1.5 flex-1">
           <label htmlFor="landmark-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center justify-between">
-            <span>Nearby Landmark <span className="text-emerald-500">*</span></span>
+            <span>Nearby Landmark <span className="text-emerald-700">*</span></span>
           </label>
           <div className="relative flex items-center">
-            <Landmark className="absolute left-4 w-4.5 h-4.5 text-neutral-400 dark:text-stone-605 pointer-events-none stroke-[2]" />
+            <Landmark className="absolute left-4 w-4.5 h-4.5 text-neutral-550 dark:text-stone-605 pointer-events-none stroke-[2]" />
             <input
               type="text"
               id="landmark-input"
@@ -176,7 +176,7 @@ export default function PostLocationForm({
               placeholder="e.g. Near Gateway Mall or main stage"
               aria-invalid={!!errors.landmark}
               aria-describedby={errors.landmark ? "landmark-error-msg" : undefined}
-              className={`w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-405 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
+              className={`w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans ${
                 errors.landmark
                   ? 'border-red-400 dark:border-red-900/80 focus:ring-red-500/20'
                   : 'border-neutral-100 dark:border-neutral-800/80 focus:border-emerald-500/80 focus:ring-emerald-500/20'
@@ -193,17 +193,17 @@ export default function PostLocationForm({
         {/* Distance from main road */}
         <div className="flex flex-col space-y-1.5 flex-1">
           <label htmlFor="distance-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-            Distance from main road <span className="text-neutral-400 dark:text-stone-500">(Optional)</span>
+            Distance from main road <span className="text-neutral-550 dark:text-stone-400">(Optional)</span>
           </label>
           <div className="relative flex items-center">
-            <Footprints className="absolute left-4 w-4.5 h-4.5 text-neutral-400 dark:text-stone-605 pointer-events-none stroke-[2]" />
+            <Footprints className="absolute left-4 w-4.5 h-4.5 text-neutral-550 dark:text-stone-605 pointer-events-none stroke-[2]" />
             <input
               type="text"
               id="distance-input"
               value={distanceFromRoad}
               onChange={(e) => onChange({ distanceFromRoad: e.target.value })}
               placeholder="e.g. 5 minutes walk from main road"
-              className="w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border border-neutral-100 dark:border-neutral-800/80 text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-405 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 focus:border-emerald-500/80 focus:ring-emerald-500/20 transition-all font-sans"
+              className="w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border border-neutral-100 dark:border-neutral-800/80 text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 focus:border-emerald-500/80 focus:ring-emerald-500/20 transition-all font-sans"
             />
           </div>
         </div>

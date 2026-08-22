@@ -48,11 +48,11 @@ export default function SafetyDepositWarning({
   return (
     <motion.div
       variants={containerVariants}
-      className="bg-orange-50/90 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-3xl p-6 shadow-sm"
+      className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-3xl p-6 shadow-sm"
     >
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/40 rounded-full flex items-center justify-center shrink-0">
-          <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400" />
         </div>
         <h3 className="text-lg font-black text-neutral-850 dark:text-stone-100 tracking-tight">
           Deposit safety
@@ -76,7 +76,7 @@ export default function SafetyDepositWarning({
           <ul className="space-y-2">
             {doItems.map((item, idx) => (
               <li key={idx} className="flex items-start text-[12px] font-semibold text-neutral-700 dark:text-stone-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-700 mr-2 shrink-0 mt-0.5" />
                 <span>{item}</span>
               </li>
             ))}

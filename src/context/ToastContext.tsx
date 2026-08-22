@@ -44,7 +44,17 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed inset-x-0 bottom-24 z-[100] flex items-center justify-center pointer-events-none px-4">
+      {/* Persistent live region. It has to exist in the DOM *before* the
+          message appears for a screen reader to announce it, which is why the
+          attributes live on this always-mounted wrapper rather than on the
+          toast inside AnimatePresence. "polite" so it never interrupts, and
+          focus is never moved -- a toast must not steal focus. */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="fixed inset-x-0 bottom-24 z-[var(--z-toast)] flex items-center justify-center pointer-events-none px-4"
+      >
         <AnimatePresence>
           {toast && (
             <motion.div
@@ -58,9 +68,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               {toast.icon ? (
                 <toast.icon className="w-4 h-4 text-emerald-450 shrink-0" />
               ) : (
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse shrink-0" />
               )}
-              <span className="truncate">{toast.message}</span>
+              <span className="text-left leading-snug">{toast.message}</span>
             </motion.div>
           )}
         </AnimatePresence>

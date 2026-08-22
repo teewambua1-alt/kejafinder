@@ -69,7 +69,7 @@ export default function RecommendedAlerts({ settings, onToggle }: RecommendedAle
       label: 'Safety alerts',
       description: 'Get reminders about viewing and deposit safety.',
       icon: AlertTriangle,
-      colorClass: 'text-orange-600 dark:text-orange-400',
+      colorClass: 'text-orange-700 dark:text-orange-400',
       bgColorClass: 'bg-orange-500/10 dark:bg-orange-500/5 border border-orange-500/20'
     }
   ];
@@ -81,7 +81,7 @@ export default function RecommendedAlerts({ settings, onToggle }: RecommendedAle
         <h2 className="text-xs font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
           Recommended alerts
         </h2>
-        <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
+        <p className="text-[10px] text-neutral-550 dark:text-stone-400 font-semibold tracking-wide mt-0.5">
           Get useful updates for homes you care about.
         </p>
       </div>
@@ -128,7 +128,7 @@ export default function RecommendedAlerts({ settings, onToggle }: RecommendedAle
                     aria-label={`Toggle alert style for ${config.label}`}
                     className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer outline-none ${
                       isEnabled 
-                        ? 'bg-emerald-600 border border-emerald-700/10' 
+                        ? 'bg-emerald-700 border border-emerald-700/10' 
                         : 'bg-neutral-200 dark:bg-stone-800 border border-neutral-300/10 dark:border-stone-750/30'
                     }`}
                   >

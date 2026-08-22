@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { createListingDraft, updateListingDraft, submitListingForReview } from '../services/postListingService';
 import { uploadListingPhoto, saveListingImages, deleteListingImage, updateListingImagePosition } from '../services/photoUploadService';
 import type { PostPhotoPreview } from '../components/PostPhotoUploader';
+import { isPosterRole } from '../lib/roles';
 
 // Matches PostPhotoUploader's SLOT_LABELS order and the listing_images
 // category CHECK constraint (supabase/migrations/20260805000001_schema.sql).
@@ -67,7 +68,9 @@ export function usePostListingDraft() {
       return false;
     }
 
-    if (profile.role === 'tenant') {
+    // The real gate on writes. Kept as an allowlist so a future role cannot
+    // acquire posting rights by simply not being 'tenant'.
+    if (!isPosterRole(profile)) {
       setError("Only landlords, caretakers, agents, and scouts can submit vacancies.");
       return false;
     }

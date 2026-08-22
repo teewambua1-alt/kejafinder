@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { motion } from 'motion/react';
-import ListingCard from './ListingCard';
-import ListingCardSkeleton from './ListingCardSkeleton';
+import { PropertyCardVertical, PropertyCardVerticalSkeleton } from './property';
+
 import EmptyState from './ui/EmptyState';
 import { useFeaturedListings } from '../hooks/useFeaturedListings';
 import { useToast } from '../context/ToastContext';
@@ -35,11 +35,11 @@ export default function FeaturedListings({ onSelectListing }: FeaturedListingsPr
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.3 }}
         className="w-full flex flex-col space-y-3.5"
       >
         <div className="flex items-center space-x-2 px-0.5">
-          <Star className="w-4 h-4 text-orange-500 stroke-[2.2]" />
+          <Star className="w-4 h-4 text-orange-700 dark:text-orange-400 stroke-[2.2]" />
           <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Featured listings
           </h2>
@@ -57,34 +57,43 @@ export default function FeaturedListings({ onSelectListing }: FeaturedListingsPr
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.3 }}
       className="w-full flex flex-col space-y-3.5"
     >
       <div className="flex items-center justify-between px-0.5">
         <div className="flex items-center space-x-2">
-          <Star className="w-4 h-4 text-orange-500 stroke-[2.2]" />
-          <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
+          <Star className="w-4 h-4 text-orange-700 dark:text-orange-400 stroke-[2.2]" />
+          <h2 id="featured-listings-heading" className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Featured listings
           </h2>
         </div>
       </div>
 
       {isLoading ? (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div
+          role="list"
+          aria-labelledby="featured-listings-heading"
+          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+        >
           {Array.from({ length: 3 }).map((_, i) => (
-            <ListingCardSkeleton key={i} />
+            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
           ))}
         </div>
       ) : (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div
+          role="list"
+          aria-labelledby="featured-listings-heading"
+          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+        >
           {listings.map((listing, index) => (
             <motion.div
               key={listing.id}
+              role="listitem"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
             >
-              <ListingCard listing={listing} onSelectListing={onSelectListing} />
+              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-[268px] shrink-0 md:w-auto" />
             </motion.div>
           ))}
         </div>

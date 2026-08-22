@@ -85,7 +85,7 @@ export default function SavedCompareSheet({
           <div className="flex items-start justify-between mb-4.5 shrink-0">
             <div>
               <h2 className="text-base font-black text-neutral-800 dark:text-neutral-50 tracking-tight flex items-center space-x-1.5">
-                <Sparkles className="w-4 h-4 text-emerald-500 fill-emerald-500/20" />
+                <Sparkles className="w-4 h-4 text-emerald-700 fill-emerald-500/20" />
                 <span>Compare Saved Homes</span>
               </h2>
               <p className="text-[11.5px] font-semibold text-neutral-500 dark:text-stone-400">
@@ -107,7 +107,7 @@ export default function SavedCompareSheet({
           <div className="flex-1 overflow-y-auto pr-1 -mr-2 space-y-5 py-1">
             {selectedListings.length === 0 ? (
               <div className="text-center py-10 space-y-2">
-                <AlertCircle className="w-8 h-8 text-neutral-400 mx-auto" />
+                <AlertCircle className="w-8 h-8 text-neutral-550 mx-auto" />
                 <p className="text-xs font-bold text-neutral-550 dark:text-stone-400">
                   Select some properties to populate the comparison sheet.
                 </p>
@@ -132,7 +132,7 @@ export default function SavedCompareSheet({
                           loading="lazy"
                           decoding="async"
                         />
-                        <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-600 border border-emerald-500/20 text-[8.5px] font-mono font-black uppercase text-white rounded-md tracking-wider">
+                        <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-700 border border-emerald-500/20 text-[8.5px] font-mono font-black uppercase text-white rounded-md tracking-wider">
                           {formatHouseType(listing.type)}
                         </div>
                       </div>
@@ -142,7 +142,7 @@ export default function SavedCompareSheet({
                           {listing.title}
                         </h4>
                         <div className="flex items-center space-x-1 text-[10px] font-semibold text-neutral-500 dark:text-stone-400">
-                          <MapPin className="w-3 h-3 text-emerald-500 shrink-0" />
+                          <MapPin className="w-3 h-3 text-emerald-700 shrink-0" />
                           <span className="truncate">{listing.location}</span>
                         </div>
                       </div>
@@ -154,15 +154,15 @@ export default function SavedCompareSheet({
                       {/* Price fields */}
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest leading-none">
+                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Rent
                           </span>
-                          <span className="text-[12px] font-black text-emerald-600 dark:text-emerald-400">
+                          <span className="text-[12px] font-black text-emerald-700 dark:text-emerald-400">
                             {formatCurrency(listing.rent)}
                           </span>
                         </div>
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest leading-none">
+                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Deposit
                           </span>
                           <span className="text-[11px] font-bold text-neutral-700 dark:text-stone-200">
@@ -173,7 +173,7 @@ export default function SavedCompareSheet({
 
                       {/* Amenities Details */}
                       <div>
-                        <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-1 leading-none">
+                        <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
                           In-House Amenities
                         </span>
                         <div className="flex flex-wrap gap-1">
@@ -190,16 +190,16 @@ export default function SavedCompareSheet({
 
                       {/* Badges details check */}
                       <div>
-                        <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-1 leading-none">
+                        <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
                           Trust status
                         </span>
                         <div className="flex flex-wrap gap-1">
                           {getBadgesList(listing.badges).map((badge) => (
                             <span 
                               key={badge} 
-                              className="text-[8px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 py-0.5 px-1.5 rounded-md border border-emerald-500/10 flex items-center space-x-0.5"
+                              className="text-[8px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/5 py-0.5 px-1.5 rounded-md border border-emerald-500/10 flex items-center space-x-0.5"
                             >
-                              <ShieldCheck className="w-2.5 h-2.5 shrink-0 text-emerald-500" />
+                              <ShieldCheck className="w-2.5 h-2.5 shrink-0 text-emerald-700" />
                               <span>{badge}</span>
                             </span>
                           ))}
@@ -209,7 +209,7 @@ export default function SavedCompareSheet({
                       {/* Distance summary */}
                       {listing.distanceFromRoad && (
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest leading-none">
+                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Accessibility
                           </span>
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-neutral-600 dark:text-stone-300">
@@ -220,7 +220,7 @@ export default function SavedCompareSheet({
                       )}
 
                       {/* Saved Dates */}
-                      <div className="flex items-center space-x-1 pt-1 text-[9px] font-bold text-neutral-400 dark:text-stone-500">
+                      <div className="flex items-center space-x-1 pt-1 text-[9px] font-bold text-neutral-550 dark:text-stone-400">
                         <Calendar className="w-3 h-3 stroke-[2]" />
                         <span>Saved: {listing.savedAt || "Recently"}</span>
                       </div>
@@ -235,14 +235,14 @@ export default function SavedCompareSheet({
                           href={`https://wa.me/${listing.whatsappPhone}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full h-10 flex items-center justify-center space-x-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[10.5px] rounded-xl transition-colors shadow-3xs"
+                          className="w-full h-10 flex items-center justify-center space-x-1 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-[10.5px] rounded-xl transition-colors shadow-3xs"
                         >
                           <span>Contact caretaker</span>
                         </motion.a>
                       ) : (
                         <button
                           disabled
-                          className="w-full h-10 flex items-center justify-center space-x-1 bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 font-extrabold text-[10.5px] rounded-xl cursor-not-allowed"
+                          className="w-full h-10 flex items-center justify-center space-x-1 bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 font-extrabold text-[10.5px] rounded-xl cursor-not-allowed"
                         >
                           <span>No WhatsApp on file</span>
                         </button>

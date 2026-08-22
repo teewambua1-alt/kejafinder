@@ -29,7 +29,7 @@ export default function AboutHeader({ onBack }: AboutHeaderProps) {
         </h1>
       </div>
 
-      <div className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-100/30 dark:bg-stone-900/30 text-emerald-600 dark:text-emerald-400" aria-label="About KejaFinder icon text representation">
+      <div className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-100/30 dark:bg-stone-900/30 text-emerald-700 dark:text-emerald-400" aria-label="About KejaFinder icon text representation">
         <Info className="w-5 h-5" />
       </div>
     </motion.header>

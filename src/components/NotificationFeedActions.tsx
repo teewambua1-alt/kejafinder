@@ -40,7 +40,7 @@ export default function NotificationFeedActions({
           className={`flex items-center space-x-1.5 py-2 px-3.5 rounded-xl text-[10.5px] font-black uppercase tracking-wider transition-all cursor-pointer outline-none ${
             unreadCount > 0
               ? 'bg-emerald-600/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-600/20'
-              : 'bg-neutral-50 dark:bg-stone-850/40 border border-neutral-200/30 dark:border-stone-800/20 text-neutral-400 pointer-events-none opacity-50'
+              : 'bg-neutral-50 dark:bg-stone-850/40 border border-neutral-200/30 dark:border-stone-800/20 text-neutral-550 pointer-events-none opacity-50'
           }`}
         >
           <CheckCheck className="w-3.5 h-3.5 stroke-[2.2]" />
@@ -53,7 +53,7 @@ export default function NotificationFeedActions({
             whileTap={{ scale: 0.96 }}
             onClick={onClearRead}
             aria-label="Clear read notifications"
-            className="flex items-center justify-center p-2 rounded-xl text-neutral-400 hover:text-red-500 dark:text-stone-500 dark:hover:text-red-400 bg-neutral-50 dark:bg-stone-850/40 border border-neutral-200/30 dark:border-stone-800/20 transition-all cursor-pointer outline-none"
+            className="flex items-center justify-center p-2 rounded-xl text-neutral-550 hover:text-red-500 dark:text-stone-400 dark:hover:text-red-400 bg-neutral-50 dark:bg-stone-850/40 border border-neutral-200/30 dark:border-stone-800/20 transition-all cursor-pointer outline-none"
           >
             <Trash2 className="w-3.5 h-3.5 stroke-[2]" />
           </motion.button>

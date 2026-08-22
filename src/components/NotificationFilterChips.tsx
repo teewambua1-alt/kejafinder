@@ -82,7 +82,7 @@ export default function NotificationFilterChips({ activeFilter, onChange }: Noti
             >
               {/* Optional warm orange indicator dot for Unread identifier specifically */}
               {chip.id === 'unread' && (
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-700 shrink-0" />
               )}
               <Icon className="w-3.5 h-3.5 stroke-[2]" />
               <span>{chip.label}</span>
@@ -92,7 +92,7 @@ export default function NotificationFilterChips({ activeFilter, onChange }: Noti
       </div>
       
       {/* Helper message indicating interactive logic state */}
-      <div className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500 italic pl-1 flex items-center justify-between">
+      <div className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 italic pl-1 flex items-center justify-between">
         <span>Tap a filter chip to narrow your feed in real-time.</span>
         <span className="font-mono text-[8.5px] uppercase font-bold not-italic px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-stone-850 border border-neutral-250/30 dark:border-stone-800 text-neutral-500 select-none">
           Dynamic Filter Engaged

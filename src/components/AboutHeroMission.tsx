@@ -36,7 +36,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
       title: "Search faster",
       desc: "Find rooms by area, budget, and type.",
       icon: Search,
-      color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       title: "Check local details",
@@ -120,7 +120,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
 
         {/* Local rental focus chips */}
         <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-stone-850/60">
-          <span className="text-[9.5px] font-black text-neutral-400 dark:text-stone-500 uppercase tracking-widest block">
+          <span className="text-[9.5px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
             Focus rental types:
           </span>
           <div className="flex flex-wrap gap-1.5" role="list">
@@ -198,7 +198,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
         <motion.button
           onClick={handleSearchAction}
           whileTap={{ scale: 0.97 }}
-          className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[12px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-xs transition-colors cursor-pointer"
+          className="flex-1 h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[12px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-xs transition-colors cursor-pointer"
           aria-label="Search homes"
         >
           <Search className="w-4 h-4 stroke-[2.5]" />
@@ -212,7 +212,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
           className="flex-1 h-12 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-805 dark:text-stone-100 border border-neutral-300 dark:border-stone-800 font-black text-[12px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-3xs transition-colors cursor-pointer"
           aria-label="Post a vacancy"
         >
-          <PlusCircle className="w-4 h-4 stroke-[2.5] text-emerald-600 dark:text-emerald-400" />
+          <PlusCircle className="w-4 h-4 stroke-[2.5] text-emerald-700 dark:text-emerald-400" />
           <span>Post a vacancy</span>
         </motion.button>
       </motion.div>
@@ -231,7 +231,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
         <p className="text-[11px] font-bold text-neutral-700 dark:text-stone-300 leading-relaxed">
           KejaFinder is built around trust, clear pricing, local details, and physical viewing before payment.
         </p>
-        <p className="text-[10px] font-black text-amber-700 dark:text-amber-550 border-t border-amber-500/10 dark:border-amber-900/15 pt-1.5 leading-normal uppercase">
+        <p className="text-[10px] font-black text-amber-700 dark:text-amber-500 border-t border-amber-500/10 dark:border-amber-900/15 pt-1.5 leading-normal uppercase">
           “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
         </p>
       </motion.div>

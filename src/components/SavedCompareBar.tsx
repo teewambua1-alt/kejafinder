@@ -24,7 +24,7 @@ export default function SavedCompareBar({
         exit={{ opacity: 0, y: 70 }}
         transition={{ type: 'spring', damping: 20, stiffness: 220 }}
         // Sticky above the bottom navigation panel
-        className="fixed bottom-[76px] left-4 right-4 z-40 max-w-lg mx-auto bg-white/90 dark:bg-stone-900/95 backdrop-blur-md border border-neutral-150 dark:border-stone-800 rounded-2.5xl p-3.5 shadow-lg flex items-center justify-between space-x-3 select-none"
+        className="fixed bottom-[76px] left-4 right-4 z-[var(--z-overlay)] max-w-lg mx-auto bg-white/90 dark:bg-stone-900/95 backdrop-blur-md border border-neutral-150 dark:border-stone-800 rounded-2.5xl p-3.5 shadow-lg flex items-center justify-between space-x-3 select-none"
       >
         {/* Left Side: Thumbnail Row & Label counts */}
         <div className="flex items-center space-x-3.5 min-w-0">
@@ -73,7 +73,7 @@ export default function SavedCompareBar({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={onCompare}
-            className="h-9 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[11.5px] tracking-tight flex items-center space-x-1.5 cursor-pointer shadow-3xs transition-colors"
+            className="h-9 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11.5px] tracking-tight flex items-center space-x-1.5 cursor-pointer shadow-3xs transition-colors"
           >
             <Columns3 className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Compare Now</span>

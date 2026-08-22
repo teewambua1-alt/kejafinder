@@ -37,7 +37,7 @@ const selectClass =
   'w-full h-12 pl-4 pr-10 bg-white/50 dark:bg-stone-850/40 rounded-2xl border border-neutral-100 dark:border-neutral-800/80 text-xs font-bold text-neutral-800 dark:text-stone-105 appearance-none focus:outline-hidden focus:ring-2 focus:border-emerald-500/80 focus:ring-emerald-500/20 focus:bg-white dark:focus:bg-stone-900 transition-all cursor-pointer font-sans';
 
 const inputClass =
-  'w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border border-neutral-100 dark:border-neutral-800/80 text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-405 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:border-emerald-500/80 focus:ring-emerald-500/20 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans';
+  'w-full h-12 px-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border border-neutral-100 dark:border-neutral-800/80 text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:border-emerald-500/80 focus:ring-emerald-500/20 focus:bg-white dark:focus:bg-stone-900 transition-all font-sans';
 
 export default function PostPropertyDetailsFields({
   waterCharge,
@@ -59,14 +59,14 @@ export default function PostPropertyDetailsFields({
       id="post-property-details-container-card"
     >
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <Layers className="w-4.5 h-4.5 stroke-[2.2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
           <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Utilities & condition
           </h3>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Optional, but the details tenants ask about first.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function PostPropertyDetailsFields({
         {/* Water charge */}
         <div className="flex flex-col space-y-1.5">
           <label htmlFor="water-charge-select" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center gap-1.5">
-            <Droplets className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-450 stroke-[2]" />
+            <Droplets className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
             Water charge
           </label>
           <div className="relative flex items-center">
@@ -84,21 +84,21 @@ export default function PostPropertyDetailsFields({
               id="water-charge-select"
               value={waterCharge}
               onChange={(e) => onChange({ waterCharge: e.target.value })}
-              className={`${selectClass} ${waterCharge === '' ? 'text-neutral-400 dark:text-stone-600' : ''}`}
+              className={`${selectClass} ${waterCharge === '' ? 'text-neutral-550 dark:text-stone-400' : ''}`}
             >
               <option value="">Not specified</option>
               {WATER_CHARGE_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-400 dark:text-stone-500 pointer-events-none stroke-[2.2]" />
+            <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-550 dark:text-stone-400 pointer-events-none stroke-[2.2]" />
           </div>
         </div>
 
         {/* Electricity type */}
         <div className="flex flex-col space-y-1.5">
           <label htmlFor="electricity-type-select" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-450 stroke-[2]" />
+            <Zap className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
             Electricity
           </label>
           <div className="relative flex items-center">
@@ -106,14 +106,14 @@ export default function PostPropertyDetailsFields({
               id="electricity-type-select"
               value={electricityType}
               onChange={(e) => onChange({ electricityType: e.target.value })}
-              className={`${selectClass} ${electricityType === '' ? 'text-neutral-400 dark:text-stone-600' : ''}`}
+              className={`${selectClass} ${electricityType === '' ? 'text-neutral-550 dark:text-stone-400' : ''}`}
             >
               <option value="">Not specified</option>
               {ELECTRICITY_TYPE_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-400 dark:text-stone-500 pointer-events-none stroke-[2.2]" />
+            <ChevronDown className="absolute right-4 w-4 h-4 text-neutral-550 dark:text-stone-400 pointer-events-none stroke-[2.2]" />
           </div>
         </div>
 
@@ -165,7 +165,7 @@ export default function PostPropertyDetailsFields({
         {/* Security */}
         <div className="flex flex-col space-y-1.5">
           <label htmlFor="security-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-450 stroke-[2]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
             Security
           </label>
           <input
@@ -182,12 +182,12 @@ export default function PostPropertyDetailsFields({
       {/* Agent fee / Viewing fee */}
       <div className="pt-1 space-y-1.5">
         <label className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center gap-1.5">
-          <Wallet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-450 stroke-[2]" />
+          <Wallet className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
           Extra one-off costs (optional)
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-xs font-black text-neutral-400 dark:text-stone-505 pointer-events-none select-none tracking-tight font-sans">
+            <span className="absolute left-4 text-xs font-black text-neutral-550 dark:text-stone-505 pointer-events-none select-none tracking-tight font-sans">
               KSh
             </span>
             <input
@@ -201,7 +201,7 @@ export default function PostPropertyDetailsFields({
             />
           </div>
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-xs font-black text-neutral-400 dark:text-stone-505 pointer-events-none select-none tracking-tight font-sans">
+            <span className="absolute left-4 text-xs font-black text-neutral-550 dark:text-stone-505 pointer-events-none select-none tracking-tight font-sans">
               KSh
             </span>
             <input

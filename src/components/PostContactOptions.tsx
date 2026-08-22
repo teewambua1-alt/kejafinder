@@ -61,14 +61,14 @@ export default function PostContactOptions({
     >
       {/* Title Block */}
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <Phone className="w-4.5 h-4.5 stroke-[2.2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
           <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Contact Options
           </h3>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Choose how tenants can reach you.
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function PostContactOptions({
                 aria-pressed={isSelected}
                 className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all duration-200 cursor-pointer outline-none ${
                   isSelected
-                    ? 'bg-emerald-50 dark:bg-emerald-950/35 border-emerald-500 dark:border-emerald-600 text-emerald-800 dark:text-emerald-300 font-extrabold'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/35 border-emerald-700 dark:border-emerald-600 text-emerald-800 dark:text-emerald-300 font-extrabold'
                     : 'bg-white/40 dark:bg-stone-850/40 border-neutral-100 dark:border-neutral-800/60 text-neutral-600 dark:text-stone-400 hover:border-neutral-200'
                 }`}
               >
@@ -107,10 +107,10 @@ export default function PostContactOptions({
         {/* Contact Person */}
         <div className="flex flex-col space-y-1.5 flex-1">
           <label htmlFor="contact-name-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-            Contact Person <span className="text-emerald-500 dark:text-emerald-450">*</span>
+            Contact Person <span className="text-emerald-700 dark:text-emerald-450">*</span>
           </label>
           <div className="relative flex items-center">
-            <User className="absolute left-4 w-4.5 h-4.5 text-neutral-400 dark:text-stone-605 pointer-events-none stroke-[2]" />
+            <User className="absolute left-4 w-4.5 h-4.5 text-neutral-550 dark:text-stone-605 pointer-events-none stroke-[2]" />
             <input
               type="text"
               id="contact-name-input"
@@ -119,7 +119,7 @@ export default function PostContactOptions({
               placeholder="Caretaker or landlord name"
               aria-invalid={!!errors.contactName}
               aria-describedby={errors.contactName ? "contact-name-error-msg" : undefined}
-              className={`w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
+              className={`w-full h-12 pl-11 pr-4 bg-white/50 dark:bg-stone-850/40 rounded-2xl border text-xs font-bold text-neutral-800 dark:text-stone-105 placeholder-neutral-550 dark:placeholder-stone-600 focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
                 errors.contactName
                   ? 'border-red-400 dark:border-red-900/80 focus:ring-red-500/20'
                   : 'border-neutral-100 dark:border-neutral-800/80 focus:border-emerald-500/80 focus:ring-emerald-500/20'
@@ -136,10 +136,10 @@ export default function PostContactOptions({
         {/* Contact Phone */}
         <div className="flex flex-col space-y-1.5 flex-1">
           <label htmlFor="contact-phone-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none flex items-center justify-between">
-            <span>Phone Number {allowCalls && <span className="text-emerald-500">*</span>}</span>
+            <span>Phone Number {allowCalls && <span className="text-emerald-700">*</span>}</span>
           </label>
           <div className="relative flex items-center">
-            <Phone className="absolute left-4 w-4.5 h-4.5 text-neutral-400 dark:text-stone-605 pointer-events-none stroke-[2]" />
+            <Phone className="absolute left-4 w-4.5 h-4.5 text-neutral-550 dark:text-stone-605 pointer-events-none stroke-[2]" />
             <input
               type="tel"
               inputMode="tel"
@@ -158,7 +158,7 @@ export default function PostContactOptions({
               }
               className={`w-full h-12 pl-11 pr-4 rounded-2xl border text-xs font-bold tracking-wider focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
                 !allowCalls
-                  ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-400 cursor-not-allowed'
+                  ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-550 cursor-not-allowed'
                   : 'bg-white/50 dark:bg-stone-850/40 text-neutral-800 dark:text-stone-105'
               } ${
                 errors.contactPhone || errors.contactPhoneFormat
@@ -184,20 +184,20 @@ export default function PostContactOptions({
       <div className="flex flex-col space-y-1.5 pt-1">
         <div className="flex items-center justify-between">
           <label htmlFor="whatsapp-phone-input" className="text-[11px] font-extrabold text-neutral-700 dark:text-stone-300 tracking-tight pl-0.5 select-none">
-            WhatsApp Number {allowWhatsApp && <span className="text-emerald-500">*</span>}
+            WhatsApp Number {allowWhatsApp && <span className="text-emerald-700">*</span>}
           </label>
           {allowWhatsApp && contactPhone && whatsappPhone !== contactPhone && (
             <button
               type="button"
               onClick={handleUsePhoneForWhatsApp}
-              className="text-[10px] font-black text-emerald-600 dark:text-emerald-450 uppercase tracking-wider hover:underline focus:outline-hidden cursor-pointer"
+              className="text-[10px] font-black text-emerald-700 dark:text-emerald-450 uppercase tracking-wider hover:underline focus:outline-hidden cursor-pointer"
             >
               Use Phone Number
             </button>
           )}
         </div>
         <div className="relative flex items-center">
-          <MessageCircle className="absolute left-4 w-4.5 h-4.5 text-neutral-400 dark:text-stone-605 pointer-events-none stroke-[2]" />
+          <MessageCircle className="absolute left-4 w-4.5 h-4.5 text-neutral-550 dark:text-stone-605 pointer-events-none stroke-[2]" />
           <input
             type="tel"
             inputMode="tel"
@@ -216,7 +216,7 @@ export default function PostContactOptions({
             }
             className={`w-full h-12 pl-11 pr-4 rounded-2xl border text-xs font-bold tracking-wider focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
               !allowWhatsApp
-                ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-400 cursor-not-allowed'
+                ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-550 cursor-not-allowed'
                 : 'bg-white/50 dark:bg-stone-850/40 text-neutral-800 dark:text-stone-105'
             } ${
               errors.whatsappPhone || errors.whatsappPhoneFormat
@@ -248,8 +248,8 @@ export default function PostContactOptions({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowCalls 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <Phone className="w-4 h-4 stroke-[2]" />
             </div>
@@ -257,7 +257,7 @@ export default function PostContactOptions({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Call
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Allow tenants to call you directly.
               </span>
             </div>
@@ -270,7 +270,7 @@ export default function PostContactOptions({
             aria-checked={allowCalls}
             onClick={() => onChange({ allowCalls: !allowCalls })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              allowCalls ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              allowCalls ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span
@@ -286,8 +286,8 @@ export default function PostContactOptions({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowWhatsApp 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <MessageCircle className="w-4 h-4 stroke-[2]" />
             </div>
@@ -295,7 +295,7 @@ export default function PostContactOptions({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 WhatsApp
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Allow tenants to message you on WhatsApp.
               </span>
             </div>
@@ -308,7 +308,7 @@ export default function PostContactOptions({
             aria-checked={allowWhatsApp}
             onClick={() => onChange({ allowWhatsApp: !allowWhatsApp })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              allowWhatsApp ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              allowWhatsApp ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span

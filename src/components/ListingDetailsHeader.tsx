@@ -24,7 +24,7 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="w-full flex items-center justify-between py-3 mb-4 sticky top-0 z-30 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border border-neutral-200/50 dark:border-stone-800/40 px-3 rounded-2xl shadow-3xs"
+      className="w-full flex items-center justify-between py-3 mb-4 sticky top-0 z-[var(--z-nav)] bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border border-neutral-200/50 dark:border-stone-800/40 px-3 rounded-2xl shadow-3xs"
     >
       {/* Back Button */}
       <motion.button 
@@ -38,12 +38,12 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
 
       {/* Title */}
       <div className="flex flex-col items-center">
-        <h1 className="text-sm font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight font-sans">
+        {/* Not a heading: the listing title below is this page's h1, and two
+          * h1s gave AT users two competing page titles. This is a toolbar
+          * label. */}
+        <p className="text-sm font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight font-sans">
           Listing details
-        </h1>
-        <span className="text-[8px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest leading-none mt-0.5">
-          Prototype Mode
-        </span>
+        </p>
       </div>
 
       {/* Action Buttons on the Right (Share, Report and Save) */}
@@ -53,7 +53,7 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={onReport}
-            className="w-9 h-9 rounded-full bg-neutral-50 dark:bg-stone-850 border border-neutral-150/50 dark:border-stone-800/50 flex items-center justify-center text-neutral-500 dark:text-stone-400 hover:text-orange-500 transition-colors cursor-pointer outline-none"
+            className="w-9 h-9 rounded-full bg-neutral-50 dark:bg-stone-850 border border-neutral-150/50 dark:border-stone-800/50 flex items-center justify-center text-neutral-500 dark:text-stone-400 hover:text-orange-700 transition-colors cursor-pointer outline-none"
             aria-label="Report listing"
           >
             <AlertTriangle className="w-4 h-4 stroke-[2]" />
@@ -76,8 +76,8 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
           onClick={handleSaveToggle}
           className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all cursor-pointer outline-none ${
             isInitialSaved 
-              ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/45 text-rose-500 shadow-sm' 
-              : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150/50 dark:border-stone-800/50 text-neutral-550 dark:text-stone-400 hover:text-rose-500 dark:hover:text-rose-450'
+              ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/45 text-emerald-700 dark:text-emerald-400 shadow-sm' 
+              : 'bg-neutral-50 dark:bg-stone-850 border-neutral-150/50 dark:border-stone-800/50 text-neutral-550 dark:text-stone-400 hover:text-emerald-800 dark:hover:text-emerald-400'
           }`}
           aria-label="Save listing"
         >
@@ -85,7 +85,7 @@ export default function ListingDetailsHeader({ onBack, isInitialSaved = false, o
             animate={isInitialSaved ? { scale: [1, 1.25, 1] } : {}}
             transition={{ duration: 0.3 }}
           >
-            <Heart className={`w-4 h-4 stroke-[2.2] ${isInitialSaved ? 'fill-rose-500' : ''}`} />
+            <Heart className={`w-4 h-4 stroke-[2.2] ${isInitialSaved ? 'fill-emerald-600 dark:fill-emerald-400' : ''}`} />
           </motion.div>
         </motion.button>
       </div>

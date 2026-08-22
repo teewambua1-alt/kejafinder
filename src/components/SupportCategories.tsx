@@ -72,7 +72,7 @@ export default function SupportCategories({ onShowFeedback }: SupportCategoriesP
             >
               <div className="flex items-center space-x-3">
                 <div className="w-8.5 h-8.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center shrink-0 border border-emerald-100 dark:border-emerald-900/30">
-                  <Icon className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+                  <Icon className="w-4.5 h-4.5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
                 </div>
                 <h4 className="text-[13px] font-black text-neutral-800 dark:text-stone-200 tracking-tight">
                   {cat.title}

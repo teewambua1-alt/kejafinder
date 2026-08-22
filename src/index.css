@@ -60,7 +60,7 @@
    * subtle contrast tweaks -- Tailwind only generates CSS for shades it
    * knows about, so every one of these was silently resolving to a fully
    * transparent color (found while building this system: a Button variant
-   * using bg-orange-550 rendered with no background at all). Each is
+   * using bg-orange-700 rendered with no background at all). Each is
    * defined here as an interpolation between its two real neighboring
    * stops, so every existing screen using one of these classes gets its
    * intended color instead of invisible ones -- no component changes.
@@ -178,11 +178,237 @@ body.dark {
   scrollbar-width: none;
 }
 
-/* Fix leaflet map stacking context issues */
-.leaflet-container {
-  z-index: 10 !important;
-}
-.leaflet-top, .leaflet-bottom {
-  z-index: 10 !important;
+/* ---------------------------------------------------------------------------
+ * Layer scale. The app had 12 distinct z-index values with no documented
+ * order, including z-40/z-[40] and z-60/z-[60] written in both syntaxes, and
+ * a fullscreen map at z-[40] that tied DesktopNavbar (whoever rendered last
+ * won). Reference these as z-[var(--z-nav)] etc. rather than adding new
+ * numbers; Tailwind v4 has no --z-index-* theme namespace, so these are plain
+ * custom properties.
+ * --------------------------------------------------------------------------- */
+:root {
+  --z-map: 0;          /* .leaflet-container -- a sealed stacking context */
+  --z-map-chrome: 10;  /* locate button, coverage chip: siblings of the map */
+  --z-sticky: 20;      /* in-page sticky toolbars */
+  --z-nav: 30;         /* BottomNav, ListingDetailsHeader */
+  --z-navbar: 40;      /* DesktopNavbar, ProfileMenu backdrop */
+  --z-overlay: 50;     /* sheets, modals, dropdowns, FABs */
+  --z-assistant: 60;   /* AIChatbot */
+  --z-lightbox: 70;    /* full-screen image viewer */
+  --z-toast: 100;      /* must outrank everything */
+
+  /* Chrome heights, declared once and consumed by the components that own
+   * them, so map containers can size themselves with calc() instead of
+   * hardcoding 64px. SearchFullMap's inline top/bottom:64px double-counted
+   * because its offset parent already sat below the header and inside
+   * AppShell's padding. */
+  --kf-navbar-h: 4rem;      /* DesktopNavbar h-16 */
+  --kf-bottomnav-h: 4rem;   /* BottomNav h-[64px] */
+  --kf-page-pad-y: 2rem;    /* AppShell md:p-8 */
 }
 
+/* ---------------------------------------------------------------------------
+ * Leaflet stacking. Leaflet forces `position: relative` on the container, so
+ * giving it a z-index creates a stacking context that seals its internal
+ * panes (200-700) and controls (800-1000) into one participating layer. That
+ * part was right; the value was not -- z-index:10 silently outranked every
+ * z-0..z-9 sibling in the app.
+ *
+ * The `.leaflet-top/.leaflet-bottom` override that used to live here has been
+ * deleted. Inside the container's stacking context those controls cannot
+ * escape anyway, so it bought nothing -- and it pushed the zoom buttons and
+ * the OpenStreetMap/CARTO attribution link *below* the marker pane (600) and
+ * popup pane (700), so markers overlapped them and stole their clicks. That
+ * was both a live bug and an attribution-compliance problem, and it is why
+ * every map chrome element in the app had been given z-[1000].
+ * --------------------------------------------------------------------------- */
+.leaflet-container {
+  z-index: var(--z-map);
+  isolation: isolate;
+}
+
+/* ---------------------------------------------------------------------------
+ * Leaflet's own chrome is not theme-aware: the zoom bar and the attribution
+ * strip ship hardcoded white backgrounds, so in dark mode a bright white box
+ * sat in the corner of an otherwise dark map. The attribution is required to
+ * stay legible, so it gets restyled rather than dimmed.
+ * --------------------------------------------------------------------------- */
+.dark .leaflet-container {
+  /* Shown while tiles load. Leaflet's default is #ddd. */
+  background: var(--color-stone-900);
+}
+
+.dark .leaflet-bar a,
+.dark .leaflet-bar a:hover {
+  background: var(--color-stone-900);
+  color: var(--color-stone-200);
+  border-bottom-color: var(--color-stone-800);
+}
+.dark .leaflet-bar a:hover {
+  background: var(--color-stone-800);
+}
+.dark .leaflet-bar {
+  border-color: var(--color-stone-800);
+}
+
+.dark .leaflet-control-attribution {
+  background: rgb(28 25 23 / 0.85);
+  color: var(--color-stone-400);
+}
+.dark .leaflet-control-attribution a {
+  color: var(--color-emerald-400);
+}
+
+/* ---------------------------------------------------------------------------
+ * Price markers. Written as real CSS rather than Tailwind utilities inside a
+ * divIcon HTML string for two reasons: the class scanner cannot see classes
+ * that only exist in a JS template literal, and a plain class re-themes all
+ * markers via the `.dark` ancestor with zero React renders and zero setIcon
+ * calls. Values come from the @theme tokens above.
+ *
+ * The root is 0x0 (see priceMarkerIcon.ts) so the pill can size to its
+ * content; it is positioned so the pill's bottom-centre sits on the
+ * coordinate. Animation lives on the root, which L.DivIcon.createIcon reuses
+ * -- the inner pill is recreated on every setIcon, so transitions on it would
+ * never run.
+ * --------------------------------------------------------------------------- */
+.kf-price-marker {
+  width: 0;
+  height: 0;
+}
+
+.kf-price-marker__pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-neutral-200);
+  background: #fff;
+  color: var(--color-neutral-850);
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 800;
+  line-height: 1.2;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.14);
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.kf-price-marker__pill::after {
+  /* Small pointer so the pill reads as attached to the coordinate. */
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background: inherit;
+  border-right: 1px solid var(--color-neutral-200);
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.kf-price-marker__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.kf-price-marker:hover .kf-price-marker__pill {
+  border-color: var(--color-emerald-500);
+  color: var(--color-emerald-700);
+}
+
+.kf-price-marker--selected .kf-price-marker__pill {
+  background: var(--color-emerald-600);
+  border-color: var(--color-emerald-600);
+  color: #fff;
+  box-shadow: 0 2px 10px rgb(5 150 105 / 0.4);
+  animation: kf-marker-pop 220ms ease-out;
+}
+
+.kf-price-marker--selected .kf-price-marker__pill::after {
+  border-right-color: var(--color-emerald-600);
+  border-bottom-color: var(--color-emerald-600);
+}
+
+@keyframes kf-marker-pop {
+  0% { transform: translate(-50%, -100%) scale(0.88); }
+  60% { transform: translate(-50%, -100%) scale(1.06); }
+  100% { transform: translate(-50%, -100%) scale(1); }
+}
+
+/* The focus ring belongs on the Leaflet-managed root, which carries tabindex. */
+.kf-price-marker:focus-visible {
+  outline: none;
+}
+.kf-price-marker:focus-visible .kf-price-marker__pill {
+  outline: 2px solid var(--color-emerald-600);
+  outline-offset: 2px;
+}
+
+.dark .kf-price-marker__pill {
+  border-color: var(--color-stone-800);
+  background: var(--color-stone-900);
+  color: var(--color-stone-100);
+}
+.dark .kf-price-marker__pill::after {
+  border-right-color: var(--color-stone-800);
+  border-bottom-color: var(--color-stone-800);
+}
+.dark .kf-price-marker:hover .kf-price-marker__pill {
+  border-color: var(--color-emerald-500);
+  color: var(--color-emerald-400);
+}
+.dark .kf-price-marker--selected .kf-price-marker__pill {
+  background: var(--color-emerald-600);
+  border-color: var(--color-emerald-500);
+  color: #fff;
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion. Nothing in the app honoured this before: there are ~140
+ * `transition-all` utilities and ~23 `animate-pulse` skeletons, none of which
+ * respond to the OS setting on their own. Neutralising them here covers every
+ * CSS-driven animation in one place; JS-driven Motion animations are handled
+ * separately by useMotion() in src/lib/motion.ts.
+ *
+ * Transitions are near-zeroed rather than removed so that transitionend
+ * listeners still fire and state machines don't stall.
+ * --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Removes the ~300ms tap delay mobile browsers add while waiting to see if a
+ * tap is a double-tap-to-zoom. Applied to controls only, so pinch-zoom on
+ * photos and maps still works. */
+button,
+a,
+[role='button'],
+label,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Keeps overscroll inside sheets and scrollers from chaining to the page
+ * behind them (which reads as the sheet "leaking" a scroll). */
+.no-scrollbar,
+[data-sheet-scroll] {
+  overscroll-behavior: contain;
+}

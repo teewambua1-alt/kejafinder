@@ -72,9 +72,9 @@ export default function PostListingPreview({
       <div className="flex flex-col space-y-0.5">
         <h4 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight flex items-center space-x-1.5">
           <span>Listing Preview</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 animate-pulse" />
         </h4>
-        <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+        <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
           This is how your listing may appear to tenants.
         </p>
       </div>
@@ -96,13 +96,13 @@ export default function PostListingPreview({
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-center p-6 space-y-2 select-none">
-              <div className="w-11 h-11 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-400 dark:text-stone-500">
+              <div className="w-11 h-11 rounded-full bg-neutral-100 dark:bg-stone-800 flex items-center justify-center text-neutral-550 dark:text-stone-400">
                 <ImagePlus className="w-5.5 h-5.5 stroke-[2]" />
               </div>
               <p className="text-[11px] font-bold text-neutral-500 dark:text-stone-400">
                 Cover photo preview
               </p>
-              <p className="text-[9px] font-semibold text-neutral-400 dark:text-stone-500 max-w-[190px]">
+              <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 max-w-[190px]">
                 Add at least one photo above to populate this card.
               </p>
             </div>
@@ -130,15 +130,15 @@ export default function PostListingPreview({
               <span className="text-xs font-black text-neutral-800 dark:text-stone-200 tracking-tight truncate max-w-[190px]">
                 {draft.title || `${formatHouseType(draft.houseType)} in ${draft.estate || 'Estate'}`}
               </span>
-              <div className="flex items-center text-[10.5px] font-bold text-neutral-400 dark:text-stone-500">
-                <MapPin className="w-3 h-3 text-neutral-400 mr-1 shrink-0" />
+              <div className="flex items-center text-[10.5px] font-bold text-neutral-550 dark:text-stone-400">
+                <MapPin className="w-3 h-3 text-neutral-550 mr-1 shrink-0" />
                 <span className="truncate max-w-[180px]">{locationSummary}</span>
               </div>
             </div>
 
             {/* Availability / Verification request pill */}
             {hasVerificationOption && (
-              <div className="flex items-center space-x-1 bg-emerald-500/10 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full border border-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-extrabold tracking-tight shrink-0 shadow-3xs uppercase">
+              <div className="flex items-center space-x-1 bg-emerald-500/10 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full border border-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[9px] font-extrabold tracking-tight shrink-0 shadow-3xs uppercase">
                 <ShieldCheck className="w-2.5 h-2.5" />
                 <span>Verified requested</span>
               </div>
@@ -164,7 +164,7 @@ export default function PostListingPreview({
                   key={amenityId} 
                   className="flex items-center space-x-1 bg-stone-100/50 dark:bg-stone-850 border border-neutral-250/20 dark:border-neutral-850 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded-md text-[9px] font-bold"
                 >
-                  <Check className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <Check className="w-2.5 h-2.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
                   <span className="truncate max-w-[90px]">
                     {AMENITY_TEXTS[amenityId] || amenityId.replace(/_/g, ' ')}
                   </span>
@@ -172,7 +172,7 @@ export default function PostListingPreview({
               ))}
             </div>
           ) : (
-            <div className="text-[9px] font-bold text-neutral-400 dark:text-stone-500 bg-neutral-500/5 p-2 rounded-xl border border-neutral-200/50 dark:border-stone-850/50 flex items-center space-x-1">
+            <div className="text-[9px] font-bold text-neutral-550 dark:text-stone-400 bg-neutral-500/5 p-2 rounded-xl border border-neutral-200/50 dark:border-stone-850/50 flex items-center space-x-1">
               <span>No amenities selected in Step 2.</span>
             </div>
           )}
@@ -192,12 +192,12 @@ export default function PostListingPreview({
             {/* Quick action buttons badges mock */}
             <div className="flex items-center space-x-1.5">
               {draft.allowCalls && (
-                <div className="w-7 h-7 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center cursor-pointer shadow-sm shadow-emerald-500/10">
+                <div className="w-7 h-7 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white flex items-center justify-center cursor-pointer shadow-sm shadow-emerald-500/10">
                   <Phone className="w-3.5 h-3.5 stroke-[2.2]" />
                 </div>
               )}
               {draft.allowWhatsApp && (
-                <div className="w-7 h-7 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 flex items-center justify-center cursor-pointer">
+                <div className="w-7 h-7 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 flex items-center justify-center cursor-pointer">
                   <MessageSquare className="w-3.5 h-3.5 stroke-[2.2]" />
                 </div>
               )}

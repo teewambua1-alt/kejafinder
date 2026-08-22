@@ -53,7 +53,7 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
         {/* Main Warning */}
         <div className="flex items-start space-x-3.5 mb-2">
           <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center shrink-0 border border-orange-200 dark:border-orange-800/50">
-            <AlertTriangle className="w-5.5 h-5.5 text-orange-600 dark:text-orange-400 stroke-[2.2]" />
+            <AlertTriangle className="w-5.5 h-5.5 text-orange-700 dark:text-orange-400 stroke-[2.2]" />
           </div>
           <div>
             <h4 className="text-[12px] font-black tracking-tight text-orange-900 dark:text-orange-200 mb-1">
@@ -89,7 +89,7 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
             <ul className="space-y-2">
               {whatToDo.map((action, i) => (
                 <li key={i} className="flex items-start space-x-2 text-[10.5px] font-bold text-neutral-700 dark:text-stone-300">
-                  <StopCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-500 shrink-0 mt-0.5" />
+                  <StopCircle className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-500 shrink-0 mt-0.5" />
                   <span className="leading-tight">{action}</span>
                 </li>
               ))}
@@ -106,7 +106,7 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
             onClick={handleSafety}
             className="flex-1 h-11 bg-white dark:bg-stone-800 text-neutral-800 dark:text-stone-200 border border-neutral-300 dark:border-stone-700 font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm hover:bg-neutral-50 dark:hover:bg-stone-700 transition-colors"
           >
-            <BookOpen className="w-4 h-4 text-amber-550" />
+            <BookOpen className="w-4 h-4 text-amber-500" />
             <span>Read Safety Page</span>
           </motion.button>
 
@@ -114,7 +114,7 @@ export default function SupportSafetyScamBlock({ onGoSafety, onShowFeedback }: S
             type="button"
             whileTap={{ scale: 0.98 }}
             onClick={() => onShowFeedback('Use the report issue form above.')}
-            className="flex-1 h-11 bg-orange-600 dark:bg-orange-600 hover:bg-orange-700 text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm transition-colors"
+            className="flex-1 h-11 bg-orange-700 dark:bg-orange-600 hover:bg-orange-800 text-white font-black text-[11px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm transition-colors"
           >
             <Flag className="w-4 h-4" />
             <span>Report scam request</span>

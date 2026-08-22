@@ -67,7 +67,7 @@ export default function SaveSearchButton({ query, filters, sort, onRequireAuth }
           transition={{ duration: 0.3 }}
         >
           {justSaved ? (
-            <BookmarkCheck className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+            <BookmarkCheck className="w-4.5 h-4.5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
           ) : (
             <Bookmark className="w-4.5 h-4.5 stroke-[2.2]" />
           )}
@@ -81,9 +81,9 @@ export default function SaveSearchButton({ query, filters, sort, onRequireAuth }
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute right-0 mt-1.5 w-64 rounded-xl bg-white/95 dark:bg-stone-850/95 backdrop-blur-md border border-neutral-100/90 dark:border-neutral-700/80 shadow-lg z-60 p-3.5 origin-top-right"
+            className="absolute right-0 mt-1.5 w-64 rounded-xl bg-white dark:bg-stone-850 border border-neutral-100 dark:border-stone-700 shadow-lg z-[var(--z-overlay)] p-3.5 origin-top-right"
           >
-            <label className="text-[10.5px] font-bold text-neutral-500 dark:text-stone-400 uppercase tracking-wider">
+            <label className="text-2xs font-bold text-neutral-600 dark:text-stone-400 uppercase tracking-wider">
               Save this search
             </label>
             <input
@@ -91,14 +91,14 @@ export default function SaveSearchButton({ query, filters, sort, onRequireAuth }
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="e.g. Bedsitters in Syokimau"
-              className="w-full h-9 px-3 mt-1.5 rounded-lg border border-neutral-150 dark:border-neutral-800 bg-neutral-50 dark:bg-stone-900 text-xs font-semibold text-neutral-850 dark:text-neutral-150 placeholder-neutral-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
+              className="w-full h-9 px-3 mt-1.5 rounded-lg border border-neutral-150 dark:border-neutral-800 bg-neutral-50 dark:bg-stone-900 text-xs font-semibold text-neutral-850 dark:text-neutral-150 placeholder-neutral-550 focus:border-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-500/20"
               autoFocus
             />
             <button
               type="button"
               onClick={handleSave}
               disabled={isSaving || !label.trim()}
-              className="w-full h-9 mt-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-extrabold shadow-sm transition-colors border-none cursor-pointer outline-none"
+              className="w-full h-9 mt-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-extrabold shadow-sm transition-colors border-none cursor-pointer outline-none"
             >
               {isSaving ? 'Saving...' : 'Save'}
             </button>

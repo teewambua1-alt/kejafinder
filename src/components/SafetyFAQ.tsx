@@ -106,7 +106,7 @@ export default function SafetyFAQ({
       {/* Section Header */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center space-x-2 mb-1">
-          <HelpCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <HelpCircle className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
           <h3 className="text-xl font-black text-neutral-850 dark:text-stone-100 tracking-tight">
             Safety FAQ
           </h3>
@@ -137,9 +137,9 @@ export default function SafetyFAQ({
                     {faq.question}
                   </span>
                   {isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-emerald-600 dark:text-emerald-500 shrink-0" />
+                    <ChevronUp className="w-4 h-4 text-emerald-700 dark:text-emerald-500 shrink-0" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-neutral-400 dark:text-stone-500 shrink-0" />
+                    <ChevronDown className="w-4 h-4 text-neutral-550 dark:text-stone-400 shrink-0" />
                   )}
                 </button>
                 <AnimatePresence initial={false}>
@@ -165,9 +165,9 @@ export default function SafetyFAQ({
       </motion.div>
 
       {/* Main Safety Reminder */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-amber-950/30 border border-orange-200/60 dark:border-amber-900/50 rounded-2xl p-5 shadow-sm">
+      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/50 rounded-2xl p-5 shadow-sm">
         <div className="flex items-start space-x-3 mb-2">
-          <AlertTriangle className="w-6 h-6 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="w-6 h-6 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
           <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 leading-snug tracking-tight">
             Never send deposit before physically viewing the house and confirming the caretaker or landlord.
           </h4>
@@ -192,7 +192,7 @@ export default function SafetyFAQ({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleSearch}
-            className="flex-1 bg-emerald-600 dark:bg-emerald-500 text-white rounded-2xl py-3 px-3 font-black uppercase text-[11px] tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center"
+            className="flex-1 bg-emerald-700 dark:bg-emerald-700 text-white rounded-2xl py-3 px-3 font-black uppercase text-[11px] tracking-wider shadow-sm hover:shadow-md transition-all flex items-center justify-center"
             aria-label="Browse safer listings"
           >
             <Search className="w-4 h-4 mr-1.5" />

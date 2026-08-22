@@ -64,14 +64,14 @@ export default function PostAmenitiesGrid({
     >
       {/* Title */}
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <Sparkles className="w-4.5 h-4.5 stroke-[2.2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
           <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Amenities
           </h3>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Select what tenants should know before visiting.
           </p>
         </div>
@@ -100,15 +100,15 @@ export default function PostAmenitiesGrid({
               aria-pressed={isSelected}
               className={`flex items-center space-x-2.5 p-3 rounded-2xl border text-xs font-bold transition-all duration-200 cursor-pointer text-left focus:outline-hidden ${
                 isSelected
-                  ? 'bg-emerald-50 dark:bg-emerald-950/35 border-emerald-500 dark:border-emerald-600 text-emerald-800 dark:text-emerald-300 font-extrabold shadow-xs shadow-emerald-500/5'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/35 border-emerald-700 dark:border-emerald-600 text-emerald-800 dark:text-emerald-300 font-extrabold shadow-xs shadow-emerald-500/5'
                   : 'bg-white/40 dark:bg-stone-850/40 border-neutral-150/40 dark:border-neutral-800/60 text-neutral-750 dark:text-stone-300 hover:border-neutral-255'
               }`}
             >
               <div
                 className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                   isSelected
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450'
-                    : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400 dark:text-stone-550'
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450'
+                    : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550 dark:text-stone-550'
                 }`}
               >
                 <Icon className="w-4 h-4 stroke-[2.2]" />

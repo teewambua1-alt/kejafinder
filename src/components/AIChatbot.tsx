@@ -74,12 +74,12 @@ export default function AIChatbot() {
           setShowNudge(false);
           localStorage.setItem(OPENED_KEY, '1');
         }}
-        className={`absolute bottom-28 right-6 z-[60] bg-emerald-600 text-white rounded-full p-4 shadow-lg ${isOpen ? 'hidden' : 'flex'} items-center justify-center`}
+        className={`absolute bottom-28 right-6 z-[var(--z-assistant)] bg-emerald-700 text-white rounded-full p-4 shadow-lg ${isOpen ? 'hidden' : 'flex'} items-center justify-center`}
         aria-label="Open AI Assistant"
       >
         <MessageSquare className="w-6 h-6" />
         {showNudge && (
-          <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-orange-500 border-2 border-white dark:border-stone-950 animate-pulse" />
+          <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-orange-700 border-2 border-white dark:border-stone-950 animate-pulse" />
         )}
       </motion.button>
 
@@ -91,10 +91,10 @@ export default function AIChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="absolute bottom-24 right-4 sm:right-6 w-[calc(100%-2rem)] sm:w-[350px] h-[500px] max-h-[70vh] bg-white dark:bg-stone-900 rounded-3xl shadow-2xl border border-neutral-200 dark:border-neutral-800 z-[60] flex flex-col overflow-hidden"
+            className="absolute bottom-24 right-4 sm:right-6 w-[calc(100%-2rem)] sm:w-[350px] h-[500px] max-h-[70vh] bg-white dark:bg-stone-900 rounded-3xl shadow-2xl border border-neutral-200 dark:border-neutral-800 z-[var(--z-assistant)] flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-emerald-600 text-white shadow-sm z-10">
+            <div className="flex items-center justify-between p-4 bg-emerald-700 text-white shadow-sm z-10">
               <div className="flex items-center space-x-2">
                 <div className="bg-white/20 p-1.5 rounded-full">
                   <Bot className="w-5 h-5" />
@@ -119,13 +119,13 @@ export default function AIChatbot() {
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex items-start max-w-[85%] space-x-2 ${msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 shadow-sm ${
-                      msg.role === 'user' ? 'bg-emerald-100 text-emerald-700' : 'bg-white dark:bg-stone-800 text-emerald-600 dark:text-emerald-400 border border-neutral-100 dark:border-neutral-700'
+                      msg.role === 'user' ? 'bg-emerald-100 text-emerald-700' : 'bg-white dark:bg-stone-800 text-emerald-700 dark:text-emerald-400 border border-neutral-100 dark:border-neutral-700'
                     }`}>
                       {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                     </div>
                     <div className={`p-3.5 rounded-2xl text-sm shadow-sm ${
                       msg.role === 'user' 
-                        ? 'bg-emerald-600 text-white rounded-tr-none' 
+                        ? 'bg-emerald-700 text-white rounded-tr-none' 
                         : 'bg-white dark:bg-stone-800 text-neutral-800 dark:text-neutral-200 rounded-tl-none border border-neutral-100 dark:border-neutral-800/80'
                     }`}>
                       {msg.parts.map((p, i) => (
@@ -141,10 +141,10 @@ export default function AIChatbot() {
                 <div className="flex justify-start">
                   <div className="flex items-start space-x-2">
                     <div className="w-8 h-8 mt-1 rounded-full bg-white dark:bg-stone-800 border border-neutral-100 dark:border-neutral-700 flex items-center justify-center shadow-sm">
-                      <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <Bot className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
                     </div>
                     <div className="p-4 rounded-2xl rounded-tl-none bg-white dark:bg-stone-800 border border-neutral-100 dark:border-neutral-800/80 flex items-center space-x-2 shadow-sm">
-                      <Loader2 className="w-4 h-4 animate-spin text-emerald-500" />
+                      <Loader2 className="w-4 h-4 animate-spin text-emerald-700" />
                       <span className="text-xs text-neutral-500 font-medium">Thinking...</span>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ export default function AIChatbot() {
               <button 
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="w-[46px] h-[46px] rounded-2xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-neutral-200 dark:disabled:bg-stone-800 disabled:text-neutral-400 text-white flex items-center justify-center transition-colors shrink-0 shadow-sm"
+                className="w-[46px] h-[46px] rounded-2xl bg-emerald-700 hover:bg-emerald-800 disabled:bg-neutral-200 dark:disabled:bg-stone-800 disabled:text-neutral-550 text-white flex items-center justify-center transition-colors shrink-0 shadow-sm"
               >
                 <Send className="w-5 h-5 ml-1" />
               </button>

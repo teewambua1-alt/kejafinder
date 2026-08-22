@@ -80,7 +80,7 @@ Please review this checklist and the current prototype state. Page-level code sp
         readOnly
         value={reportText}
         rows={8}
-        className="w-full bg-neutral-900 dark:bg-stone-950 text-neutral-300 dark:text-stone-400 text-[10px] sm:text-[11px] font-mono p-3 rounded-xl border border-neutral-700 dark:border-stone-800 focus:outline-none resize-none leading-relaxed"
+        className="w-full bg-neutral-900 dark:bg-stone-950 text-neutral-550 dark:text-stone-400 text-[10px] sm:text-[11px] font-mono p-3 rounded-xl border border-neutral-700 dark:border-stone-800 focus:outline-none resize-none leading-relaxed"
       />
 
       <div className="flex flex-col sm:flex-row gap-2">
@@ -88,7 +88,7 @@ Please review this checklist and the current prototype state. Page-level code sp
           type="button"
           whileTap={{ scale: 0.96 }}
           onClick={generateReport}
-          className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] uppercase tracking-wider py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[11px] uppercase tracking-wider py-3 rounded-xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Generate local report</span>

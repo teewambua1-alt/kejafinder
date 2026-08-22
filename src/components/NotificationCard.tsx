@@ -40,17 +40,17 @@ export default function NotificationCard({ notification, onActionClick, onDismis
   const getCategoryIcon = () => {
     switch (category) {
       case 'saved':
-        return <Heart className="w-5 h-5 text-rose-500" />;
+        return <Heart className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />;
       case 'message':
         return <MessageCircle className="w-5 h-5 text-indigo-500" />;
       case 'safety':
-        return <ShieldCheck className="w-5 h-5 text-orange-500" />;
+        return <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-orange-400" />;
       case 'verification':
-        return <ShieldCheck className="w-5 h-5 text-emerald-600" />;
+        return <ShieldCheck className="w-5 h-5 text-emerald-700" />;
       case 'availability':
         return <CalendarCheck className="w-5 h-5 text-sky-500" />;
       case 'price':
-        return <TrendingDown className="w-5 h-5 text-emerald-500" />;
+        return <TrendingDown className="w-5 h-5 text-emerald-700" />;
       case 'support':
         return <Headphones className="w-5 h-5 text-amber-500" />;
       default:
@@ -85,7 +85,7 @@ export default function NotificationCard({ notification, onActionClick, onDismis
       {/* Unread indicator badge / status marker */}
       {!isRead && (
         <span 
-          className="absolute top-4.5 right-11 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs" 
+          className="absolute top-4.5 right-11 w-2.5 h-2.5 rounded-full bg-emerald-700 shadow-xs" 
           aria-label="Unread notification"
           title="Unread notification"
         />
@@ -99,7 +99,7 @@ export default function NotificationCard({ notification, onActionClick, onDismis
           onDismiss(id);
         }}
         aria-label={`Dismiss notification: ${title}`}
-        className="absolute top-2.5 right-2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-400 dark:text-stone-500 hover:text-orange-500 hover:bg-orange-500/5 dark:hover:text-orange-400 dark:hover:bg-orange-500/[0.03] transition-colors cursor-pointer outline-none z-10"
+        className="absolute top-2.5 right-2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-550 dark:text-stone-400 hover:text-orange-700 hover:bg-orange-500/5 dark:hover:text-orange-400 dark:hover:bg-orange-500/[0.03] transition-colors cursor-pointer outline-none z-10"
       >
         <X className="w-3.5 h-3.5 stroke-[2.2]" />
       </motion.button>
@@ -131,13 +131,13 @@ export default function NotificationCard({ notification, onActionClick, onDismis
           <div className="flex items-center space-x-1.5 flex-wrap">
             <span className={`text-[9.5px] font-black uppercase tracking-wider ${
               category === 'safety' || isImportant
-                ? 'text-orange-650 dark:text-orange-400'
+                ? 'text-orange-700 dark:text-orange-400'
                 : 'text-neutral-550 dark:text-stone-400'
             }`}>
               {category === 'verification' ? 'scout verified' : category}
             </span>
-            <span className="text-[9px] text-neutral-400 dark:text-stone-500 font-bold">&#8226;</span>
-            <span className="text-[10px] text-neutral-400 dark:text-stone-500 font-semibold">{timeAgo}</span>
+            <span className="text-[9px] text-neutral-550 dark:text-stone-400 font-bold">&#8226;</span>
+            <span className="text-[10px] text-neutral-550 dark:text-stone-400 font-semibold">{timeAgo}</span>
           </div>
 
           {/* Title - bold header styling */}
@@ -162,8 +162,8 @@ export default function NotificationCard({ notification, onActionClick, onDismis
                 aria-label={`${actionLabel} notification: ${title}`}
                 className={`py-1.5 px-4.5 rounded-xl text-[10.5px] font-extrabold uppercase tracking-wide cursor-pointer transition-all shadow-3xs outline-none ${
                   category === 'safety' || isImportant
-                    ? 'bg-orange-550 text-white hover:bg-orange-600'
-                    : 'bg-emerald-600 text-white hover:bg-emerald-650'
+                    ? 'bg-orange-700 text-white hover:bg-orange-800'
+                    : 'bg-emerald-700 text-white hover:bg-emerald-800'
                 }`}
               >
                 {actionLabel}
@@ -173,7 +173,7 @@ export default function NotificationCard({ notification, onActionClick, onDismis
         </div>
 
         {/* Far-Right Indicator arrow */}
-        <div className="self-center text-neutral-550 dark:text-stone-600 shrink-0">
+        <div className="self-center text-neutral-550 dark:text-stone-400 shrink-0">
           <ChevronRight className="w-4 h-4 stroke-[2.2] group-hover/card:translate-x-0.5 transition-transform" />
         </div>
       </div>

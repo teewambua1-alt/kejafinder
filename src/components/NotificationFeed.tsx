@@ -49,11 +49,11 @@ export default function NotificationFeed({
           className="w-full flex flex-col space-y-3"
         >
           <div className="flex items-center space-x-2 pl-1">
-            <h2 className="text-[10.5px] font-black text-neutral-400 dark:text-stone-400 uppercase tracking-widest leading-none select-none">
+            <h2 className="text-[10.5px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest leading-none select-none">
               Today
             </h2>
             <div className="h-px bg-neutral-200 dark:bg-stone-850/60 flex-1" />
-            <span className="text-[9px] font-mono font-bold text-neutral-400 dark:text-stone-500 px-1 bg-neutral-50 dark:bg-stone-900 rounded border border-neutral-100 dark:border-stone-850">
+            <span className="text-[9px] font-mono font-bold text-neutral-550 dark:text-stone-400 px-1 bg-neutral-50 dark:bg-stone-900 rounded border border-neutral-100 dark:border-stone-850">
               {todayNotifications.length}
             </span>
           </div>
@@ -81,11 +81,11 @@ export default function NotificationFeed({
           className="w-full flex flex-col space-y-3"
         >
           <div className="flex items-center space-x-2 pl-1">
-            <h2 className="text-[10.5px] font-black text-neutral-400 dark:text-stone-400 uppercase tracking-widest leading-none select-none">
+            <h2 className="text-[10.5px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest leading-none select-none">
               Earlier
             </h2>
             <div className="h-px bg-neutral-200 dark:bg-stone-850/60 flex-1" />
-            <span className="text-[9px] font-mono font-bold text-neutral-400 dark:text-stone-500 px-1 bg-neutral-50 dark:bg-stone-900 rounded border border-neutral-100 dark:border-stone-850">
+            <span className="text-[9px] font-mono font-bold text-neutral-550 dark:text-stone-400 px-1 bg-neutral-50 dark:bg-stone-900 rounded border border-neutral-100 dark:border-stone-850">
               {earlierNotifications.length}
             </span>
           </div>

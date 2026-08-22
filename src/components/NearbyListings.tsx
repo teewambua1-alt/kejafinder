@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { MapPin, Navigation, LocateFixed } from 'lucide-react';
 import { motion } from 'motion/react';
-import ListingCard from './ListingCard';
-import ListingCardSkeleton from './ListingCardSkeleton';
+import { PropertyCardVertical, PropertyCardVerticalSkeleton } from './property';
+
 import EmptyState from './ui/EmptyState';
 import { useNearbyListings } from '../hooks/useNearbyListings';
 import { useToast } from '../context/ToastContext';
@@ -47,12 +47,12 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.25 }}
       className="w-full flex flex-col space-y-3.5"
     >
       <div className="flex items-center space-x-2 px-0.5">
-        <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
-        <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
+        <MapPin className="w-4 h-4 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
+        <h2 id="nearby-listings-heading" className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
           Nearby listings
         </h2>
       </div>
@@ -62,12 +62,15 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
           onClick={requestLocation}
           className="w-full rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-dashed border-emerald-200 dark:border-emerald-900/50 p-5 flex items-center space-x-3.5 text-left cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors"
         >
-          <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+          <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
             <Navigation className="w-5 h-5 stroke-[2.2]" />
           </div>
           <div>
             <p className="text-xs font-black text-neutral-800 dark:text-neutral-100">See homes near you</p>
-            <p className="text-2xs font-semibold text-neutral-500 dark:text-stone-400 mt-0.5">
+            {/* stone-300, not the usual muted stone-400: this sits on the
+                emerald-950/20 tint rather than the card surface, which drops
+                stone-400 to 4.41:1 -- just under AA. */}
+            <p className="text-2xs font-semibold text-neutral-500 dark:text-stone-300 mt-0.5">
               Share your location to find vacancies close by.
             </p>
           </div>
@@ -91,9 +94,13 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
       )}
 
       {(permissionState === 'requesting' || (permissionState === 'granted' && isLoading)) && (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div
+          role="list"
+          aria-labelledby="nearby-listings-heading"
+          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+        >
           {Array.from({ length: 3 }).map((_, i) => (
-            <ListingCardSkeleton key={i} />
+            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
           ))}
         </div>
       )}
@@ -107,16 +114,21 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
       )}
 
       {permissionState === 'granted' && !isLoading && listings.length > 0 && (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div
+          role="list"
+          aria-labelledby="nearby-listings-heading"
+          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+        >
           {listings.map((listing, index) => (
             <motion.div
               key={listing.id}
+              role="listitem"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
               className="relative"
             >
-              <ListingCard listing={listing} onSelectListing={onSelectListing} />
+              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-[268px] shrink-0 md:w-auto" />
               {userCoords && typeof listing.lat === 'number' && typeof listing.lng === 'number' && (
                 <div className="absolute top-2.5 left-2.5 z-10 bg-black/60 backdrop-blur-md text-white text-2xs font-bold px-2 py-1 rounded-md border border-white/20 shadow-sm pointer-events-none">
                   {distanceKm(userCoords, { lat: listing.lat, lng: listing.lng }).toFixed(1)} km away

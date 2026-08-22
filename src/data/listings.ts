@@ -18,7 +18,6 @@ export const sampleListings: Listing[] = [
     contactPhone: '+254700000000',
     whatsappPhone: '254700000000',
     isAvailable: true,
-    panoramaUrl: 'https://photo-sphere-viewer-data.netlify.app/assets/sphere.jpg',
   },
   {
     id: 'listing-2',

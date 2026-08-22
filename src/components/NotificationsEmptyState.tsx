@@ -28,7 +28,7 @@ export default function NotificationsEmptyState({
       {/* Centered illustration style icon area */}
       <div className="relative">
         {/* Soft emerald icon circle container */}
-        <div className="w-16 h-16 rounded-2.5xl bg-emerald-550/10 dark:bg-emerald-550/5 border border-emerald-500/20 dark:border-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-16 h-16 rounded-2.5xl bg-emerald-550/10 dark:bg-emerald-550/5 border border-emerald-500/20 dark:border-emerald-500/10 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           {isNoResults ? (
             <Search className="w-7 h-7 stroke-[2.2]" />
           ) : (
@@ -37,7 +37,7 @@ export default function NotificationsEmptyState({
         </div>
         {/* Warm orange small accent dot */}
         <span 
-          className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-orange-500 border-2 border-white dark:border-stone-900"
+          className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-orange-700 border-2 border-white dark:border-stone-900"
           aria-hidden="true"
         />
       </div>
@@ -62,7 +62,7 @@ export default function NotificationsEmptyState({
             whileTap={{ scale: 0.96 }}
             onClick={onClearFilters}
             aria-label="Clear all active notification filters"
-            className="w-full py-2.5 px-5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-650 text-white shadow-3xs cursor-pointer outline-none transition-all"
+            className="w-full py-2.5 px-5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-700 hover:bg-emerald-800 text-white shadow-3xs cursor-pointer outline-none transition-all"
           >
             Clear filters
           </motion.button>
@@ -73,7 +73,7 @@ export default function NotificationsEmptyState({
                 whileTap={{ scale: 0.96 }}
                 onClick={onBrowseHomes}
                 aria-label="Browse newly vacant homes"
-                className="w-full py-2.5 px-5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-650 text-white shadow-3xs cursor-pointer outline-none transition-all"
+                className="w-full py-2.5 px-5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-700 hover:bg-emerald-800 text-white shadow-3xs cursor-pointer outline-none transition-all"
               >
                 Browse homes
               </motion.button>

@@ -6,7 +6,11 @@ import { cn } from '../../lib/cn';
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref' | 'children'> {
+  // Narrowed from HTMLMotionProps, which also permits MotionValue children.
+  // A button label is text or nodes -- never an animated value -- and the
+  // wider type made the <span> wrapper below unassignable.
+  children?: React.ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: LucideIcon;
@@ -16,7 +20,7 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'ref'> {
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary:
-    'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-500/15 border border-transparent',
+    'bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm shadow-emerald-500/15 border border-transparent',
   secondary:
     'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40',
   outline:
@@ -24,7 +28,7 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   ghost:
     'bg-transparent hover:bg-neutral-100 dark:hover:bg-stone-850/60 text-neutral-700 dark:text-stone-300 border border-transparent',
   danger:
-    'bg-orange-550 hover:bg-orange-600 text-white shadow-sm shadow-orange-500/15 border border-transparent',
+    'bg-orange-700 hover:bg-orange-800 text-white shadow-sm shadow-orange-500/15 border border-transparent',
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

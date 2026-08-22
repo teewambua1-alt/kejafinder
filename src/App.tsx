@@ -3,14 +3,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import AppShell from './components/AppShell';
 import Header from './components/Header';
 import HeroSearch from './components/HeroSearch';
-import FilterChips from './components/FilterChips';
-import CategoryScroller from './components/CategoryScroller';
 import NearbyListings from './components/NearbyListings';
 import FeaturedListings from './components/FeaturedListings';
 import FreshVacancies from './components/FreshVacancies';
 import PopularLocations from './components/PopularLocations';
 import SafetyBanner from './components/SafetyBanner';
-import HomeIntroBanner from './components/HomeIntroBanner';
 import PullToRefreshIndicator from './components/PullToRefreshIndicator';
 import { useListings } from './hooks/useListings';
 import { usePullToRefresh } from './hooks/usePullToRefresh';
@@ -39,8 +36,6 @@ export default function App() {
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [activeFilterChip, setActiveFilterChip] = useState<string | null>(null);
 
   useEffect(() => {
     if (listingsError) {
@@ -176,55 +171,34 @@ export default function App() {
     setActiveTab(previousTab || 'profile');
   };
 
-  // Multi-criteria filter logic
+  /**
+   * Home narrows only by what the user typed. The category and
+   * availability predicates were removed along with the filter controls that
+   * drove them -- structured filtering lives on the Search page, which
+   * applies all nine filters rather than a partial subset.
+   */
   const filteredListings = useMemo(() => {
-    return allListings.filter((listing) => {
-      // 1. Category Filter
-      if (selectedCategory !== 'all' && listing.type !== selectedCategory) {
-        return false;
-      }
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return allListings;
 
-      // 2. Available Filter
-      if (activeFilterChip === 'available' && listing.isAvailable === false) {
-        return false;
-      }
+    return allListings.filter((listing) =>
+      [
+        listing.title,
+        listing.type,
+        listing.typeLabel,
+        listing.location,
+        listing.town,
+        listing.estate,
+        listing.landmark,
+        ...listing.amenities,
+        ...listing.badges,
+      ]
+        .filter(Boolean)
+        .some((field) => String(field).toLowerCase().includes(q))
+    );
+  }, [allListings, searchQuery]);
 
-      // 3. Search Query Filter - matches against title, type, location, town, estate, landmark, amenities, and badges
-      if (!searchQuery.trim()) {
-        return true;
-      }
-
-      const q = searchQuery.toLowerCase().trim();
-
-      const titleMatch = listing.title.toLowerCase().includes(q);
-      const typeMatch = listing.type.toLowerCase().includes(q) || (listing.typeLabel ? listing.typeLabel.toLowerCase().includes(q) : false);
-      const locationMatch = listing.location.toLowerCase().includes(q);
-      const townMatch = listing.town.toLowerCase().includes(q);
-      const estateMatch = listing.estate.toLowerCase().includes(q);
-      const landmarkMatch = listing.landmark ? listing.landmark.toLowerCase().includes(q) : false;
-
-      const amenitiesMatch = listing.amenities.some((amenity) => amenity.toLowerCase().includes(q));
-
-      const badgesMatch = listing.badges.some((badge) => badge.toLowerCase().includes(q));
-
-      return (
-        titleMatch ||
-        typeMatch ||
-        locationMatch ||
-        townMatch ||
-        estateMatch ||
-        landmarkMatch ||
-        amenitiesMatch ||
-        badgesMatch
-      );
-    });
-  }, [allListings, searchQuery, selectedCategory, activeFilterChip]);
-
-  const handleClearFilters = () => {
-    setSearchQuery('');
-    setSelectedCategory('all');
-    setActiveFilterChip(null);
-  };
+  const handleClearFilters = () => setSearchQuery('');
 
   // Real aggregation of already-loaded approved listings by estate -- never
   // a curated/fake list. PopularLocations itself renders nothing when this
@@ -244,6 +218,7 @@ export default function App() {
 
   return (
     <AppShell
+      focusMode={activeTab === 'auth'}
       activeTab={activeTab === 'listing-details' || activeTab === 'about' ? previousTab : activeTab}
       onTabChange={(tab) => {
         setSelectedListingId(null);
@@ -274,66 +249,53 @@ export default function App() {
         className="flex-1 flex flex-col w-full min-h-0"
       >
       {activeTab === 'home' ? (
-        /* Container holding the progression of elements */
-        <div className="flex-1 flex flex-col py-2 space-y-8 animate-fadeIn">
+        /**
+         * Home is deliberately spare: land, search, see homes. It previously
+         * opened with 22 interactive controls on an empty database -- a
+         * dismissible explainer, an "Available Now" toggle and a seven-tile
+         * category row before any listing appeared.
+         *
+         * The category and availability filters were removed rather than
+         * restyled: the Search page's filter sheet already applies all nine
+         * filters honestly, so these were a partial duplicate that made the
+         * first screen feel like setup. Typing here still narrows the list
+         * live, and submitting opens full Search.
+         */
+        <div className="flex-1 flex flex-col py-2 space-y-10 md:space-y-12 animate-fadeIn">
 
           {/* Header -- hidden at md+, DesktopNavbar covers that role there */}
           <div className="md:hidden">
             <Header onNotificationsClick={() => setActiveTab('notifications')} onProfileClick={() => setActiveTab('profile')} />
           </div>
 
-          {/* First-time, signed-out visitor explainer -- shows once, ever */}
-          <HomeIntroBanner />
-
-          {/* 1. Hero Search */}
+          {/* The one thing this screen asks you to do */}
           <HeroSearch
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onSearchSubmit={handleSearchSubmit}
           />
 
-          {/* 2. Nearby Listings */}
-          <NearbyListings onSelectListing={openListingDetails} />
-
-          {/* 3. Featured Listings */}
-          <FeaturedListings onSelectListing={openListingDetails} />
-
-          {/* 4. Recently Added */}
+          {/* Real listings, immediately */}
           <FreshVacancies
             listings={filteredListings}
             searchQuery={searchQuery}
-            selectedCategory={selectedCategory}
             onClearFilters={handleClearFilters}
             onSelectListing={openListingDetails}
             onSeeAll={() => setActiveTab('search')}
             isLoading={isLoading}
           />
 
-          {/* 5. Popular Locations */}
+          <NearbyListings onSelectListing={openListingDetails} />
+
+          <FeaturedListings onSelectListing={openListingDetails} />
+
           <PopularLocations locations={popularLocations} onSelectLocation={handleSearchSubmit} />
 
-          {/* 6. Quick Filters */}
-          <div className="flex flex-col space-y-3.5">
-            <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight px-0.5">
-              Quick filters
-            </h2>
-            <FilterChips
-              activeChip={activeFilterChip}
-              onChipClick={setActiveFilterChip}
-            />
-            <CategoryScroller
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-            />
-          </div>
-
-          {/* 7. Safety Tips */}
           <SafetyBanner />
 
         </div>
       ) : activeTab === 'search' ? (
         <SearchResultsPage
-          onBackToHome={() => setActiveTab('home')}
           onTabChange={setActiveTab}
           onSelectListing={openListingDetails}
           initialQuery={pendingSearchQuery}
@@ -420,11 +382,11 @@ export default function App() {
       ) : (
         /* Placeholder for other tabs like profile */
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4 min-h-[400px]">
-          <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-neutral-100 dark:border-stone-850">
+          <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-700 dark:text-emerald-400 border border-neutral-100 dark:border-stone-850">
             <span className="font-mono text-xs font-black uppercase">{activeTab[0]}</span>
           </div>
           <div className="space-y-1">
-            <div className="text-emerald-600 dark:text-emerald-400 font-display font-black text-sm tracking-tight capitalize">
+            <div className="text-emerald-700 dark:text-emerald-400 font-display font-black text-sm tracking-tight capitalize">
               {activeTab} Screen
             </div>
             <p className="text-neutral-500 dark:text-neutral-400 text-[10px] leading-relaxed max-w-[240px] font-medium mx-auto">
@@ -434,7 +396,7 @@ export default function App() {
           <motion.button 
             whileTap={{ scale: 0.95 }}
             onClick={() => setActiveTab('home')}
-            className="px-4 py-1.5 rounded-lg bg-emerald-600 border-none outline-none font-bold text-xs text-white cursor-pointer hover:bg-emerald-700 transition-colors shadow-2xs"
+            className="px-4 py-1.5 rounded-lg bg-emerald-700 border-none outline-none font-bold text-xs text-white cursor-pointer hover:bg-emerald-800 transition-colors shadow-2xs"
           >
             Go back Home
           </motion.button>

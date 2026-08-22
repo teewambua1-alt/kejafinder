@@ -97,7 +97,7 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
       {/* Section Header */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center space-x-2 mb-1">
-          <Flag className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <Flag className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
           <h3 className="text-xl font-black text-neutral-850 dark:text-stone-100 tracking-tight">
             Report suspicious listings
           </h3>
@@ -123,8 +123,8 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
             >
               <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                 isOrange 
-                  ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400' 
-                  : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                  ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400' 
+                  : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
               }`}>
                 <Icon className="w-4 h-4" />
               </div>
@@ -150,7 +150,7 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
         <ol className="space-y-2">
           {['KejaFinder records the report.', 'Repeated reports can flag a listing for review.', 'Outdated or suspicious listings can be hidden later.', 'Admins will review reports in the real MVP.'].map((step, idx) => (
             <li key={idx} className="flex items-start text-[12px] font-medium text-emerald-900/80 dark:text-emerald-100/80">
-              <span className="font-bold text-emerald-600 dark:text-emerald-400 mr-2 shrink-0">{idx + 1}.</span>
+              <span className="font-bold text-emerald-700 dark:text-emerald-400 mr-2 shrink-0">{idx + 1}.</span>
               <span>{step}</span>
             </li>
           ))}
@@ -165,7 +165,7 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
           {['What was wrong?', 'Who contacted you?', 'Was the price different?', 'Was the house already taken?', 'Did they ask for money before viewing?', 'Did the location or photos look wrong?'].map((tip, idx) => (
             <li key={idx} className="flex items-start text-[11px] font-semibold text-neutral-600 dark:text-stone-400">
-              <CheckCircle2 className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500 mr-2 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-neutral-550 dark:text-stone-400 mr-2 shrink-0 mt-0.5" />
               <span>{tip}</span>
             </li>
           ))}
@@ -176,8 +176,8 @@ export default function SafetyReportGuide({ onShowFeedback }: SafetyReportGuideP
       </motion.div>
 
       {/* Safety Note */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-2xl p-4 shadow-sm flex items-start space-x-3">
-        <ShieldCheck className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 shadow-sm flex items-start space-x-3">
+        <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
         <div>
           <p className="text-[13px] font-black text-orange-800 dark:text-orange-300 leading-snug mb-1">
             Never send deposit before physically viewing the house and confirming the caretaker or landlord.

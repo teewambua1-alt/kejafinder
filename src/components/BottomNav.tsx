@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Home, Search, Plus, Heart, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
+import { isPosterRole } from '../lib/roles';
 
 interface BottomNavProps {
   activeTab?: string;
@@ -22,10 +23,8 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
     }
   };
 
-  // Only signed-in landlords/caretakers/agents/scouts can submit vacancies
-  // (see usePostListingDraft) -- signed-out visitors and tenant accounts
-  // don't get the tab at all.
-  const canPost = !!profile && profile.role !== 'tenant';
+  // One shared allowlist -- see lib/roles.ts for why this is not `!== 'tenant'`.
+  const canPost = isPosterRole(profile);
   const navItems = [
     { id: 'home', label: 'Explore', icon: Home },
     { id: 'search', label: 'Search', icon: Search },
@@ -38,7 +37,7 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
   const tabWidth = 100 / navItems.length;
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
+    <div className="absolute bottom-0 left-0 right-0 z-[var(--z-nav)] pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
       {/* Background with animated curve */}
       <div className="absolute inset-x-0 bottom-0 h-[64px] drop-shadow-[0_-4px_16px_rgba(0,0,0,0.06)] dark:drop-shadow-[0_-4px_16px_rgba(0,0,0,0.25)]">
         <motion.div 
@@ -60,7 +59,7 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
           <div className="absolute left-[50%] ml-[50px] w-[1000px] h-[64px] bg-current" />
           
           {/* Sliding Active Circle */}
-          <div className="absolute top-[-16px] left-1/2 -ml-[23px] w-[46px] h-[46px] rounded-full bg-emerald-600 dark:bg-emerald-500 shadow-lg shadow-emerald-500/30 flex items-center justify-center pointer-events-none z-20">
+          <div className="absolute top-[-16px] left-1/2 -ml-[23px] w-[46px] h-[46px] rounded-full bg-emerald-700 dark:bg-emerald-700 shadow-lg shadow-emerald-500/30 flex items-center justify-center pointer-events-none z-20">
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={activeTab}
@@ -97,7 +96,7 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
                 initial={false}
                 animate={isActive ? { y: 25, opacity: 0, scale: 0.5 } : { y: 22, opacity: 1, scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="absolute top-0 text-neutral-400 dark:text-stone-500"
+                className="absolute top-0 text-neutral-550 dark:text-stone-400"
               >
                 <IconComp className="w-[22px] h-[22px] stroke-[2.2]" />
               </motion.div>

@@ -141,7 +141,7 @@ Sizes: `sm` (h-9, rounded-xl), `md` (h-11, rounded-2xl), `lg` (h-13, rounded-2xl
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Poor photos / no virtual tours (dataset-flagged anti-pattern for this product category — the app already invests in `PanoramaViewerModal`, photo galleries; keep doing that)
+- ❌ Poor photos (dataset-flagged anti-pattern for this product category — invest in the gallery, and group by the real `listing_images.category`). Note: `PanoramaViewerModal` was **deleted** in Phase 1. No `panorama_url` column exists; the 360° button was showing a demo sphere from a hardcoded sample on every real listing. Do not reintroduce it without a column behind it.
 - ❌ Glassmorphism / heavy blur, luxury serif display fonts (Cinzel etc.) — mismatched with the established flat, mobile-first, trust-driven direction (see Rejected Alternative above)
 - ❌ Raw Tailwind color shades in new semantic contexts — reach for `brand-primary` / `success` / `danger` tokens instead of `emerald-600`/`red-500` directly where a semantic meaning is intended
 - ❌ New fractional spacing tokens beyond the existing set — use the default 4px-based steps
@@ -156,6 +156,63 @@ The "no emoji as structural icons" rule was violated in 9 files where an emoji s
 
 `text-neutral-450` (`#a3a3a3`) measured **2.5:1** against a white surface — below both the 3:1 large-text floor and the 4.5:1 normal-text floor. `text-neutral-350` (`#bcbcbc`-ish color-mix) measured **~1.9:1**, worse still. Both were used exclusively as the light-mode half of an already-correct `dark:text-stone-*` pair (verified before changing anything — only one place in the whole codebase, `SearchResultCard.tsx:185`, uses `dark:text-neutral-350` as an intentional *dark-surface* value, and that one was left untouched). Swapped all 76 other occurrences (67 + 9) across 38 files to `text-neutral-550` (`#737373`, ~4.7:1, passes AA). `npm run typecheck` verified clean after the change.
 
+### AA-safe colour pairs (added Phase 8) — measured, not assumed
+
+A full-page contrast audit found **37 AA failures on the brand colours**. An earlier pass had reported zero, but it only sampled text on card surfaces — it never sampled filled buttons or brand-coloured text, which is where every failure was. Ratios below were measured in the running app with alpha layers composited.
+
+| Pair | Before | After | Verdict |
+|---|---|---|---|
+| `text-emerald-600` on white | 3.65:1 | `text-emerald-700` → **5.36:1** | every price, at 15px bold |
+| white on `bg-emerald-600` | 3.65:1 | `bg-emerald-700` → **5.36:1** | primary CTAs, badges |
+| white on `bg-emerald-500` | 2.47:1 | `bg-emerald-700` | worst offender |
+| white on `bg-orange-500` / `-550` | 2.89 / 3.16:1 | `bg-orange-700` → **5.66:1** | "Featured" badge |
+| `text-orange-500` / `-600` on white | 2.89 / 3.58:1 | `text-orange-700` | "Deposit", warnings |
+| `text-neutral-300` / `-400` on white | 1.48 / 2.58:1 | `text-neutral-550` → **4.74:1** | separators, hints |
+| `dark:text-stone-600` on dark | 2.29:1 | `dark:text-stone-400` | failed in all 44 uses |
+| `dark:text-stone-500` on dark | 3.65:1 | `dark:text-stone-400` | |
+
+**Rules that follow:**
+
+- **Filled controls use the `-700` step**, never `-500`/`-600`, whenever they carry white text. There is no way to keep emerald-600 under white small text: `-600` only passes at ≥24px, or ≥18.66px bold, and every button label in this app is 11–14px.
+- **Brand text on a light surface uses `-700`.** `-800`/`-900` are also fine; `-600` and lighter are not, except for display text at ≥24px.
+- **Interaction states go darker, never lighter.** There were 32 uses of `hover:bg-emerald-500` over a `-600` base — a hover that lightened. Hover/active on a filled control is now `-800`. The exception is opacity tints (`hover:bg-emerald-500/5`) on transparent/outline buttons, where transparent → faint tint is the correct direction.
+- **Borders on filled controls track their fill** (`border-emerald-700`). Hairline tints (`border-emerald-500/20`) on tinted surfaces are unchanged — those pass 3:1 on their own.
+- **Dark mode is measured separately.** `dark:text-stone-400` is the muted tier (4.41:1 worst case, passing in 48 of 49 uses); anything below it fails. `dark:text-emerald-400` (9.0:1) and `dark:text-orange-400` (7.4:1) are the brand text colours on dark — a `-700` brand colour needs a `dark:` counterpart or it goes near-invisible.
+
+**When checking contrast, composite the alpha layers.** Two probe bugs produced phantom results before this audit was trustworthy: a digit-regex read `oklch(0.439 0 0)` as `rgb(0, 439, 0)` (Tailwind v4 emits oklch), and treating a 10%-alpha emerald tint as opaque reported bright emerald text on it as a 1.31:1 failure. Normalise colours through a canvas and blend translucent ancestors onto the first opaque one.
+
+### Layer scale (added Phase 6)
+
+There were 12 distinct z-index values with no documented order, including `z-40`/`z-[40]` and `z-60`/`z-[60]` written in both syntaxes, a `z-[9999]` lightbox, and eight map overlays at `z-[1000]`. The scale now lives once, as custom properties in `:root` (Tailwind v4 has no `--z-index-*` theme namespace), and is referenced as `z-[var(--z-nav)]`:
+
+| Token | Value | Owns |
+|---|---|---|
+| `--z-map` | 0 | `.leaflet-container` — a sealed stacking context |
+| `--z-map-chrome` | 10 | locate button, coverage notice, docked card |
+| `--z-sticky` | 20 | in-page sticky toolbars |
+| `--z-nav` | 30 | BottomNav, ListingDetailsHeader |
+| `--z-navbar` | 40 | DesktopNavbar, ProfileMenu backdrop |
+| `--z-overlay` | 50 | sheets, modals, dropdowns, FABs, map takeover |
+| `--z-assistant` | 60 | AIChatbot |
+| `--z-lightbox` | 70 | full-screen image viewer |
+| `--z-toast` | 100 | must outrank everything |
+
+Do not add new numbers. If something needs a layer, it belongs at one of these.
+
+Three companion variables kill the layout magic numbers: `--kf-navbar-h` (4rem), `--kf-bottomnav-h` (4rem), `--kf-page-pad-y` (2rem), each consumed by whatever needs to size around that chrome.
+
+**`position: fixed` warning.** `AppShell`'s main container carries `backdrop-blur-md`, and `backdrop-filter` makes an element the containing block for every fixed descendant. So `fixed` inside the app resolves against AppShell's box, not the viewport — `top`/`bottom` arithmetic there is silently wrong. Prefer `inset-0`, which cannot be wrong about a box it fills entirely.
+
+### Map conventions (added Phase 6)
+
+- **One map component**: `components/map/PropertyMap`. It owns **zero height** — always `h-full`, and the caller sizes the parent. Use `svh`, never `dvh`, for map containers: `dvh` resizes continuously while the mobile URL bar animates, which turns one scroll into a resize storm.
+- **`react-leaflet@5` freezes** `className`, `style`, `center`, `zoom` and every `MapOptions` field at first render. They are mount-time defaults, not controlled props. View changes go through a child component using `useMap()`; theme classes go on the wrapper, never on `MapContainer`.
+- **Markers are `L.divIcon` with real CSS classes** (`.kf-price-marker` in `index.css`), not `renderToString`. A CSS class re-themes all pins on a theme toggle with zero React renders and zero `setIcon` calls. Two hard rules: escape user text (it reaches `innerHTML`), and no Tailwind utilities inside the HTML string — the class scanner cannot see classes that exist only in a JS template literal.
+- **Every coordinate goes through `toMapPoint()`** in `lib/leaflet.ts`, which rejects null, non-finite, `(0,0)`, and anything outside a Kenya bounding box (that last check catches swapped lat/lng). A listing with no coordinates is **not plotted and the omission is disclosed** by `MapCoverageNotice`. Never fabricate a position — the deleted `approximateCoordinates` hashed the listing id into an offset around Nairobi, and `SavedMapView`'s `getMockCoordinates` returned CSS percentages from the estate name.
+- **No `<Popup>`.** One selection model, two renderings: docked card on mobile, ringed-and-scrolled card on desktop. A popup with a clickable div inside it is a second interaction path no keyboard or screen-reader user will find.
+- **Tile attribution must be links**, not plain text — OSM and CARTO both require it. And never override `.leaflet-top`/`.leaflet-bottom`: inside the container's stacking context those controls cannot escape anyway, and demoting them puts the marker pane over the zoom buttons and the attribution link.
+- **Clustering: no.** 60 DOM markers is nothing. The threshold is pagination, not marker count — revisit when `.limit(60)` becomes a viewport query and >150 pins can land at once, and then use `supercluster` with the same `divIcon`.
+
 ---
 
 ## Pre-Delivery Checklist
@@ -167,10 +224,15 @@ Already true across the codebase (verified, not aspirational):
 - [x] Bottom nav ≤ 5 items, role-aware
 - [x] Safe-area insets respected on fixed bottom nav
 - [x] `text-neutral-450`/`-350` no longer used on light surfaces (swapped to `text-neutral-550`, ~4.7:1)
+- [x] Zero WCAG AA text-contrast failures across Home/Search/Saved/Profile in light **and** dark, filled buttons and brand text included (see the pair table above)
 
 Still to verify per new/changed screen:
 - [ ] No new emoji introduced for functional/status meaning (decorative emoji in plain prose is a separate, lower-stakes call)
 - [ ] Dark mode contrast checked independently, not assumed from light mode
+- [ ] Filled controls sampled too — a text-on-surface sweep will not catch white-on-brand failures
+- [ ] Interaction states verified darker than their base, not lighter
 - [ ] `prefers-reduced-motion` respected for spring/stagger animations
 - [ ] Responsive at 375px, 768px, 1024px, 1440px
 - [ ] New semantic-colored elements use the `brand-*`/`success`/`warning`/`danger`/`info` tokens, not raw Tailwind shades
+- [ ] z-index comes from the `--z-*` scale above, not a fresh number
+- [ ] Any new arbitrary `text-[Npx]` justified — 741 remain across 112 files and are a known debt, so do not add to the pile

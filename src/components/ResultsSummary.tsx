@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import SortDropdown, { SortOption } from './SortDropdown';
 import { List, LayoutGrid } from 'lucide-react';
 
@@ -23,19 +22,23 @@ export default function ResultsSummary({
   rightSlot
 }: ResultsSummaryProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut', delay: 0.25 }}
-      className="w-full flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 px-1 py-1"
-    >
+    /* No animation of its own any more: the parent page already fades this in
+     * as part of a stagger, and a second initial/animate here overrode it with
+     * a hardcoded 0.25s delay that also ignored prefers-reduced-motion. */
+    /* flex-wrap rather than an `xs:flex-row` switch. At exactly 390px -- iPhone
+     * 14/15 width -- xs fired and put four controls on one line, pushing "Save
+     * this search" 21px outside the viewport where it was clipped and
+     * unreachable. 375px wrapped fine and 430px fit fine, so the bug lived in
+     * a narrow band that a two-width check would miss. Wrapping needs no
+     * breakpoint to be right. */
+    <div className="w-full flex flex-wrap items-center justify-between gap-x-3 gap-y-2.5 px-1 py-1">
       {/* Dynamic Count Text Indicator */}
       <div
         role="status"
         aria-live="polite"
-        className="text-[14px] font-medium tracking-tight text-neutral-800 dark:text-neutral-100 font-sans"
+        className="text-sm font-medium tracking-tight text-neutral-800 dark:text-neutral-100 font-sans"
       >
-        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold pr-1">{count}</span>
+        <span className="text-emerald-700 dark:text-emerald-400 font-extrabold pr-1">{count}</span>
         {searchQuery.trim() ? (
           <>
             homes found in <span className="font-semibold text-neutral-900 dark:text-neutral-100">{searchQuery}</span>
@@ -45,7 +48,7 @@ export default function ResultsSummary({
         )}
       </div>
 
-      <div className="flex items-center justify-between w-full xs:w-auto gap-3 shrink-0">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 ml-auto">
         {/* View Mode Toggle */}
         <div className="flex items-center bg-neutral-100 dark:bg-stone-850 p-1 rounded-xl shadow-sm border border-neutral-200/50 dark:border-stone-800">
           <button
@@ -53,7 +56,7 @@ export default function ResultsSummary({
             aria-pressed={viewMode === 'list'}
             className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
               viewMode === 'list'
-                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600'
+                ? 'bg-white dark:bg-stone-700 text-emerald-700 shadow-sm border border-neutral-200/50 dark:border-stone-600'
                 : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
             }`}
             aria-label="List view"
@@ -65,7 +68,7 @@ export default function ResultsSummary({
             aria-pressed={viewMode === 'grid'}
             className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
               viewMode === 'grid'
-                ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm border border-neutral-200/50 dark:border-stone-600'
+                ? 'bg-white dark:bg-stone-700 text-emerald-700 shadow-sm border border-neutral-200/50 dark:border-stone-600'
                 : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
             }`}
             aria-label="Grid view"
@@ -81,6 +84,6 @@ export default function ResultsSummary({
 
         {rightSlot}
       </div>
-    </motion.div>
+    </div>
   );
 }

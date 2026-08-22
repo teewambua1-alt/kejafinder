@@ -23,8 +23,8 @@ export default function SavedHelperBanner() {
           <span className="text-[9.5px] font-black uppercase text-emerald-800 dark:text-emerald-400 tracking-widest leading-none">
             Trust & Safety Tip
           </span>
-          <span className="h-1 w-1 rounded-full bg-emerald-300 dark:bg-emerald-500 shrink-0"></span>
-          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 leading-none">KejaFinder recommendation</span>
+          <span className="h-1 w-1 rounded-full bg-emerald-300 dark:bg-emerald-700 shrink-0"></span>
+          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 leading-none">KejaFinder recommendation</span>
         </div>
         
         <h4 className="text-xs font-black text-neutral-800 dark:text-stone-200 tracking-tight leading-snug">

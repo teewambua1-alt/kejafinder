@@ -65,7 +65,7 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
         {/* Issue Type */}
         <div className="space-y-2.5">
           <label className="text-[11px] font-black uppercase tracking-wider text-neutral-700 dark:text-stone-300">
-            Issue type <span className="text-orange-500">*</span>
+            Issue type <span className="text-orange-700 dark:text-orange-400">*</span>
           </label>
           <div className="flex flex-wrap gap-2">
             {issueOptions.map(opt => (
@@ -75,7 +75,7 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
                 onClick={() => setIssueType(opt)}
                 className={`py-1.5 px-3 rounded-full text-[11px] font-bold transition-colors border ${
                   issueType === opt 
-                    ? 'bg-emerald-600 text-white border-emerald-600' 
+                    ? 'bg-emerald-700 text-white border-emerald-700' 
                     : 'bg-neutral-50 dark:bg-stone-800/50 text-neutral-600 dark:text-stone-400 border-neutral-200 dark:border-stone-700 hover:bg-neutral-100 dark:hover:bg-stone-700'
                 }`}
               >
@@ -119,7 +119,7 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
             value={reference}
             onChange={(e) => setReference(e.target.value)}
             placeholder="Listing title, area, or contact number"
-            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
+            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-550 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
           />
         </div>
 
@@ -134,14 +134,14 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Describe what happened..."
             rows={3}
-            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all resize-none"
+            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-550 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all resize-none"
           />
         </div>
 
         {/* Contact */}
         <div className="space-y-2">
           <label htmlFor="contact" className="text-[11px] font-black uppercase tracking-wider text-neutral-700 dark:text-stone-300">
-            Contact info <span className="font-semibold text-neutral-400 normal-case">(Optional)</span>
+            Contact info <span className="font-semibold text-neutral-550 normal-case">(Optional)</span>
           </label>
           <input
             id="contact"
@@ -149,12 +149,12 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
             value={contactInfo}
             onChange={(e) => setContactInfo(e.target.value)}
             placeholder="Phone or email optional"
-            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
+            className="w-full bg-neutral-50 dark:bg-stone-800/50 border border-neutral-200 dark:border-stone-700 rounded-xl px-4 py-3 text-[13px] font-medium text-neutral-800 dark:text-stone-200 placeholder:text-neutral-550 outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
           />
         </div>
 
         {errorMsg && (
-          <div className="flex items-center space-x-2 text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 p-3 rounded-xl border border-orange-100 dark:border-orange-900/30">
+          <div className="flex items-center space-x-2 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 p-3 rounded-xl border border-orange-100 dark:border-orange-900/30">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span className="text-[11px] font-bold">{errorMsg}</span>
           </div>
@@ -163,7 +163,7 @@ export default function SupportIssueFormMockup({ onShowFeedback }: SupportIssueF
         <motion.button
           whileTap={{ scale: 0.98 }}
           type="submit"
-          className="w-full h-12 bg-emerald-650 hover:bg-emerald-600 text-white font-black text-[12px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm transition-colors cursor-pointer mt-2"
+          className="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[12px] uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-sm transition-colors cursor-pointer mt-2"
         >
           <Send className="w-4 h-4" />
           <span>Submit locally</span>
