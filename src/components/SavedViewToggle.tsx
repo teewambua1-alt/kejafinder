@@ -15,7 +15,7 @@ export default function SavedViewToggle({ view, onViewChange }: SavedViewToggleP
         <motion.div
           layout
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-          className="w-full h-full bg-emerald-600 rounded-full"
+          className="w-full h-full bg-emerald-700 rounded-full"
           style={{
             x: view === 'map' ? '100%' : '0%',
             transform: view === 'map' ? 'translateX(8px)' : 'translateX(0px)'

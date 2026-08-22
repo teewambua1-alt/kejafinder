@@ -47,24 +47,24 @@ export default function SavedSearchesSection({ savedSearches, onApply, onDelete 
               onClick={() => onApply(search)}
               className="flex-1 min-w-0 flex items-center gap-3 text-left cursor-pointer outline-none"
             >
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
                 <Search className="w-4 h-4 stroke-[2.2]" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-black text-neutral-800 dark:text-neutral-100 truncate">{search.label}</p>
-                <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 truncate mt-0.5">
+                <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 truncate mt-0.5">
                   {filterSummary(search)}
                 </p>
               </div>
             </button>
 
-            <ChevronRight className="w-4 h-4 text-neutral-550 dark:text-stone-600 shrink-0" />
+            <ChevronRight className="w-4 h-4 text-neutral-550 dark:text-stone-400 shrink-0" />
 
             <button
               type="button"
               onClick={() => onDelete(search.id)}
               aria-label={`Delete saved search ${search.label}`}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 dark:text-stone-500 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-colors cursor-pointer outline-none shrink-0"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-550 dark:text-stone-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/30 dark:hover:text-red-400 transition-colors cursor-pointer outline-none shrink-0"
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>

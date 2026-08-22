@@ -1,343 +1,240 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight, User, Phone, Mail, MapPin, Search, ShieldCheck, AlertTriangle, Info, KeyRound } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Mail, KeyRound, User, Phone, MapPin, Eye, EyeOff } from 'lucide-react';
 import { AuthMode, AuthDraftUser } from '../types/auth';
 import { normalizeKenyanPhone } from '../utils/phone';
+import { Button, Input } from './ui';
+import AuthSafetyNote from './AuthSafetyNote';
 
 interface AuthSignupBasicsFormProps {
+  authDraftUser: Partial<AuthDraftUser>;
   onSetAuthMode: (mode: AuthMode) => void;
   onSetAuthDraftUser: (user: Partial<AuthDraftUser>) => void;
-  onShowFeedback: (msg: string) => void;
+  /** Handed the password separately -- it is never put in the draft object. */
+  onSetPassword: (value: string) => void;
   onGoHome?: () => void;
-  onGoSearch?: () => void;
 }
 
+type FieldErrors = Partial<Record<'fullName' | 'email' | 'password' | 'confirm' | 'phone' | 'mainArea', string>>;
+
 export default function AuthSignupBasicsForm({
+  authDraftUser,
   onSetAuthMode,
   onSetAuthDraftUser,
-  onShowFeedback,
+  onSetPassword,
   onGoHome,
-  onGoSearch
 }: AuthSignupBasicsFormProps) {
-  const [signupForm, setSignupForm] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    mainArea: "",
-  });
-  
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  // Prefilled from the draft so stepping back to fix a typo doesn't wipe the
+  // rest of the form.
+  const [fullName, setFullName] = useState(authDraftUser.fullName ?? '');
+  const [email, setEmail] = useState(authDraftUser.email ?? '');
+  const [phone, setPhone] = useState(authDraftUser.phone ?? '');
+  const [mainArea, setMainArea] = useState(authDraftUser.mainArea ?? '');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const [focusSummary, setFocusSummary] = useState(false);
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!signupForm.fullName || signupForm.fullName.trim().length < 3) {
-      newErrors.fullName = "Enter your full name.";
+  // The summary is rendered from `errors`, so it does not exist yet on the
+  // tick that sets them -- focusing it inline silently did nothing. Defer to
+  // an effect that runs once the node is actually mounted.
+  useEffect(() => {
+    if (focusSummary && summaryRef.current) {
+      summaryRef.current.focus();
+      setFocusSummary(false);
     }
-    
-    if (!signupForm.phone) {
-      newErrors.phone = "Enter your phone number.";
-    } else {
-      const normalized = normalizeKenyanPhone(signupForm.phone);
-      if (!normalized) {
-        newErrors.phone = "Enter a valid Kenyan phone number.";
-      }
-    }
-    
-    if (!signupForm.email || !signupForm.email.includes("@") || !signupForm.email.includes(".")) {
-      newErrors.email = "Valid email is required for login.";
-    }
+  }, [focusSummary]);
 
-    if (!signupForm.password || signupForm.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    }
-
-    if (signupForm.password !== signupForm.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
-    }
-    
-    // Make area optional for now or keep required
-    if (signupForm.mainArea && signupForm.mainArea.trim().length < 2) {
-      newErrors.mainArea = "Enter a valid main area.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const clear = (key: keyof FieldErrors) => {
+    if (errors[key]) setErrors((p) => ({ ...p, [key]: undefined }));
   };
 
-  const handleContinue = () => {
-    if (validate()) {
-      const normalizedPhone = normalizeKenyanPhone(signupForm.phone);
-      onSetAuthDraftUser({
-        fullName: signupForm.fullName.trim(),
-        phone: normalizedPhone || signupForm.phone,
-        email: signupForm.email.trim(),
-        // We temporarily store password in auth draft here, then clear it later
-        password: signupForm.password,
-        mainArea: signupForm.mainArea.trim()
-      });
-      onShowFeedback("Profile basics saved locally.");
-      onSetAuthMode('role');
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const next: FieldErrors = {};
+
+    if (fullName.trim().length < 3) next.fullName = 'Enter your full name.';
+    if (!email.includes('@') || !email.includes('.')) next.email = 'Enter a valid email address.';
+    if (password.length < 6) next.password = 'Use at least 6 characters.';
+    if (confirm !== password) next.confirm = 'Passwords do not match.';
+    if (!normalizeKenyanPhone(phone)) next.phone = 'Enter a valid Kenyan phone number.';
+    if (mainArea.trim() && mainArea.trim().length < 2) next.mainArea = 'Enter a valid area.';
+
+    setErrors(next);
+
+    const failures = Object.values(next).filter(Boolean);
+    if (failures.length > 0) {
+      // With more than one problem, focus the summary rather than a single
+      // field, so the count is announced before the user starts fixing.
+      if (failures.length > 1) setFocusSummary(true);
+      return;
     }
+
+    onSetAuthDraftUser({
+      fullName: fullName.trim(),
+      email: email.trim(),
+      phone: normalizeKenyanPhone(phone) ?? phone.trim(),
+      mainArea: mainArea.trim() || undefined,
+    });
+    onSetPassword(password);
+    onSetAuthMode('role');
   };
 
-  const updateField = (field: keyof typeof signupForm, value: string) => {
-    setSignupForm(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => {
-        const next = { ...prev };
-        delete next[field];
-        return next;
-      });
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
-  const itemVariants: any = {
-    hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } }
-  };
+  const errorCount = Object.values(errors).filter(Boolean).length;
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="space-y-6"
-    >
-      <motion.div variants={itemVariants} className="bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-neutral-200/60 dark:border-stone-800/60 rounded-3xl p-6 shadow-sm">
-        <h2 className="text-2xl font-black text-neutral-850 dark:text-stone-100 tracking-tight leading-tight mb-2">
+    <div className="flex flex-col gap-6">
+      <div className="rounded-3xl border border-neutral-200/60 dark:border-stone-800/60 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-6 shadow-sm">
+        <h2 className="text-2xl font-black tracking-tight leading-tight text-neutral-850 dark:text-stone-100">
           Create your account
         </h2>
-        <p className="text-[13px] font-semibold text-neutral-600 dark:text-stone-300 mb-2">
-          Add basic details so KejaFinder can personalize your search and posting experience.
-        </p>
-        <p className="text-[11px] font-medium text-neutral-500 dark:text-stone-400 mb-6">
-          You can browse homes without an account, but saving, alerts, and posting will work better with one.
+        <p className="mt-1.5 mb-6 text-[13px] font-semibold text-neutral-600 dark:text-stone-300">
+          Your name and phone help caretakers know who is calling.
         </p>
 
-        <div className="space-y-4 mb-6">
-          {/* Full Name */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-700 dark:text-stone-300 pl-1">
-              Full name
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.fullName ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm px-3 py-3`}>
-              <User className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-              <input 
-                type="text" 
-                value={signupForm.fullName}
-                onChange={(e) => updateField('fullName', e.target.value)}
-                placeholder="Amina Njeri"
-                className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                aria-label="Full name"
-              />
-            </div>
-            <AnimatePresence>
-              {errors.fullName && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.fullName}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Email */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider flex items-center gap-2 text-neutral-700 dark:text-stone-300 pl-1">
-              <span>Email</span>
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.email ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm px-3 py-3`}>
-              <Mail className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-              <input 
-                type="email" 
-                value={signupForm.email}
-                onChange={(e) => updateField('email', e.target.value)}
-                placeholder="amina@example.com"
-                className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                aria-label="Email Address"
-              />
-            </div>
-            <AnimatePresence>
-              {errors.email && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.email}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-          
-          {/* Password */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider flex items-center gap-2 text-neutral-700 dark:text-stone-300 pl-1">
-              <span>Password</span>
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.password ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm px-3 py-3`}>
-              <KeyRound className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-              <input 
-                type="password" 
-                value={signupForm.password}
-                onChange={(e) => updateField('password', e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                aria-label="Password"
-              />
-            </div>
-            <AnimatePresence>
-              {errors.password && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.password}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Confirm Password */}
-          <div className="space-y-1.5">
-             <label className="block text-[11px] font-black uppercase tracking-wider flex items-center gap-2 text-neutral-700 dark:text-stone-300 pl-1">
-              <span>Confirm Password</span>
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.confirmPassword ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm px-3 py-3`}>
-              <KeyRound className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-              <input 
-                type="password" 
-                value={signupForm.confirmPassword}
-                onChange={(e) => updateField('confirmPassword', e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                aria-label="Confirm Password"
-              />
-            </div>
-            <AnimatePresence>
-              {errors.confirmPassword && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.confirmPassword}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Phone Number */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider text-neutral-700 dark:text-stone-300 pl-1">
-              Phone number
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.phone ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm`}>
-              <div className="pl-4 pr-3 py-3 bg-neutral-50 dark:bg-stone-900 border-r border-neutral-200 dark:border-stone-800 flex items-center justify-center">
-                <span className="text-[13px] font-bold text-neutral-700 dark:text-stone-300">+254</span>
-              </div>
-              <div className="flex-1 flex items-center px-3 py-3">
-                <Phone className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-                <input 
-                  type="tel" 
-                  value={signupForm.phone}
-                  onChange={(e) => updateField('phone', e.target.value)}
-                  placeholder="0712 345 678"
-                  className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                  aria-label="Phone number"
-                />
-              </div>
-            </div>
-            <AnimatePresence>
-              {errors.phone && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.phone}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Main Area (Optional) */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider flex items-center gap-2 text-neutral-700 dark:text-stone-300 pl-1">
-              <span>Main area</span>
-              <span className="text-[9px] font-semibold bg-neutral-100 dark:bg-stone-800 px-1.5 py-0.5 rounded text-neutral-500 dark:text-stone-400 normal-case">Optional</span>
-            </label>
-            <div className={`flex items-center bg-white dark:bg-stone-950 border ${errors.mainArea ? 'border-orange-500' : 'border-neutral-300 dark:border-stone-700'} rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500/20 focus-within:border-emerald-500 transition-all shadow-sm px-3 py-3`}>
-              <MapPin className="w-4 h-4 text-neutral-400 mr-2 shrink-0" />
-              <input 
-                type="text" 
-                value={signupForm.mainArea}
-                onChange={(e) => updateField('mainArea', e.target.value)}
-                placeholder="Athi River, Syokimau, Rongai..."
-                className="w-full bg-transparent text-[14px] font-bold text-neutral-800 dark:text-stone-100 placeholder-neutral-400 dark:placeholder-stone-600 focus:outline-none"
-                aria-label="Main area"
-              />
-            </div>
-            <AnimatePresence>
-              {errors.mainArea && (
-                <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="text-[11px] font-bold text-orange-600 dark:text-orange-400 pl-1">
-                  {errors.mainArea}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={handleContinue}
-          className="w-full flex items-center justify-center space-x-2 bg-emerald-600 dark:bg-emerald-500 text-white rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all"
-          aria-label="Continue signup"
-        >
-          <span className="text-[13px] font-black uppercase tracking-wider">Continue</span>
-          <ArrowRight className="w-4 h-4" />
-        </motion.button>
-
-        <div className="mt-6 flex flex-col space-y-3">
-          <button
-            onClick={() => {
-              onSetAuthMode('login');
-              onShowFeedback('Email login is available.');
-            }}
-            className="flex items-center justify-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors py-1"
-            aria-label="Continue with email login"
+        {errorCount > 1 && (
+          <div
+            ref={summaryRef}
+            tabIndex={-1}
+            role="alert"
+            className="mb-5 rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/20 p-4 outline-none"
           >
-            <span>Already have an account? Login</span>
+            <p className="text-xs font-black text-red-600 dark:text-red-400">
+              {errorCount} details need fixing
+            </p>
+            <p className="mt-1 text-[11px] font-semibold text-red-500 dark:text-red-400/80">
+              Check the highlighted fields below.
+            </p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+          <Input
+            label="Full name"
+            name="name"
+            autoComplete="name"
+            placeholder="e.g. Amina Wanjiru"
+            value={fullName}
+            onChange={(e) => { setFullName(e.target.value); clear('fullName'); }}
+            error={errors.fullName}
+            icon={User}
+            required
+          />
+
+          <Input
+            label="Email"
+            type="email"
+            inputMode="email"
+            name="email"
+            autoComplete="email"
+            spellCheck={false}
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); clear('email'); }}
+            error={errors.email}
+            icon={Mail}
+            required
+          />
+
+          <Input
+            label="Phone number"
+            type="tel"
+            inputMode="tel"
+            name="tel"
+            autoComplete="tel"
+            spellCheck={false}
+            placeholder="07XX XXX XXX"
+            value={phone}
+            onChange={(e) => { setPhone(e.target.value); clear('phone'); }}
+            error={errors.phone}
+            hint="Kenyan number. Used so caretakers can reach you."
+            icon={Phone}
+            required
+          />
+
+          <Input
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            name="new-password"
+            autoComplete="new-password"
+            placeholder="At least 6 characters"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); clear('password'); clear('confirm'); }}
+            error={errors.password}
+            icon={KeyRound}
+            required
+            trailing={
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-neutral-550 hover:text-neutral-700 dark:text-stone-400 dark:hover:text-stone-300 transition-colors cursor-pointer outline-none"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4 stroke-[2.2]" /> : <Eye className="w-4 h-4 stroke-[2.2]" />}
+              </button>
+            }
+          />
+
+          <Input
+            label="Confirm password"
+            type={showPassword ? 'text' : 'password'}
+            name="confirm-password"
+            autoComplete="new-password"
+            placeholder="Repeat your password"
+            value={confirm}
+            onChange={(e) => { setConfirm(e.target.value); clear('confirm'); }}
+            error={errors.confirm}
+            icon={KeyRound}
+            required
+          />
+
+          <Input
+            label="Main area"
+            name="address-level2"
+            autoComplete="address-level2"
+            placeholder="e.g. Kilimani"
+            value={mainArea}
+            onChange={(e) => { setMainArea(e.target.value); clear('mainArea'); }}
+            error={errors.mainArea}
+            hint="Optional. Helps us show homes near you first."
+            icon={MapPin}
+          />
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            icon={ArrowRight}
+            iconPosition="right"
+          >
+            Continue
+          </Button>
+        </form>
+
+        <div className="mt-5 flex flex-col items-center gap-3">
+          <button
+            type="button"
+            onClick={() => onSetAuthMode('login')}
+            className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors cursor-pointer outline-none bg-transparent border-none"
+          >
+            Already have an account? Log in
           </button>
-          
           <button
-            onClick={() => {
-              if (onGoSearch) onGoSearch();
-              else if (onGoHome) onGoHome();
-              else onShowFeedback('Guest browsing enabled in this prototype.');
-            }}
-            className="flex items-center justify-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-200 transition-colors py-1"
-            aria-label="Browse KejaFinder as guest"
+            type="button"
+            onClick={onGoHome}
+            className="text-[11px] font-bold uppercase tracking-wider text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-200 transition-colors cursor-pointer outline-none bg-transparent border-none"
           >
-            <Search className="w-3.5 h-3.5" />
-            <span>Browse as guest</span>
+            Browse without an account
           </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Why we ask note */}
-      <motion.div variants={itemVariants} className="bg-emerald-50/80 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
-        <Info className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-        <div>
-          <h4 className="text-[11px] font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-300 mb-0.5">Why we ask</h4>
-          <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400/90 leading-snug">
-            Your phone helps with contact. Your area helps us suggest nearby homes and alerts.
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Safety Note */}
-      <motion.div variants={itemVariants} className="bg-orange-50/80 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
-        <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
-        <p className="text-[11px] font-semibold text-orange-800 dark:text-orange-300 leading-snug">
-          Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-        </p>
-      </motion.div>
-    </motion.div>
+      <AuthSafetyNote>
+        Nothing is created yet. You will confirm your role and read the safety
+        reminders before your account is made.
+      </AuthSafetyNote>
+    </div>
   );
 }

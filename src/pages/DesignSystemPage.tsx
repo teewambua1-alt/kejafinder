@@ -2,6 +2,44 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, Heart, Bookmark, Home as HomeIcon, MapPin, Wallet, CalendarDays, Search } from 'lucide-react';
 import { Button, Input, Card, Chip, Badge, Skeleton, EmptyState, ErrorState } from '../components/ui';
+import {
+  PropertyCardVertical,
+  PropertyCardHorizontal,
+  PropertyCardVerticalSkeleton,
+  PropertyCardHorizontalSkeleton,
+} from '../components/property';
+import type { Listing } from '../types/listing';
+
+/**
+ * Reference row for the card primitives. This is dev-only sample data for a
+ * non-public style-guide route -- it is never rendered anywhere a user could
+ * mistake it for a real vacancy.
+ */
+const SAMPLE_LISTING: Listing = {
+  id: 'sample-1',
+  title: 'Spacious bedsitter with own bathroom',
+  type: 'bedsitter',
+  typeLabel: 'Bedsitter',
+  rent: 12500,
+  deposit: 12500,
+  location: 'Kilimani',
+  town: 'Nairobi',
+  estate: 'Kilimani',
+  image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80',
+  imagesCount: 4,
+  amenities: ['water_available', 'token_electricity', 'private_bathroom', 'secure_gate'],
+  badges: ['Recently Updated'],
+  isFeatured: true,
+  isAvailable: true,
+  contactPhone: '+254700000000',
+  whatsappPhone: '254700000000',
+  bathroomType: 'Private bathroom',
+  distanceFromRoad: '5 min from tarmac',
+  verificationLevel: 'scout',
+  agentFee: 0,
+  viewingFee: 0,
+  updatedAt: new Date().toISOString(),
+};
 
 interface DesignSystemPageProps {
   onBack: () => void;
@@ -12,7 +50,7 @@ function Section({ title, description, children }: { title: string; description?
     <div className="space-y-3">
       <div>
         <h2 className="text-xs font-black text-neutral-800 dark:text-stone-100 uppercase tracking-widest">{title}</h2>
-        {description && <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-500 mt-0.5">{description}</p>}
+        {description && <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 mt-0.5">{description}</p>}
       </div>
       {children}
     </div>
@@ -25,7 +63,7 @@ function Swatch({ name, className, hex }: { name: string; className: string; hex
       <div className={`w-full h-14 rounded-xl border border-neutral-200/50 dark:border-stone-800/50 ${className}`} />
       <div>
         <p className="text-[10px] font-black text-neutral-800 dark:text-stone-200">{name}</p>
-        {hex && <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-500 font-mono">{hex}</p>}
+        {hex && <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 font-mono">{hex}</p>}
       </div>
     </div>
   );
@@ -50,7 +88,7 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
           <h1 className="text-sm font-black text-neutral-850 dark:text-stone-100 uppercase tracking-wider leading-none">
             Design System
           </h1>
-          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 mt-1">
             Phase 1 -- tokens and reusable primitives. Dev-only reference, not a public route.
           </p>
         </div>
@@ -60,19 +98,19 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
         {/* Colors */}
         <Section title="Color Palette" description="Emerald primary, warm orange accent, off-white/charcoal surfaces.">
           <div className="grid grid-cols-3 gap-3">
-            <Swatch name="Primary" className="bg-emerald-600" hex="emerald-600" />
+            <Swatch name="Primary" className="bg-emerald-700" hex="emerald-600" />
             <Swatch name="Primary Hover" className="bg-emerald-700" hex="emerald-700" />
             <Swatch name="Primary Light" className="bg-emerald-50" hex="emerald-50" />
-            <Swatch name="Accent" className="bg-orange-500" hex="orange-500" />
-            <Swatch name="Accent Hover" className="bg-orange-600" hex="orange-600" />
+            <Swatch name="Accent" className="bg-orange-700" hex="orange-500" />
+            <Swatch name="Accent Hover" className="bg-orange-700" hex="orange-600" />
             <Swatch name="Accent Light" className="bg-orange-50" hex="orange-50" />
             <Swatch name="Surface" className="bg-white" hex="#ffffff" />
             <Swatch name="Surface Muted" className="bg-[#f7fee7]" hex="#f7fee7" />
             <Swatch name="Charcoal Text" className="bg-neutral-850" hex="neutral-850" />
           </div>
           <div className="grid grid-cols-4 gap-3 pt-1">
-            <Swatch name="Success" className="bg-emerald-600" />
-            <Swatch name="Warning" className="bg-orange-500" />
+            <Swatch name="Success" className="bg-emerald-700" />
+            <Swatch name="Warning" className="bg-orange-700" />
             <Swatch name="Danger" className="bg-red-500" hex="red-500" />
             <Swatch name="Info" className="bg-blue-500" hex="blue-500" />
           </div>
@@ -96,7 +134,7 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
             {[2, 3, 4, 6, 8, 10, 12].map((n) => (
               <div key={n} className="flex flex-col items-center space-y-1">
                 <div className={`w-4 bg-emerald-500/70 rounded-sm`} style={{ height: `${n * 4}px` }} />
-                <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-500">{n * 4}px</span>
+                <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-400">{n * 4}px</span>
               </div>
             ))}
           </div>
@@ -147,11 +185,11 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
           <div className="grid grid-cols-2 gap-3">
             <Card>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-100">Default card</p>
-              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">Static surface</p>
+              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 mt-1">Static surface</p>
             </Card>
             <Card interactive onClick={() => {}}>
               <p className="text-xs font-black text-neutral-800 dark:text-stone-100">Interactive card</p>
-              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-500 mt-1">Hover / tap me</p>
+              <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400 mt-1">Hover / tap me</p>
             </Card>
           </div>
         </Section>
@@ -217,6 +255,30 @@ export default function DesignSystemPage({ onBack }: DesignSystemPageProps) {
             description="Tap the heart on homes you like and they'll appear here."
             primaryAction={{ label: 'Browse homes', onClick: () => {}, icon: Search }}
           />
+        </Section>
+
+        {/* Property cards */}
+        <Section
+          title="Property Cards"
+          description="One card, two layouts. Replaced ListingCard, SearchResultCard, SavedListingCard and SimilarHomeCard (1,109 lines)."
+        >
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-widest text-neutral-550 dark:text-stone-400">
+              Vertical &mdash; carousels &amp; grid
+            </p>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
+              <PropertyCardVertical listing={SAMPLE_LISTING} priority />
+              <PropertyCardVerticalSkeleton />
+            </div>
+
+            <p className="text-[10px] font-black uppercase tracking-widest text-neutral-550 dark:text-stone-400 pt-2">
+              Horizontal &mdash; results list &amp; saved
+            </p>
+            <div className="space-y-3">
+              <PropertyCardHorizontal listing={SAMPLE_LISTING} />
+              <PropertyCardHorizontalSkeleton />
+            </div>
+          </div>
         </Section>
 
         {/* Error state */}

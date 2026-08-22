@@ -14,6 +14,32 @@ export type SupabaseListingWithImages = SupabaseListing & {
 // rather than a separate query per listing.
 const LISTING_SELECT = '*, listing_images(id, storage_path, category, position)';
 
+/**
+ * Attaches listing_images to rows that came back without them (the
+ * nearby_listings RPC returns bare rows). One extra query for the whole set,
+ * not one per listing, and the caller's row order is preserved.
+ */
+async function attachImages(rows: SupabaseListing[]): Promise<SupabaseListingWithImages[]> {
+  const { data, error } = await supabase
+    .from('listing_images')
+    .select('id, storage_path, category, position, listing_id')
+    .in('listing_id', rows.map((r) => r.id));
+
+  if (error) {
+    console.error('Error fetching images for listings:', error);
+    return rows.map((row) => ({ ...row, listing_images: [] }));
+  }
+
+  const byListing = new Map<string, SupabaseListingImagePick[]>();
+  for (const img of data ?? []) {
+    const bucket = byListing.get(img.listing_id) ?? [];
+    bucket.push({ id: img.id, storage_path: img.storage_path, category: img.category, position: img.position });
+    byListing.set(img.listing_id, bucket);
+  }
+
+  return rows.map((row) => ({ ...row, listing_images: byListing.get(row.id) ?? [] }));
+}
+
 export async function getApprovedAvailableListings(limitCount = 60): Promise<SupabaseListingWithImages[] | null> {
   const { data, error } = await supabase
     .from('listings')
@@ -108,10 +134,14 @@ export async function searchApprovedListings(params: SearchParams): Promise<Supa
       console.error('Error fetching nearby listings:', error);
       return null;
     }
-    // The RPC returns bare listing rows (no embedded images) since it can't
-    // express the same embed as the query builder — callers/mappers must
-    // treat listing_images as possibly absent for this one path.
-    return (data ?? []).map((row) => ({ ...row, listing_images: [] })) as SupabaseListingWithImages[];
+    // The RPC returns bare listing rows -- it can't express the query
+    // builder's embed. Previously they were back-filled with an empty
+    // listing_images array, so every "nearby" card fell through to the
+    // placeholder photo. Fetch the images for exactly these ids and attach
+    // them, preserving the RPC's distance ordering.
+    const rows = (data ?? []) as SupabaseListing[];
+    if (rows.length === 0) return [];
+    return attachImages(rows);
   }
 
   const pageSize = params.pageSize ?? 30;

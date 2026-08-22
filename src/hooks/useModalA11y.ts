@@ -12,6 +12,17 @@ const FOCUSABLE_SELECTOR =
 export function useModalA11y(isOpen: boolean, onClose: () => void) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * onClose is almost always an inline arrow at the call site, so its identity
+   * changes on every parent render. With it in the dependency array the whole
+   * effect tore down and re-ran: cleanup called `previouslyFocused.focus()`,
+   * which yanked focus out of the open dialog and back to whatever opened it,
+   * mid-interaction. Reading it through a ref makes the effect depend on
+   * `isOpen` alone, which is the only thing that should drive it.
+   */
+  const onCloseRef = useRef(onClose);
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -24,7 +35,7 @@ export function useModalA11y(isOpen: boolean, onClose: () => void) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key !== 'Tab' || !container) return;
@@ -55,7 +66,8 @@ export function useModalA11y(isOpen: boolean, onClose: () => void) {
       document.removeEventListener('keydown', handleKeyDown);
       previouslyFocused?.focus();
     };
-  }, [isOpen, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   return containerRef;
 }

@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useTheme } from './ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import ProfileMenu from './ProfileMenu';
+import { isPosterRole } from '../lib/roles';
 
 interface DesktopNavbarProps {
   activeTab?: string;
@@ -17,6 +18,11 @@ interface DesktopNavbarProps {
 
 const BASE_NAV_LINKS = [
   { id: 'home', label: 'Explore', icon: Home },
+  // Search had no navbar entry, and BottomNav is hidden from md up -- so
+  // between 768px and 1279px the search page was unreachable except by
+  // submitting the form to the right, and there was no way back to it after
+  // navigating away.
+  { id: 'search', label: 'Search', icon: Search },
   { id: 'saved', label: 'Saved', icon: Heart },
 ];
 const POST_NAV_LINK = { id: 'post', label: 'Post a vacancy', icon: PlusCircle };
@@ -41,9 +47,7 @@ export default function DesktopNavbar({
   const [query, setQuery] = useState('');
 
   const initial = profile?.full_name?.trim()?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase();
-  // Only signed-in landlords/caretakers/agents/scouts can submit vacancies
-  // -- see BottomNav's identical gate.
-  const canPost = !!profile && profile.role !== 'tenant';
+  const canPost = isPosterRole(profile);
   const navLinks = canPost ? [...BASE_NAV_LINKS, POST_NAV_LINK] : BASE_NAV_LINKS;
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -52,7 +56,7 @@ export default function DesktopNavbar({
   };
 
   return (
-    <div className="hidden md:block sticky top-0 z-40 w-full border-b border-neutral-200/60 dark:border-stone-800 bg-white/90 dark:bg-stone-950/90 backdrop-blur-md">
+    <div className="hidden md:block sticky top-0 z-[var(--z-navbar)] w-full border-b border-neutral-200/60 dark:border-stone-800 bg-white/90 dark:bg-stone-950/90 backdrop-blur-md">
       <div className="w-full max-w-7xl mx-auto px-6 xl:px-10 h-16 flex items-center justify-between gap-6">
         {/* Logo */}
         <button
@@ -61,10 +65,10 @@ export default function DesktopNavbar({
           aria-label="Go to home"
         >
           <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center shadow-xs">
-            <MapPinHouse className="w-5 h-5 text-emerald-600 dark:text-emerald-500 stroke-[2.2]" />
+            <MapPinHouse className="w-5 h-5 text-emerald-700 dark:text-emerald-500 stroke-[2.2]" />
           </div>
           <div className="text-lg tracking-tight leading-none font-sans font-extrabold select-none hidden lg:block">
-            <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
+            <span className="text-emerald-700 dark:text-emerald-500">Keja</span>
             <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
           </div>
         </button>
@@ -77,14 +81,14 @@ export default function DesktopNavbar({
               <button
                 key={link.id}
                 onClick={() => onTabChange?.(link.id)}
-                className="relative px-3.5 py-2 text-xs font-bold text-neutral-600 dark:text-stone-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer outline-none"
+                className="relative px-3.5 py-2 text-xs font-bold text-neutral-600 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-400 transition-colors cursor-pointer outline-none"
                 aria-current={isActive ? 'page' : undefined}
               >
                 <span className={isActive ? 'text-emerald-700 dark:text-emerald-400' : ''}>{link.label}</span>
                 {isActive && (
                   <motion.span
                     layoutId="desktop-nav-active"
-                    className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-emerald-600 dark:bg-emerald-500"
+                    className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-emerald-700 dark:bg-emerald-700"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -96,13 +100,13 @@ export default function DesktopNavbar({
         {/* Compact search pill */}
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-md">
           <div className="flex items-center bg-neutral-100/70 dark:bg-stone-900 rounded-full border border-neutral-200/60 dark:border-stone-800 px-4 h-10 focus-within:border-emerald-500/50 transition-colors">
-            <Search className="w-4 h-4 text-neutral-400 shrink-0 mr-2.5 stroke-[2.2]" />
+            <Search className="w-4 h-4 text-neutral-550 shrink-0 mr-2.5 stroke-[2.2]" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search estate, area, landmark..."
-              className="w-full bg-transparent text-xs text-neutral-800 dark:text-neutral-100 placeholder-neutral-450 outline-none"
+              className="w-full bg-transparent text-xs text-neutral-800 dark:text-neutral-100 placeholder-neutral-550 outline-none"
               aria-label="Search vacancies"
             />
           </div>
@@ -139,7 +143,7 @@ export default function DesktopNavbar({
                 ) : user && initial ? (
                   <span className="text-xs font-black text-emerald-700 dark:text-emerald-400">{initial}</span>
                 ) : (
-                  <UserCircle className="w-5 h-5 text-neutral-550 dark:text-stone-500" />
+                  <UserCircle className="w-5 h-5 text-neutral-550 dark:text-stone-400" />
                 )}
               </div>
             </button>

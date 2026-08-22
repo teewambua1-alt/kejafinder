@@ -18,13 +18,13 @@ export default function SavedEmptyState({ onBrowseHomes, onSearchNearby }: Saved
     >
       {/* Decorative Icon Area */}
       <div className="relative">
-        <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-3xs">
+        <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shadow-3xs">
           <Heart className="w-7.5 h-7.5 stroke-[2]" />
         </div>
         {/* Tiny warm orange badge accent to signify interactive status */}
         <span className="absolute -top-1 -right-1 flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-700"></span>
         </span>
       </div>
 
@@ -45,7 +45,7 @@ export default function SavedEmptyState({ onBrowseHomes, onSearchNearby }: Saved
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={onBrowseHomes}
-          className="h-10 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11.5px] tracking-tight shadow-md flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
+          className="h-10 px-5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-[11.5px] tracking-tight shadow-md flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
           aria-label="Browse popular homes"
         >
           <Compass className="w-4 h-4 stroke-[2.5]" />

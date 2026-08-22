@@ -4,17 +4,16 @@ import { Heart, Search, Home, Clock, CheckCircle2, Eye, MessageSquare } from 'lu
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileIdentityCard from '../components/ProfileIdentityCard';
 import ProfileStats, { ProfileStatItem } from '../components/ProfileStats';
-import ProfileShortcuts from '../components/ProfileShortcuts';
-import ProfileActionList from '../components/ProfileActionList';
+import ProfileLinks from '../components/ProfileLinks';
 import ProfileTrustStatus from '../components/ProfileTrustStatus';
 import ProfileSettingsPanel, { ProfileSettingsPanelType } from '../components/ProfileSettingsPanel';
-import ProfileSafetySupport from '../components/ProfileSafetySupport';
 import { useAuth } from '../context/AuthContext';
 import { useIsAdmin } from '../hooks/useIsAdmin';
 import { useOwnerListings } from '../hooks/useOwnerListings';
 import { useSavedListings } from '../hooks/useSavedListings';
 import { useSavedSearches } from '../hooks/useSavedSearches';
 import { useToast } from '../context/ToastContext';
+import { isPosterRole } from '../lib/roles';
 
 interface ProfilePageProps {
   onTabChange?: (tab: string) => void;
@@ -26,14 +25,12 @@ interface ProfilePageProps {
   onOpenAdminDashboard?: () => void;
 }
 
-const POSTER_ROLES = ['landlord', 'caretaker', 'agent', 'scout'];
-
 export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onOpenAbout, onOpenSupport, onOpenOwnerDashboard, onOpenAdminDashboard }: ProfilePageProps) {
   const { user: currentUser, profile, signOut } = useAuth();
   const { showToast } = useToast();
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<ProfileSettingsPanelType | null>(null);
 
-  const isPosterRole = !!profile && POSTER_ROLES.includes(profile.role);
+  const isPoster = isPosterRole(profile);
   const { isAdmin } = useIsAdmin();
 
   // Every one of these real hooks is called unconditionally (rules of
@@ -41,7 +38,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
   // possibly need that data -- see the `enabled` param on each.
   const { savedListings } = useSavedListings();
   const { savedSearches } = useSavedSearches();
-  const { stats: ownerStats } = useOwnerListings(isPosterRole);
+  const { stats: ownerStats } = useOwnerListings(isPoster);
 
   const handleSave = (msg: string) => {
     showToast(msg);
@@ -62,7 +59,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
   // own real listing stats here).
   const stats: ProfileStatItem[] = !currentUser
     ? []
-    : isPosterRole
+    : isPoster
     ? [
         { label: 'Total Listings', value: ownerStats.total, icon: Home },
         { label: 'Pending Review', value: ownerStats.pendingReview, icon: Clock },
@@ -130,9 +127,11 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
         <motion.div variants={itemVariants} className="w-full px-1">
           <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
             <div>
-              <h3 className="text-sm font-black text-emerald-900 dark:text-emerald-300 uppercase tracking-tight mb-1">
+              {/* h2, not h3: this sits directly under the page h1, and h1 -> h3
+                  skips a level. */}
+              <h2 className="text-sm font-black text-emerald-900 dark:text-emerald-300 uppercase tracking-tight mb-1">
                 Create an account
-              </h3>
+              </h2>
               <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-500 max-w-[200px]">
                 Sign in to save your favorite houses, post vacancies, and access more features.
               </p>
@@ -140,7 +139,7 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={onOpenAuth}
-              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-emerald-600 dark:bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-shadow"
+              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-emerald-700 dark:bg-emerald-700 text-white text-[11px] font-black uppercase tracking-wider shadow-md hover:shadow-lg transition-shadow"
             >
               Login / Sign up
             </motion.button>
@@ -157,7 +156,6 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
           <ProfileTrustStatus
             isPhoneVerified={profile?.is_phone_verified ?? false}
             isIdVerified={profile?.is_id_verified ?? false}
-            hasEmail={!!currentUser.email}
           />
         </motion.div>
       )}
@@ -169,34 +167,24 @@ export default function ProfilePage({ onTabChange, onOpenAuth, onOpenSafety, onO
         </motion.div>
       )}
 
-      {/* 4. Real Profile Shortcuts */}
+      {/* One list of destinations, role-gated. Replaces ProfileShortcuts +
+        * ProfileActionList + ProfileSafetySupport, which together duplicated
+        * Safety and Help/Support and carried the deposit warning twice. */}
       <motion.div variants={itemVariants} className="w-full">
-        <ProfileShortcuts
+        <ProfileLinks
+          isSignedIn={!!currentUser}
+          canPost={isPoster}
+          isAdmin={isAdmin}
           onTabChange={onTabChange}
+          onOpenPersonalDetails={() => setActiveSettingsPanel('personal_details')}
           onOpenSettings={() => setActiveSettingsPanel('settings_home')}
           onOpenSafety={onOpenSafety}
+          onOpenSupport={onOpenSupport}
+          onOpenAbout={onOpenAbout}
           onOpenOwnerDashboard={onOpenOwnerDashboard}
           onOpenAdminDashboard={onOpenAdminDashboard}
-          showPostVacancy={isPosterRole}
-          showOwnerDashboard={isPosterRole}
-          showAdminDashboard={isAdmin}
+          onLogout={handleLogout}
         />
-      </motion.div>
-
-      {/* 5. Real Profile Action Preferences List */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileActionList onLogout={handleLogout} onOpenPanel={(pType) => {
-          if (pType as string === 'about_page') {
-            if (onOpenAbout) onOpenAbout();
-          } else {
-            setActiveSettingsPanel(pType);
-          }
-        }} />
-      </motion.div>
-
-      {/* 6. Safety & Support Component */}
-      <motion.div variants={itemVariants} className="w-full">
-        <ProfileSafetySupport onOpenSafety={onOpenSafety} onOpenSupport={onOpenSupport} />
       </motion.div>
 
       {/* Profile settings panel bottom sheet modal */}

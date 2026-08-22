@@ -28,7 +28,7 @@ export default function ErrorState({
       transition={{ duration: 0.35, ease: 'easeOut' }}
       className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md rounded-2.5xl border border-dashed border-orange-200 dark:border-orange-900/40 p-8 py-10 shadow-3xs text-center flex flex-col items-center justify-center space-y-5"
     >
-      <div className="w-16 h-16 rounded-3xl bg-orange-500/10 dark:bg-orange-950/30 flex items-center justify-center text-orange-550 dark:text-orange-400 shadow-3xs">
+      <div className="w-16 h-16 rounded-3xl bg-orange-500/10 dark:bg-orange-950/30 flex items-center justify-center text-orange-700 dark:text-orange-400 shadow-3xs">
         <AlertTriangle className="w-7.5 h-7.5 stroke-[2]" />
       </div>
 

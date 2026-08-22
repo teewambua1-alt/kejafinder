@@ -411,7 +411,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
             {/* Clear Rent / Deposit Verification Hint */}
             <div className="flex items-center space-x-2.5 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-sans">
-              <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-450 shrink-0" />
+              <ShieldCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-450 shrink-0" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
                 Clear rent and deposit details help renters trust your listing.
               </span>
@@ -419,7 +419,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
             {/* Safety Warning Note */}
             <div className="flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans">
-              <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2]" />
+              <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 stroke-[2.2]" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
                 Never post misleading information. Keep prices and availability accurate.
               </span>
@@ -432,7 +432,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 id="btn-post-continue"
                 whileTap={{ scale: 0.97 }}
                 onClick={handleContinueStep1}
-                className="w-full h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
+                className="w-full h-13 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -468,7 +468,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
             {/* Privacy and safety note banner selection */}
             <div className="flex items-center space-x-2.5 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-sans">
-              <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-450 shrink-0" />
+              <ShieldCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-450 shrink-0" />
               <span className="text-[11px] font-bold tracking-tight leading-relaxed">
                 For privacy and safety, tenants will see an approximate location first. Confirm exact directions after they contact you.
               </span>
@@ -492,7 +492,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 type="button"
                 whileTap={{ scale: 0.97 }}
                 onClick={handleContinueStep2}
-                className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
+                className="flex-[2] h-13 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -542,7 +542,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 type="button"
                 whileTap={{ scale: 0.97 }}
                 onClick={handleContinueStep3}
-                className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
+                className="flex-[2] h-13 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -580,7 +580,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
               draft={draft}
             />
 
-            <div className="flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-850 dark:text-blue-400 font-sans shadow-3xs">
+            <div className="flex items-start space-x-2.5 p-4 bg-blue-500/5 dark:bg-blue-950/10 rounded-2xl border border-blue-500/10 text-blue-800 dark:text-blue-400 font-sans shadow-3xs">
               <Sparkles className="w-5 h-5 text-blue-500 shrink-0 stroke-[2] mt-0.5" />
               <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
                 Photos upload when you save or submit this listing — they aren't public until an admin approves it.
@@ -605,7 +605,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                 type="button"
                 whileTap={{ scale: 0.97 }}
                 onClick={handleContinueStep4}
-                className="flex-[2] h-13 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
+                className="flex-[2] h-13 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-sm tracking-wide shadow-sm shadow-emerald-500/15 flex items-center justify-center space-x-2 cursor-pointer transition-colors font-sans"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -623,7 +623,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
             {!currentUser && (
               <div className="mb-4 flex flex-col items-center justify-center p-6 space-y-4 text-center bg-white dark:bg-stone-850 rounded-2xl border border-neutral-100 dark:border-stone-800 shadow-sm">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                  <UserCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  <UserCircle className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
                 </div>
                 <div className="space-y-1">
                   <h3 className="text-sm font-black text-neutral-800 dark:text-neutral-50 tracking-tight">Log in to submit a vacancy</h3>
@@ -633,7 +633,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onTabChange?.('profile')}
-                    className="w-full h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl text-white text-[11px] font-bold tracking-wider"
+                    className="w-full h-10 bg-emerald-700 dark:bg-emerald-700 rounded-xl text-white text-[11px] font-bold tracking-wider"
                   >
                     Log in or create account
                   </motion.button>
@@ -649,7 +649,7 @@ export default function PostVacancyPage({ onTabChange }: PostVacancyPageProps = 
 
             {currentUser && userProfile?.role === 'tenant' && (
               <div className="mb-4 flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans">
-                <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2]" />
+                <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 stroke-[2.2]" />
                 <span className="text-[11px] font-bold tracking-tight leading-relaxed">
                   Tenant accounts can browse and save homes. To post vacancies, switch to landlord, caretaker, agent, or scout role later.
                 </span>

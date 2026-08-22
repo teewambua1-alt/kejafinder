@@ -37,10 +37,10 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
       <div className="w-full md:max-w-3xl xl:max-w-7xl md:mx-auto px-4 md:px-8 xl:px-12 py-2.5">
         <div className="flex items-center gap-2.5 md:max-w-xs md:ml-auto">
           <div className="pl-0.5 pr-1 min-w-0 hidden xs:block">
-            <p className="text-sm font-black text-emerald-600 dark:text-emerald-500 leading-none truncate">
+            <p className="text-sm font-black text-emerald-700 dark:text-emerald-500 leading-none truncate">
               KSh {rent.toLocaleString()}
             </p>
-            <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 leading-none mt-0.5">/month</p>
+            <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-none mt-0.5">/month</p>
           </div>
 
           {hasPhone ? (
@@ -48,7 +48,7 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
               whileTap={{ scale: 0.96 }}
               href={`tel:${phone.replace(/\s+/g, '')}`}
               onClick={onCallClick}
-              className="flex-1 h-11 rounded-xl border border-emerald-500 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
+              className="flex-1 h-11 rounded-xl border border-emerald-700 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
               aria-label="Call about this listing"
             >
               <Phone className="w-4 h-4 stroke-[2.2]" />
@@ -57,7 +57,7 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
           ) : (
             <button
               disabled
-              className="flex-1 h-11 rounded-xl border border-neutral-200 dark:border-stone-700 text-neutral-400 dark:text-stone-600 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
+              className="flex-1 h-11 rounded-xl border border-neutral-200 dark:border-stone-700 text-neutral-550 dark:text-stone-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
               aria-label="No phone number on file"
             >
               <Phone className="w-4 h-4 stroke-[2.2]" />
@@ -72,7 +72,7 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
               target="_blank"
               rel="noopener noreferrer"
               onClick={onWhatsAppClick}
-              className="flex-1 h-11 rounded-xl bg-emerald-600 dark:bg-emerald-600 text-white flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
+              className="flex-1 h-11 rounded-xl bg-emerald-700 dark:bg-emerald-600 text-white flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer outline-none"
               aria-label="WhatsApp about this listing"
             >
               <MessageCircle className="w-4 h-4 stroke-[2.2]" />
@@ -81,7 +81,7 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
           ) : (
             <button
               disabled
-              className="flex-1 h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-400 dark:text-stone-600 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
+              className="flex-1 h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
               aria-label="No WhatsApp number on file"
             >
               <MessageCircle className="w-4 h-4 stroke-[2.2]" />

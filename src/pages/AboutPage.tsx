@@ -75,7 +75,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
             <h1 className="text-2xl font-black text-neutral-900 dark:text-stone-100 uppercase tracking-tight">
               About KejaFinder
             </h1>
-            <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+            <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
               Helping Kenyans find vacant, affordable homes faster.
             </p>
             <p className="text-xs font-semibold text-neutral-500 dark:text-stone-405 leading-relaxed">
@@ -131,7 +131,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
               <h3 className="text-xs font-black text-neutral-800 dark:text-stone-250 uppercase tracking-wider">
                 Platform Roadmap
               </h3>
-              <span className="text-[9px] font-black text-neutral-550 dark:text-stone-500 uppercase tracking-widest bg-neutral-100 dark:bg-stone-850 px-2 py-0.5 rounded-lg border border-neutral-200/40 dark:border-stone-800/30">
+              <span className="text-[9px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest bg-neutral-100 dark:bg-stone-850 px-2 py-0.5 rounded-lg border border-neutral-200/40 dark:border-stone-800/30">
                 Foundations Live
               </span>
             </div>
@@ -162,7 +162,7 @@ export default function AboutPage({ onBack, onGoSearch, onGoPost, onGoSafety }: 
                           {pt.version}
                         </span>
                       </div>
-                      <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-500 leading-relaxed truncate group-hover:text-neutral-600 dark:group-hover:text-stone-300 transition-colors">
+                      <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-relaxed truncate group-hover:text-neutral-600 dark:group-hover:text-stone-300 transition-colors">
                         {pt.desc}
                       </p>
                     </div>

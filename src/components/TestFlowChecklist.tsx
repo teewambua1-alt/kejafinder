@@ -88,7 +88,7 @@ export default function TestFlowChecklist({ items, onToggleStatus, onActionClick
                   <button 
                     type="button"
                     onClick={() => onActionClick(item.actionKey || '')}
-                    className="flex items-center text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-stone-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors w-fit pt-1"
+                    className="flex items-center text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-stone-300 hover:text-emerald-800 dark:hover:text-emerald-400 transition-colors w-fit pt-1"
                   >
                     <span>{item.actionLabel}</span>
                     <ChevronRight className="w-3.5 h-3.5 ml-0.5" />

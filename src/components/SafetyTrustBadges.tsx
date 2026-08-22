@@ -85,7 +85,7 @@ export default function SafetyTrustBadges({
       {/* Section Header */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center space-x-2 mb-1">
-          <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <ShieldCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
           <h3 className="text-xl font-black text-neutral-850 dark:text-stone-100 tracking-tight">
             Trust badges explained
           </h3>
@@ -114,7 +114,7 @@ export default function SafetyTrustBadges({
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                   isAmber 
                     ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
-                    : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                    : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
                 }`}>
                   <Icon className="w-5 h-5" />
                 </div>
@@ -131,7 +131,7 @@ export default function SafetyTrustBadges({
                     {badge.description}
                   </p>
                   <p className="text-[11px] font-medium text-neutral-500 dark:text-stone-400 leading-snug">
-                    <span className="font-bold text-neutral-400 dark:text-stone-500">Helps with:</span> {badge.helpsWith}
+                    <span className="font-bold text-neutral-550 dark:text-stone-400">Helps with:</span> {badge.helpsWith}
                   </p>
                 </div>
               </div>
@@ -154,9 +154,9 @@ export default function SafetyTrustBadges({
       </motion.div>
 
       {/* Important caution card */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-2xl p-4 shadow-sm">
+      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 shadow-sm">
         <div className="flex items-center space-x-2 mb-2">
-          <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0" />
+          <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0" />
           <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 tracking-tight">
             Badges are not a payment guarantee
           </h4>

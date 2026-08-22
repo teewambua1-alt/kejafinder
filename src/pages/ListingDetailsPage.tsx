@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import ListingDetailsHeader from '../components/ListingDetailsHeader';
 import ListingImageGallery from '../components/ListingImageGallery';
-import ListingTitleSection from '../components/ListingTitleSection';
-import ListingPricingSummary from '../components/ListingPricingSummary';
-import ListingLocationDetails from '../components/ListingLocationDetails';
-import ListingAmenitiesCondition from '../components/ListingAmenitiesCondition';
-import ListingContactCard from '../components/ListingContactCard';
-import ListingTrustSafety from '../components/ListingTrustSafety';
+import {
+  ListingOverview, ListingCost, ListingHouse, ListingLocation, ListingContact,
+} from '../components/listing';
 import SimilarHomesSection from '../components/SimilarHomesSection';
 import { useListing } from '../hooks/useListing';
 import { useListings } from '../hooks/useListings';
 import { useSavedListings } from '../hooks/useSavedListings';
 import { useAuth } from '../context/AuthContext';
-import { sampleKejaListing } from '../data/listingsData';
 import { KejaListing } from '../types/listings';
 import ReportListingPanel from '../components/ReportListingPanel';
 import ListingStickyContactBar from '../components/ListingStickyContactBar';
@@ -50,45 +46,33 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     }
   }, [fbListing]);
 
-  // Gracefully resolve listing details from data sources
+  // Built from the real row only. This used to spread the fetched listing
+  // over `sampleKejaListing`, which meant every KejaListing field the mapper
+  // doesn't emit kept the sample's value on real listings -- including
+  // isPhoneVerified: true (a false trust signal), a demo panorama URL, and a
+  // whole fabricated "house condition" block. Fields with no real column are
+  // now absent, and each section hides itself rather than inventing content.
   const currentListing = React.useMemo(() => {
-    if (!internalListingId) return sampleKejaListing;
-    if (fbListing) {
-      return {
-        ...sampleKejaListing, // use as base to fill missing detail fields
-        ...fbListing,
-        houseType: fbListing.type || 'House',
-        trustBadges: (fbListing.badges || []) as any,
-        imageUrl: fbListing.image,
-        caretakerPhone: fbListing.contactPhone,
-      } as KejaListing;
-    }
-    return sampleKejaListing;
-  }, [internalListingId, fbListing]);
+    if (!fbListing) return null;
+    return {
+      ...fbListing,
+      houseType: fbListing.type,
+      // `trustBadges` is gone: nothing read it once the overview switched to
+      // the real verification_level ladder, and it was the last `as any` on
+      // this page -- a string[] force-cast into a union of five literals.
+      imageUrl: fbListing.image,
+      caretakerName: fbListing.contactName,
+      caretakerPhone: fbListing.contactPhone,
+    } as KejaListing;
+  }, [fbListing]);
 
-  const allAvailableListings = React.useMemo(() => {
-    // Skip any listing missing real rent/deposit rather than fabricating a
-    // price -- "similar homes" comparisons need a real number to be honest.
-    const mapped = allListings
-      .filter((listing: any) => listing.rent && listing.deposit)
-      .map((listing: any) => ({
-        ...listing,
-        id: listing.id,
-        title: listing.title,
-        houseType: listing.type || listing.typeLabel || 'House',
-        rent: listing.rent,
-        deposit: listing.deposit,
-        location: listing.location,
-        estate: listing.estate || listing.town || listing.location,
-        imageUrl: listing.image || 'https://images.unsplash.com/photo-1542361345-89e58247f2d5?auto=format&fit=crop&w=600&q=80',
-        amenities: listing.amenities || [],
-        trustBadges: (listing.badges || []) as any,
-      })) as KejaListing[];
-
-    const uniqueMap = new Map();
-    mapped.forEach(l => uniqueMap.set(l.id, l));
-    return Array.from(uniqueMap.values());
-  }, [allListings]);
+  // Real rows straight from useListings(); no reshaping needed now that
+  // SimilarHomesSection consumes Listing directly. Listings missing a real
+  // rent/deposit are skipped rather than shown with a fabricated price.
+  const similarCandidates = React.useMemo(
+    () => allListings.filter((l) => l.rent && l.deposit),
+    [allListings]
+  );
 
   const handleOpenSimilarListing = (id: string) => {
     setInternalListingId(id);
@@ -100,11 +84,12 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
   };
 
   const handleShare = async () => {
+    if (!currentListing) return;
     const shareUrl = new URL(window.location.href);
     shareUrl.searchParams.set('listing', currentListing.id);
-    
+
     const shareData = {
-      title: `Check out this ${currentListing.houseType} on KejaFinder`,
+      title: `Check out this ${currentListing.typeLabel || currentListing.houseType} on KejaFinder`,
       text: `${currentListing.title || 'Great rental home'} for KSh ${currentListing.rent?.toLocaleString()}/month in ${currentListing.estate || currentListing.location}.`,
       url: shareUrl.toString(),
     };
@@ -128,24 +113,9 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     }
   };
 
-  const handleAskDirections = () => {
-    showFeedback("Directions request coming soon.");
-  };
-
-  const handleOpenMap = () => {
-    showFeedback("Map view coming soon.");
-  };
-
-  const handleAskAmenities = () => {
-    showFeedback("Amenity question feature coming soon.");
-  };
-
-  const handleAskAvailability = () => {
-    showFeedback("Availability check noted locally.");
-  };
-
   const handleReportSubmit = async (reason: string, message: string) => {
     setIsReportPanelOpen(false);
+    if (!currentListing) return;
     if (!user) {
       showFeedback("Log in to report a listing.");
       return;
@@ -167,10 +137,13 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
     if (fbListing) incrementContactClick(fbListing.id, 'whatsapp');
   };
 
-  const [localSaved, setLocalSaved] = useState(currentListing.isSaved || false);
-  const currentlySaved = source === 'supabase' ? isSaved(currentListing.id) : localSaved;
+  const [localSaved, setLocalSaved] = useState(false);
+  const currentlySaved = currentListing
+    ? (source === 'supabase' ? isSaved(currentListing.id) : localSaved)
+    : false;
 
   const handleSaveToggleClick = async () => {
+    if (!currentListing) return;
     if (source === 'supabase') {
       await toggleSavedListing(currentListing);
       showFeedback(isSaved(currentListing.id) ? "Removed from saved homes." : "Saved to your account.");
@@ -212,21 +185,21 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
 
   // Real listings only reach this page with an ID that should resolve. While
   // that fetch is in flight, or if it comes back empty (bad/stale/removed
-  // ID), show that honestly instead of silently rendering fake sample data
-  // as if it were the listing the user actually clicked on.
-  if (internalListingId && isLoading) {
+  // ID, or no ID at all), show that honestly instead of rendering fake
+  // sample data as if it were the listing the user actually clicked on.
+  if (isLoading) {
     return (
       <div className="flex-1 flex flex-col pb-44 animate-fadeIn relative">
         <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
         <div className="flex-1 flex flex-col items-center justify-center space-y-3 py-24">
           <div className="w-8 h-8 border-3 border-emerald-500/30 border-t-emerald-600 rounded-full animate-spin" />
-          <p className="text-xs font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">Loading listing…</p>
+          <p className="text-xs font-bold text-neutral-550 dark:text-stone-400 uppercase tracking-wider">Loading listing…</p>
         </div>
       </div>
     );
   }
 
-  if (internalListingId && !isLoading && !fbListing) {
+  if (!currentListing) {
     return (
       <div className="flex-1 flex flex-col pb-44 animate-fadeIn relative">
         <ListingDetailsHeader onBack={onBack} isInitialSaved={false} onShare={() => {}} onSaveToggle={() => {}} onReport={() => {}} />
@@ -237,7 +210,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
           </p>
           <button
             onClick={onBack}
-            className="mt-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider"
+            className="mt-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider"
           >
             Go back
           </button>
@@ -276,67 +249,48 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
         {/* A. Image gallery (v1.4.1) */}
         <motion.div variants={cardVariants}>
           <ListingImageGallery 
-            listing={currentListing as any} 
+            listing={currentListing}
             onShare={handleShare}
             onSaveToggle={handleSaveToggleClick}
             isSaved={currentlySaved}
           />
         </motion.div>
 
-        {/* B. Listing title (v1.4.1) */}
+        {/* Five sections, one card each. This was six components rendering
+          * roughly twenty cards, in which availability appeared three times,
+          * the landmark three times, water and electricity three times, and
+          * the deposit warning three times. Each section now answers exactly
+          * one question and no fact is stated twice. */}
         <motion.div variants={cardVariants}>
-          <ListingTitleSection listing={currentListing as any} />
+          <ListingOverview listing={currentListing} />
         </motion.div>
 
-        {/* C. Pricing summary (v1.4.2) */}
         <motion.div variants={cardVariants}>
-          <ListingPricingSummary 
-            listing={currentListing as any} 
-            onFeedback={showFeedback}
-          />
+          <ListingCost listing={currentListing} />
         </motion.div>
 
-        {/* D. Location details (v1.4.3) */}
         <motion.div variants={cardVariants}>
-          <ListingLocationDetails 
-            listing={currentListing as any} 
-            onAskDirections={handleAskDirections}
-            onOpenMap={handleOpenMap}
-          />
+          <ListingHouse listing={currentListing} />
         </motion.div>
 
-        {/* E. Amenities and condition (v1.4.4) */}
         <motion.div variants={cardVariants}>
-          <ListingAmenitiesCondition 
-            listing={currentListing as any} 
-            onAskAmenities={handleAskAmenities}
-          />
+          <ListingLocation listing={currentListing} onWhatsAppClick={handleWhatsAppClick} />
         </motion.div>
 
-        {/* F. Contact caretaker (v1.4.5) */}
         <motion.div variants={cardVariants}>
-          <ListingContactCard
-            listing={currentListing as any}
-            onFeedback={showFeedback}
+          <ListingContact
+            listing={currentListing}
             onCallClick={handleCallClick}
             onWhatsAppClick={handleWhatsAppClick}
-          />
-        </motion.div>
-
-        {/* G. Trust and safety (v1.4.6) */}
-        <motion.div variants={cardVariants}>
-          <ListingTrustSafety
-            listing={currentListing as any}
-            onAvailabilityCheck={handleAskAvailability}
-            onOpenReport={() => setIsReportPanelOpen(true)}
+            onReport={() => setIsReportPanelOpen(true)}
           />
         </motion.div>
 
         {/* H. Similar homes (v1.4.7) */}
         <motion.div variants={cardVariants}>
           <SimilarHomesSection
-            currentListing={currentListing as any}
-            allListings={allAvailableListings}
+            currentListing={fbListing}
+            allListings={similarCandidates}
             onOpenListingDetails={handleOpenSimilarListing}
             setListingFeedback={showToast}
           />

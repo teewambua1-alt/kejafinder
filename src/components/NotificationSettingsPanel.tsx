@@ -54,14 +54,14 @@ export default function NotificationSettingsPanel({
         {/* Modal Header */}
         <div className="px-5 pb-3 pt-1 flex items-center justify-between border-b border-neutral-150/40 dark:border-stone-850/40 shrink-0">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-555/10 dark:bg-emerald-550/5 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-emerald-555/10 dark:bg-emerald-550/5 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
               <Bell className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div>
               <h2 className="text-sm font-black text-neutral-850 dark:text-stone-100 uppercase tracking-wider leading-none">
                 Alert Subscriptions
               </h2>
-              <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold mt-1">
+              <p className="text-[10px] text-neutral-550 dark:text-stone-400 font-semibold mt-1">
                 Configure your real-time notification platforms.
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function NotificationSettingsPanel({
         <div className="flex-grow overflow-y-auto px-5 py-4.5 space-y-5 scrollbar-thin">
           {/* Main Toggles Section */}
           <div className="space-y-3.5">
-            <span className="block text-[10px] font-black text-neutral-400 dark:text-stone-500 uppercase tracking-widest leading-none">
+            <span className="block text-[10px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest leading-none">
               Notification Channels
             </span>
 
@@ -105,7 +105,7 @@ export default function NotificationSettingsPanel({
                 aria-checked={whatsappAlerts}
                 aria-label="Toggle WhatsApp Alerts"
                 className={`relative w-10 h-5.5 rounded-full shrink-0 transition-colors cursor-pointer outline-none ${
-                  whatsappAlerts ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-800'
+                  whatsappAlerts ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
                 }`}
               >
                 <span className={`block w-4 h-4 rounded-full bg-white absolute top-0.5 shadow-xs transition-transform ${
@@ -136,7 +136,7 @@ export default function NotificationSettingsPanel({
                 aria-checked={smsBroadcasts}
                 aria-label="Toggle SMS Broadcasts"
                 className={`relative w-10 h-5.5 rounded-full shrink-0 transition-colors cursor-pointer outline-none ${
-                  smsBroadcasts ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-800'
+                  smsBroadcasts ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
                 }`}
               >
                 <span className={`block w-4 h-4 rounded-full bg-white absolute top-0.5 shadow-xs transition-transform ${
@@ -148,7 +148,7 @@ export default function NotificationSettingsPanel({
             {/* In-app push notifications */}
             <div className="flex items-center justify-between p-3.5 bg-neutral-50/50 dark:bg-stone-850/30 rounded-2xl border border-neutral-205/10 dark:border-stone-800/10">
               <div className="flex items-start space-x-3 pr-2">
-                <div className="w-8.5 h-8.5 rounded-xl bg-orange-500/10 dark:bg-orange-500/5 flex items-center justify-center shrink-0 text-orange-600 dark:text-orange-400">
+                <div className="w-8.5 h-8.5 rounded-xl bg-orange-500/10 dark:bg-orange-500/5 flex items-center justify-center shrink-0 text-orange-700 dark:text-orange-400">
                   <Bell className="w-4 h-4 stroke-[2.2]" />
                 </div>
                 <div>
@@ -167,7 +167,7 @@ export default function NotificationSettingsPanel({
                 aria-checked={pushNotifs}
                 aria-label="Toggle Push Alerts"
                 className={`relative w-10 h-5.5 rounded-full shrink-0 transition-colors cursor-pointer outline-none ${
-                  pushNotifs ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-800'
+                  pushNotifs ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
                 }`}
               >
                 <span className={`block w-4 h-4 rounded-full bg-white absolute top-0.5 shadow-xs transition-transform ${
@@ -180,8 +180,8 @@ export default function NotificationSettingsPanel({
           {/* digest frequency selection */}
           <div className="space-y-3.5 pt-1">
             <div className="flex items-center space-x-1.5 leading-none">
-              <Mail className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-              <span className="block text-[10px] font-black text-neutral-400 dark:text-stone-500 uppercase tracking-widest leading-none">
+              <Mail className="w-3.5 h-3.5 text-neutral-550 shrink-0" />
+              <span className="block text-[10px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest leading-none">
                 Email Digest Frequency
               </span>
             </div>
@@ -194,7 +194,7 @@ export default function NotificationSettingsPanel({
                   aria-pressed={emailDigest === freq}
                   className={`py-2 px-3.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-center cursor-pointer transition-all border ${
                     emailDigest === freq 
-                      ? 'bg-emerald-600 text-white border-emerald-650 shadow-3xs' 
+                      ? 'bg-emerald-700 text-white border-emerald-700 shadow-3xs' 
                       : 'bg-neutral-50/50 hover:bg-neutral-100/50 text-neutral-600 dark:bg-stone-850/40 dark:hover:bg-stone-800/40 dark:text-stone-400 border-neutral-200/50 dark:border-stone-800'
                   }`}
                 >
@@ -208,8 +208,8 @@ export default function NotificationSettingsPanel({
           <div className="space-y-3.5 pt-1">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1.5 leading-none">
-                <Moon className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
-                <span className="block text-[10px] font-black text-neutral-400 dark:text-stone-500 uppercase tracking-widest leading-none">
+                <Moon className="w-3.5 h-3.5 text-neutral-550 shrink-0" />
+                <span className="block text-[10px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest leading-none">
                   Quiet Hours (Prototype)
                 </span>
               </div>
@@ -220,7 +220,7 @@ export default function NotificationSettingsPanel({
                 aria-checked={quietHoursEnabled}
                 aria-label="Toggle Quiet Hours"
                 className={`relative w-9 h-5 rounded-full shrink-0 transition-colors cursor-pointer outline-none ${
-                  quietHoursEnabled ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-800'
+                  quietHoursEnabled ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
                 }`}
               >
                 <span className={`block w-3.5 h-3.5 rounded-full bg-white absolute top-0.5 shadow-xs transition-transform ${
@@ -273,7 +273,7 @@ export default function NotificationSettingsPanel({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleSaveAndClose}
-            className="flex-1 py-3 px-4.5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-600 hover:bg-emerald-650 text-white shadow-3xs flex items-center justify-center space-x-1.5 cursor-pointer outline-none transition-all"
+            className="flex-1 py-3 px-4.5 rounded-xl text-center text-xs font-black uppercase tracking-wider bg-emerald-700 hover:bg-emerald-800 text-white shadow-3xs flex items-center justify-center space-x-1.5 cursor-pointer outline-none transition-all"
           >
             <Save className="w-3.5 h-3.5" />
             <span>Done</span>

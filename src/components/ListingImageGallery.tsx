@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Heart, Share2, Home, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { KejaListing } from '../types/listings';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import PanoramaViewerModal from './PanoramaViewerModal';
-import { View } from 'lucide-react';
 import { useModalA11y } from '../hooks/useModalA11y';
 
 interface ListingImageGalleryProps {
@@ -17,14 +15,13 @@ interface ListingImageGalleryProps {
 export default function ListingImageGallery({ listing, onSaveToggle, onShare, isSaved = false }: ListingImageGalleryProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [isPanoramaOpen, setIsPanoramaOpen] = useState(false);
   const lightboxRef = useModalA11y(isLightboxOpen, () => setIsLightboxOpen(false));
 
   const images = listing.images && listing.images.length > 0 ? listing.images : (listing.imageUrl ? [listing.imageUrl] : []);
 
   if (images.length === 0) {
     return (
-      <div className="w-full h-64 bg-neutral-100 dark:bg-stone-850 rounded-3xl border border-neutral-200/50 dark:border-stone-800/40 shadow-sm flex flex-col items-center justify-center p-6 text-neutral-400 dark:text-stone-500">
+      <div className="w-full h-64 bg-neutral-100 dark:bg-stone-850 rounded-3xl border border-neutral-200/50 dark:border-stone-800/40 shadow-sm flex flex-col items-center justify-center p-6 text-neutral-550 dark:text-stone-400">
         <div className="w-16 h-16 rounded-full bg-white dark:bg-stone-800 shadow-sm flex items-center justify-center mb-3">
           <Home className="w-8 h-8 stroke-[1.5]" />
         </div>
@@ -73,20 +70,9 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
             {activeImageIndex + 1} / {images.length}
           </div>
 
-          {/* 360 Panorama Button */}
-          {listing.panoramaUrl && (
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsPanoramaOpen(true);
-              }}
-              className="absolute bottom-4 right-4 bg-emerald-500/90 hover:bg-emerald-600 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 transition-colors border border-emerald-400/20"
-            >
-              <View className="w-4 h-4" />
-              <span>360° View</span>
-            </motion.button>
-          )}
+          {/* 360° panorama button removed: there is no panorama_url column,
+              so this was gated on a field inherited from the sample and every
+              listing offered a "360° View" of the same demo sphere. */}
 
           {/* Overlay Controls */}
           <div className="absolute top-4 right-4 flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
@@ -107,8 +93,8 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                 onClick={onSaveToggle}
                 className={`w-10 h-10 rounded-full backdrop-blur-md shadow-sm border border-black/5 dark:border-white/5 flex items-center justify-center transition-colors cursor-pointer outline-none ${
                   isSaved 
-                    ? 'bg-rose-50/90 dark:bg-rose-900/80 text-rose-500' 
-                    : 'bg-white/90 dark:bg-stone-900/90 text-neutral-500 hover:text-rose-400'
+                    ? 'bg-emerald-50/90 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-400' 
+                    : 'bg-white/90 dark:bg-stone-900/90 text-neutral-500 hover:text-emerald-800'
                 }`}
                 aria-label="Save listing"
               >
@@ -116,7 +102,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                   animate={isSaved ? { scale: [1, 1.25, 1] } : {}}
                   transition={{ duration: 0.3 }}
                 >
-                  <Heart className={`w-4.5 h-4.5 stroke-[2.2] ${isSaved ? 'fill-rose-500' : ''}`} />
+                  <Heart className={`w-4.5 h-4.5 stroke-[2.2] ${isSaved ? 'fill-emerald-600 dark:fill-emerald-400' : ''}`} />
                 </motion.div>
               </motion.button>
             )}
@@ -139,7 +125,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
                   aria-label={`View photo ${idx + 1} of ${listing.title}`}
                   className={`relative w-16 h-16 shrink-0 rounded-xl overflow-hidden shadow-xs outline-none cursor-pointer border-2 transition-all duration-200 ${
                     isActive 
-                      ? 'border-emerald-500 scale-100 ring-2 ring-emerald-500/20' 
+                      ? 'border-emerald-700 scale-100 ring-2 ring-emerald-500/20' 
                       : 'border-transparent opacity-60 hover:opacity-100 scale-95'
                   }`}
                 >
@@ -167,7 +153,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-lg flex flex-col outline-none"
+            className="fixed inset-0 z-[var(--z-lightbox)] bg-black/95 backdrop-blur-lg flex flex-col outline-none"
           >
             {/* Header / Controls */}
             <div className="flex items-center justify-between p-4 sm:p-6 text-white absolute top-0 left-0 right-0 z-50">
@@ -258,14 +244,6 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
         )}
       </AnimatePresence>
 
-      {/* 360 Panorama Modal */}
-      {listing.panoramaUrl && (
-        <PanoramaViewerModal
-          isOpen={isPanoramaOpen}
-          onClose={() => setIsPanoramaOpen(false)}
-          panoramaUrl={listing.panoramaUrl}
-        />
-      )}
     </>
   );
 }

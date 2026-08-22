@@ -3,16 +3,14 @@ import { Locate, LocateFixed, LoaderCircle, ShieldAlert } from 'lucide-react';
 import { motion } from 'motion/react';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import L, { LatLng } from 'leaflet';
+// Side effect: default marker-icon setup. Without this import the pin renders
+// as a broken image whenever this lazy chunk is the first map to load, which is
+// exactly what happens on a cold visit to Post Vacancy.
+import '../lib/leaflet';
+import { NAIROBI_CENTER, TILES, MAX_ZOOM } from '../lib/leaflet';
+import { useTheme } from './ThemeContext';
 
-// Fix for default marker icons in React Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-const DEFAULT_CENTER: [number, number] = [-1.2921, 36.8219]; // Nairobi
+const DEFAULT_CENTER: [number, number] = NAIROBI_CENTER;
 
 type CaptureState = 'idle' | 'requesting' | 'captured' | 'denied' | 'unsupported';
 
@@ -46,10 +44,12 @@ function ClickToPlace({ onPlace }: { onPlace: (latlng: LatLng) => void }) {
  * Real interactive Leaflet map for setting a listing's exact coordinates --
  * drag the pin, tap anywhere on the map, or tap "Locate me" for a real
  * navigator.geolocation fix. This is the only place in the app a listing
- * ever gets real lat/lng; every other map (ListingLocationDetails,
- * SearchFullMap) falls back to an approximation when it's null.
+ * ever gets real lat/lng. Everywhere else, a listing with no coordinates is
+ * simply not plotted and the omission is disclosed -- see toMapPoint and
+ * MapCoverageNotice. There is no longer a fabricated fallback position.
  */
 export default function PostMapPreview({ lat, lng, onLocationCaptured }: PostMapPreviewProps) {
+  const { isDark } = useTheme();
   const [position, setPosition] = useState<[number, number]>(
     lat !== null && lng !== null ? [lat, lng] : DEFAULT_CENTER
   );
@@ -106,12 +106,17 @@ export default function PostMapPreview({ lat, lng, onLocationCaptured }: PostMap
       <MapContainer
         center={position}
         zoom={16}
+        maxZoom={MAX_ZOOM}
         scrollWheelZoom={false}
-        className="w-full h-full z-0"
+        className="w-full h-full"
       >
+        {/* The app has a full dark theme, but every map was pinned to the light
+          * tileset -- so opening this in dark mode flash-banged the user.
+          * Swapping `url` makes react-leaflet call setUrl, keeping the layer. */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url={isDark ? TILES.dark.url : TILES.light.url}
+          attribution={isDark ? TILES.dark.attribution : TILES.light.attribution}
+          detectRetina={false}
         />
         <Marker
           position={position}
@@ -131,9 +136,9 @@ export default function PostMapPreview({ lat, lng, onLocationCaptured }: PostMap
       )}
 
       {/* Floating real-status badge */}
-      <div className="absolute top-3 left-3 right-14 px-2.5 py-1.5 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md rounded-xl border border-neutral-150/45 dark:border-neutral-800/60 shadow-xs flex items-center space-x-1.5 z-[1000] pointer-events-none">
+      <div className="absolute top-3 left-3 right-14 px-2.5 py-1.5 bg-white/95 dark:bg-stone-900/95 rounded-xl border border-neutral-150/45 dark:border-neutral-800/60 shadow-xs flex items-center space-x-1.5 z-[var(--z-map-chrome)] pointer-events-none">
         <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-          captureState === 'captured' ? 'bg-emerald-500 animate-pulse' : captureState === 'denied' || captureState === 'unsupported' ? 'bg-orange-500' : 'bg-neutral-400'
+          captureState === 'captured' ? 'bg-emerald-700 animate-pulse' : captureState === 'denied' || captureState === 'unsupported' ? 'bg-orange-700' : 'bg-neutral-400'
         }`} />
         <span className="text-[9.5px] font-extrabold text-neutral-750 dark:text-stone-200 tracking-tight truncate">
           {badgeText}
@@ -146,14 +151,14 @@ export default function PostMapPreview({ lat, lng, onLocationCaptured }: PostMap
         onClick={requestLocation}
         disabled={captureState === 'requesting'}
         aria-label="Use current location"
-        className="absolute bottom-3 right-3 w-8.5 h-8.5 bg-white dark:bg-stone-900 border border-neutral-100 dark:border-neutral-800 rounded-xl flex items-center justify-center text-neutral-700 dark:text-stone-300 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-850 active:scale-95 transition-all cursor-pointer disabled:opacity-60 z-[1000]"
+        className="absolute bottom-3 right-3 w-8.5 h-8.5 bg-white dark:bg-stone-900 border border-neutral-100 dark:border-neutral-800 rounded-xl flex items-center justify-center text-neutral-700 dark:text-stone-300 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-850 active:scale-95 transition-all cursor-pointer disabled:opacity-60 z-[var(--z-map-chrome)]"
       >
         {captureState === 'requesting' ? (
           <LoaderCircle className="w-4.5 h-4.5 stroke-[2] animate-spin" />
         ) : captureState === 'captured' ? (
-          <LocateFixed className="w-4.5 h-4.5 stroke-[2] text-emerald-600" />
+          <LocateFixed className="w-4.5 h-4.5 stroke-[2] text-emerald-700" />
         ) : captureState === 'denied' || captureState === 'unsupported' ? (
-          <ShieldAlert className="w-4.5 h-4.5 stroke-[2] text-orange-500" />
+          <ShieldAlert className="w-4.5 h-4.5 stroke-[2] text-orange-700 dark:text-orange-400" />
         ) : (
           <Locate className="w-4.5 h-4.5 stroke-[2]" />
         )}

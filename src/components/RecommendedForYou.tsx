@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import { Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Listing } from '../types/listing';
-import ListingCard from './ListingCard';
-import ListingCardSkeleton from './ListingCardSkeleton';
+import { PropertyCardVertical, PropertyCardVerticalSkeleton } from './property';
+
 import { useSavedListings } from '../hooks/useSavedListings';
 
 interface RecommendedForYouProps {
@@ -89,7 +89,7 @@ export default function RecommendedForYou({
       {isLoading ? (
         <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
           {Array.from({ length: 4 }).map((_, i) => (
-            <ListingCardSkeleton key={i} />
+            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
           ))}
         </div>
       ) : (
@@ -102,9 +102,10 @@ export default function RecommendedForYou({
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
               className="shrink-0"
             >
-              <ListingCard
+              <PropertyCardVertical
                 listing={listing}
-                onSelectListing={() => onSelectListing?.(listing.id)}
+                onSelect={() => onSelectListing?.(listing.id)}
+                className="w-[268px] md:w-auto"
               />
             </motion.div>
           ))}

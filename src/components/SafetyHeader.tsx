@@ -30,7 +30,7 @@ export default function SafetyHeader({ onBack }: SafetyHeaderProps) {
       </div>
 
       <div className="w-10 h-10 flex items-center justify-center">
-        <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+        <ShieldCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
       </div>
     </motion.header>
   );

@@ -7,6 +7,12 @@ interface PriceRangeSliderProps {
   onChange: (value: [number, number]) => void;
   step?: number;
   formatValue?: (value: number) => string;
+  /**
+   * What is being ranged, lowercase and singular -- "rent", "deposit".
+   * The thumb labels were hardcoded to "Minimum rent"/"Maximum rent", so a
+   * second instance of this slider announced itself as a rent control.
+   */
+  ariaLabel?: string;
 }
 
 /**
@@ -22,6 +28,7 @@ export default function PriceRangeSlider({
   onChange,
   step = 500,
   formatValue = (v) => `KSh ${v.toLocaleString()}`,
+  ariaLabel = 'rent',
 }: PriceRangeSliderProps) {
   const [lowValue, highValue] = value;
   const range = Math.max(max - min, 1);
@@ -48,12 +55,13 @@ export default function PriceRangeSlider({
         <div className="absolute inset-x-0 h-1.5 rounded-full bg-neutral-150 dark:bg-stone-800" />
         {/* Highlighted range between the two thumbs */}
         <div
-          className="absolute h-1.5 rounded-full bg-emerald-600"
+          className="absolute h-1.5 rounded-full bg-emerald-700"
           style={{ left: `${lowPct}%`, right: `${100 - highPct}%` }}
         />
         <input
           type="range"
-          aria-label="Minimum rent"
+          aria-label={`Minimum ${ariaLabel}`}
+          aria-valuetext={formatValue(lowValue)}
           min={min}
           max={max}
           step={step}
@@ -64,7 +72,8 @@ export default function PriceRangeSlider({
         />
         <input
           type="range"
-          aria-label="Maximum rent"
+          aria-label={`Maximum ${ariaLabel}`}
+          aria-valuetext={formatValue(highValue)}
           min={min}
           max={max}
           step={step}

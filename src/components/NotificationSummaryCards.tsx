@@ -50,7 +50,7 @@ export default function NotificationSummaryCards({
       icon: BellRing,
       helperText: 'Needs attention',
       ariaLabel: 'Show unread notifications',
-      colorClass: 'text-emerald-600 dark:text-emerald-400',
+      colorClass: 'text-emerald-700 dark:text-emerald-400',
       bgColorClass: 'bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/20 dark:border-emerald-500/10',
       isHighlight: false
     },
@@ -61,7 +61,7 @@ export default function NotificationSummaryCards({
       icon: Heart,
       helperText: 'From saved homes',
       ariaLabel: 'Show saved home updates',
-      colorClass: 'text-emerald-600 dark:text-emerald-400',
+      colorClass: 'text-emerald-700 dark:text-emerald-400',
       bgColorClass: 'bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/20 dark:border-emerald-500/10',
       isHighlight: false
     },
@@ -72,7 +72,7 @@ export default function NotificationSummaryCards({
       icon: TrendingDown,
       helperText: 'Rent changed',
       ariaLabel: 'Show price drop alerts',
-      colorClass: 'text-orange-600 dark:text-orange-400',
+      colorClass: 'text-orange-700 dark:text-orange-400',
       bgColorClass: 'bg-orange-500/10 dark:bg-orange-500/5 border border-orange-500/20 dark:border-orange-500/10',
       isHighlight: true
     },
@@ -83,7 +83,7 @@ export default function NotificationSummaryCards({
       icon: MessageCircle,
       helperText: 'Replies & support',
       ariaLabel: 'Show messages and support notifications',
-      colorClass: 'text-emerald-600 dark:text-emerald-400',
+      colorClass: 'text-emerald-700 dark:text-emerald-400',
       bgColorClass: 'bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/20 dark:border-emerald-500/10',
       isHighlight: false
     },
@@ -94,7 +94,7 @@ export default function NotificationSummaryCards({
       icon: ShieldCheck,
       helperText: 'Trust reminders',
       ariaLabel: 'Show safety and verification alerts',
-      colorClass: 'text-orange-600 dark:text-orange-400',
+      colorClass: 'text-orange-700 dark:text-orange-400',
       bgColorClass: 'bg-orange-500/10 dark:bg-orange-500/5 border border-orange-500/20 dark:border-orange-500/10',
       isHighlight: true
     }
@@ -107,7 +107,7 @@ export default function NotificationSummaryCards({
         <h2 className="text-xs font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider">
           Activity alerts
         </h2>
-        <p className="text-[10px] text-neutral-550 dark:text-stone-500 font-semibold tracking-wide mt-0.5">
+        <p className="text-[10px] text-neutral-550 dark:text-stone-400 font-semibold tracking-wide mt-0.5">
           Quick view of updates that need your attention.
         </p>
       </div>
@@ -142,7 +142,7 @@ export default function NotificationSummaryCards({
                 <h3 className="text-[10.5px] font-black text-neutral-805 dark:text-stone-200 uppercase tracking-tight leading-none">
                   {card.label}
                 </h3>
-                <p className="text-[9.5px] text-neutral-550 dark:text-stone-500 font-bold leading-none mt-1.5 whitespace-nowrap">
+                <p className="text-[9.5px] text-neutral-550 dark:text-stone-400 font-bold leading-none mt-1.5 whitespace-nowrap">
                   {card.helperText}
                 </p>
               </div>
@@ -157,7 +157,7 @@ export default function NotificationSummaryCards({
       {/* 3. Instant alerts mini banner built inline in summary module */}
       <div className="w-full bg-emerald-550/[0.03] dark:bg-emerald-555/[0.015] border border-emerald-500/15 dark:border-emerald-500/10 rounded-2.5xl p-4 flex items-center justify-between space-x-3.5 shadow-3xs">
         <div className="flex items-start space-x-3 flex-1 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-emerald-550/10 dark:bg-emerald-550/5 border border-emerald-550/20 flex items-center justify-center shrink-0 text-emerald-600 dark:text-emerald-400">
+          <div className="w-9 h-9 rounded-xl bg-emerald-550/10 dark:bg-emerald-550/5 border border-emerald-550/20 flex items-center justify-center shrink-0 text-emerald-700 dark:text-emerald-400">
             <Sparkles className="w-4.5 h-4.5 stroke-[2.2]" />
           </div>
           <div className="flex-1 min-w-0 py-0.5">
@@ -180,7 +180,7 @@ export default function NotificationSummaryCards({
             aria-label="Toggle instant alerts"
             className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer outline-none ${
               instantAlertsEnabled 
-                ? 'bg-emerald-600 border border-emerald-700/10' 
+                ? 'bg-emerald-700 border border-emerald-700/10' 
                 : 'bg-neutral-200 dark:bg-stone-800 border border-neutral-300/10 dark:border-stone-750/30'
             }`}
           >

@@ -48,14 +48,14 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
       {/* KejaFinder Logo */}
       <div className="flex items-center space-x-2.5">
         <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center shadow-2xs">
-          <MapPinHouse className="w-5.5 h-5.5 text-emerald-600 dark:text-emerald-500 stroke-[2.2]" />
+          <MapPinHouse className="w-5.5 h-5.5 text-emerald-700 dark:text-emerald-500 stroke-[2.2]" />
         </div>
         <div className="flex flex-col">
           <div className="text-xl tracking-tight leading-none font-sans font-extrabold select-none">
-            <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
+            <span className="text-emerald-700 dark:text-emerald-500">Keja</span>
             <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
           </div>
-          <span className="text-[10px] text-neutral-550 dark:text-stone-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
+          <span className="text-[10px] text-neutral-550 dark:text-stone-400 font-medium font-sans mt-0.5 tracking-wider uppercase">
             Vacancies Hub
           </span>
         </div>
@@ -85,7 +85,7 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
         >
           <Bell className="w-4.5 h-4.5 text-neutral-700 dark:text-neutral-200 stroke-[2]" />
           {displayCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-500 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-880">
+            <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-orange-700 text-white font-sans text-[8.5px] font-bold flex items-center justify-center shadow-xs border border-white dark:border-stone-880">
               {displayCount}
             </span>
           )}
@@ -106,7 +106,7 @@ export default function NotificationsHeader({ onNotificationsClick, onProfileCli
               referrerPolicy="no-referrer"
             />
           </div>
-          <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 rounded-full border border-white dark:border-stone-800" />
+          <span className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-700 rounded-full border border-white dark:border-stone-800" />
         </button>
       </div>
     </motion.header>

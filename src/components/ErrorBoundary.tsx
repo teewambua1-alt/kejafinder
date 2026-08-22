@@ -35,7 +35,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     return (
       <div className="min-h-[100dvh] w-full flex items-center justify-center bg-[#f7fee7] dark:bg-stone-950 px-6">
         <div className="max-w-[320px] w-full text-center space-y-5">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
             <AlertTriangle className="w-6 h-6" strokeWidth={2.25} />
           </div>
           <div className="space-y-1.5">
@@ -49,7 +49,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
           <button
             type="button"
             onClick={this.handleReload}
-            className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-colors"
+            className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm transition-colors"
           >
             <RotateCw className="w-4 h-4" strokeWidth={2.5} />
             Reload page

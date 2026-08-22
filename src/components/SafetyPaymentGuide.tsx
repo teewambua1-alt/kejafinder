@@ -116,7 +116,7 @@ export default function SafetyPaymentGuide({
       {/* Section Header */}
       <motion.div variants={itemVariants}>
         <div className="flex items-center space-x-2 mb-1">
-          <ShieldAlert className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <ShieldAlert className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
           <h3 className="text-xl font-black text-neutral-850 dark:text-stone-100 tracking-tight">
             Agent fees and payment safety
           </h3>
@@ -167,7 +167,7 @@ export default function SafetyPaymentGuide({
           <ul className="space-y-2.5">
             {saferItems.map((item, idx) => (
               <li key={idx} className="flex items-start text-[12px] font-semibold text-emerald-900/80 dark:text-emerald-100/80 leading-snug">
-                <span className="text-emerald-500 mr-2 shrink-0">•</span>
+                <span className="text-emerald-700 mr-2 shrink-0">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -175,7 +175,7 @@ export default function SafetyPaymentGuide({
         </div>
 
         {/* Risky block */}
-        <div className="bg-orange-50/50 dark:bg-amber-950/20 border border-orange-100/60 dark:border-orange-900/30 rounded-2xl p-4 shadow-sm">
+        <div className="bg-orange-50/50 dark:bg-orange-950/20 border border-orange-100/60 dark:border-orange-900/30 rounded-2xl p-4 shadow-sm">
           <h4 className="text-[13px] font-black text-orange-800 dark:text-orange-300 uppercase tracking-wider mb-3 flex items-center">
             <XCircle className="w-4 h-4 mr-2" />
             Risky behavior
@@ -183,7 +183,7 @@ export default function SafetyPaymentGuide({
           <ul className="space-y-2.5">
             {riskyItems.map((item, idx) => (
               <li key={idx} className="flex items-start text-[12px] font-semibold text-orange-900/80 dark:text-orange-200/80 leading-snug">
-                <span className="text-orange-500 mr-2 shrink-0">•</span>
+                <span className="text-orange-700 dark:text-orange-400 mr-2 shrink-0">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -192,9 +192,9 @@ export default function SafetyPaymentGuide({
       </motion.div>
 
       {/* Main Payment Warning Card */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-amber-950/30 border border-orange-200/60 dark:border-amber-900/50 rounded-2xl p-5 shadow-sm">
+      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/50 rounded-2xl p-5 shadow-sm">
         <div className="flex items-start space-x-3 mb-2">
-          <AlertTriangle className="w-6 h-6 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="w-6 h-6 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
           <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 leading-snug tracking-tight">
             Never send deposit before physically viewing the house and confirming the caretaker or landlord.
           </h4>
@@ -218,7 +218,7 @@ export default function SafetyPaymentGuide({
         <ul className="grid grid-cols-1 gap-2">
           {agentChecks.map((check, idx) => (
             <li key={idx} className="flex items-start text-[11px] font-semibold text-neutral-600 dark:text-stone-300">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-2 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 mr-2 shrink-0 mt-0.5" />
               <span>{check}</span>
             </li>
           ))}
@@ -235,7 +235,7 @@ export default function SafetyPaymentGuide({
           <p className="text-[11px] font-medium text-neutral-600 dark:text-stone-400 leading-snug mb-2">
             Never share your M-Pesa PIN. Keep transaction messages, receipts, and contact details if you pay after viewing.
           </p>
-          <p className="text-[11px] font-bold text-orange-600 dark:text-orange-400 leading-snug bg-orange-50/50 dark:bg-orange-900/10 inline-block px-2 py-1 rounded-md">
+          <p className="text-[11px] font-bold text-orange-700 dark:text-orange-400 leading-snug bg-orange-50/50 dark:bg-orange-900/10 inline-block px-2 py-1 rounded-md">
             KejaFinder will never ask for your M-Pesa PIN.
           </p>
         </div>
@@ -246,7 +246,7 @@ export default function SafetyPaymentGuide({
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={handleSearch}
-          className="w-full bg-emerald-600 dark:bg-emerald-500 text-white rounded-2xl py-3.5 px-4 font-black uppercase text-[12px] tracking-wider shadow-md hover:shadow-lg transition-all flex justify-center items-center"
+          className="w-full bg-emerald-700 dark:bg-emerald-700 text-white rounded-2xl py-3.5 px-4 font-black uppercase text-[12px] tracking-wider shadow-md hover:shadow-lg transition-all flex justify-center items-center"
           aria-label="View homes with clear fees"
         >
           <Search className="w-4 h-4 mr-2" />

@@ -401,12 +401,12 @@ export default function NotificationsPage({ onBackToHome, onOpenSafety }: Notifi
           >
             <div className="bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/30 dark:border-emerald-500/15 rounded-2.5xl p-3 flex items-center justify-between text-neutral-800 dark:text-stone-200 shadow-2xs">
               <div className="flex items-center space-x-2">
-                <AlertCircle className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
+                <AlertCircle className="w-4.5 h-4.5 text-emerald-700 shrink-0" />
                 <span className="text-[11px] font-bold uppercase tracking-wider">{notificationFeedback}</span>
               </div>
               <button 
                 onClick={() => setNotificationFeedback(null)}
-                className="p-1 rounded-full hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-400 select-none outline-none cursor-pointer"
+                className="p-1 rounded-full hover:bg-neutral-100 dark:hover:bg-stone-800 text-neutral-550 select-none outline-none cursor-pointer"
                 aria-label="Dismiss message"
               >
                 <X className="w-3.5 h-3.5 stroke-[2.2]" />
@@ -472,20 +472,20 @@ export default function NotificationsPage({ onBackToHome, onOpenSafety }: Notifi
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Settings className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+              <Settings className="w-4 h-4 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
               <span className="block text-[10px] font-black text-neutral-805 dark:text-stone-200 uppercase tracking-wider">
                 My Alert Subscriptions
               </span>
             </div>
             
-            <span className="text-[8px] font-black py-1 px-2.5 rounded-lg bg-emerald-50 dark:bg-stone-800 text-emerald-600 dark:text-emerald-400 border border-emerald-100/40 dark:border-stone-750 uppercase tracking-widest font-sans">
+            <span className="text-[8px] font-black py-1 px-2.5 rounded-lg bg-emerald-50 dark:bg-stone-800 text-emerald-700 dark:text-emerald-400 border border-emerald-100/40 dark:border-stone-750 uppercase tracking-widest font-sans">
               Manage Panel
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 text-[10px] font-bold text-neutral-550 dark:text-stone-400">
             <div className="flex items-center space-x-2 p-2 rounded-xl bg-neutral-50/50 dark:bg-stone-850/50 border border-neutral-150/40 dark:border-stone-800/40">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
               <span>WhatsApp Alerts Preview</span>
             </div>
             <div className="flex items-center space-x-2 p-2 rounded-xl bg-neutral-50/50 dark:bg-stone-850/50 border border-neutral-150/40 dark:border-stone-800/40">

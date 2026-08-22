@@ -195,14 +195,14 @@ export default function PostPhotoUploader({
       {/* 1. Main Photos Header & Drag-Drop Card */}
       <div className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md rounded-3xl border border-neutral-100 dark:border-neutral-800/80 p-5 shadow-sm space-y-4">
         <div className="flex items-start space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+          <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
             <Camera className="w-4.5 h-4.5 stroke-[2.2]" />
           </div>
           <div className="flex flex-col space-y-0.5">
             <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
               Add Photos
             </h3>
-            <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+            <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
               Clear photos help tenants trust your listing faster.
             </p>
           </div>
@@ -229,12 +229,12 @@ export default function PostPhotoUploader({
             onDrop={handleDrop}
             className={`w-full cursor-pointer text-left rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-center p-6 transition-all duration-300 focus:outline-hidden ${
               isDragging 
-                ? 'border-emerald-500 bg-emerald-500/5 shadow-inner' 
+                ? 'border-emerald-700 bg-emerald-500/5 shadow-inner' 
                 : 'border-emerald-500/20 dark:border-emerald-500/10 hover:border-emerald-500/40 bg-white/40 dark:bg-stone-850/40'
             }`}
           >
             <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
-              isDragging ? 'bg-emerald-500 text-white animate-bounce' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+              isDragging ? 'bg-emerald-700 text-white animate-bounce' : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
             } mb-3`}>
               <UploadCloud className="w-5.5 h-5.5 stroke-[2]" />
             </div>
@@ -242,16 +242,16 @@ export default function PostPhotoUploader({
             <h4 className="text-[12px] font-extrabold text-neutral-800 dark:text-stone-200 tracking-tight">
               Upload house photos
             </h4>
-            <p className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 max-w-[220px] mt-1.5 leading-relaxed">
+            <p className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 max-w-[220px] mt-1.5 leading-relaxed">
               Add room, outside, toilet, kitchen, and compound photos.
             </p>
-            <span className="text-[8px] font-bold text-neutral-550 dark:text-stone-600 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
+            <span className="text-[8px] font-bold text-neutral-550 dark:text-stone-400 uppercase tracking-widest mt-2 bg-neutral-100 dark:bg-stone-800 py-1 px-2.5 rounded-full select-none">
               JPG or PNG, up to 10MB each
             </span>
           </button>
         ) : (
           <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4 flex flex-col items-center text-center space-y-1">
-            <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+            <CheckCircle2 className="w-6 h-6 text-emerald-700" />
             <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400">All photos added</h4>
             <p className="text-[10px] font-medium text-emerald-700/80 dark:text-emerald-500/80 leading-relaxed max-w-[210px]">
               You have added the maximum limit of {MAX_PHOTOS} photos. Remove some if you want to swap them.
@@ -261,14 +261,14 @@ export default function PostPhotoUploader({
 
         {/* Errors & Local Notes banner alerts */}
         {error && (
-          <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl flex items-start space-x-2 text-red-650 dark:text-red-400 animate-pulse">
+          <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl flex items-start space-x-2 text-red-600 dark:text-red-400 animate-pulse">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.2] mt-0.5" />
             <span className="text-[10.5px] font-extrabold leading-tight">{error}</span>
           </div>
         )}
 
         {localNote && (
-          <div className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl flex items-start space-x-2 text-amber-750 dark:text-amber-500">
+          <div className="p-3 bg-amber-500/5 border border-amber-500/15 rounded-xl flex items-start space-x-2 text-amber-700 dark:text-amber-500">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.2] mt-0.5" />
             <span className="text-[10.5px] font-extrabold leading-tight">{localNote}</span>
           </div>
@@ -328,7 +328,7 @@ export default function PostPhotoUploader({
                     {/* Labels badge */}
                     <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
                       {index === 0 ? (
-                        <span className="flex items-center space-x-0.5 bg-emerald-600 border border-emerald-500/20 text-white px-1.5 py-0.5 rounded-md text-[8px] font-black tracking-wide uppercase shadow-3xs">
+                        <span className="flex items-center space-x-0.5 bg-emerald-700 border border-emerald-500/20 text-white px-1.5 py-0.5 rounded-md text-[8px] font-black tracking-wide uppercase shadow-3xs">
                           <Sparkles className="w-2.5 h-2.5" />
                           <span>Cover / Room</span>
                         </span>
@@ -369,14 +369,14 @@ export default function PostPhotoUploader({
                     type="button"
                     onClick={triggerFileInput}
                     aria-label="Add photo"
-                    className="aspect-square rounded-2xl border border-dashed border-neutral-200 dark:border-stone-800 bg-white/15 dark:bg-stone-800/15 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-neutral-400 hover:text-emerald-500 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all text-center focus:outline-hidden"
+                    className="aspect-square rounded-2xl border border-dashed border-neutral-200 dark:border-stone-800 bg-white/15 dark:bg-stone-800/15 flex flex-col items-center justify-center gap-1.5 cursor-pointer text-neutral-550 hover:text-emerald-800 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all text-center focus:outline-hidden"
                   >
-                    <div className="w-7.5 h-7.5 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center shadow-3xs text-neutral-400 group-hover:text-emerald-500 transition-colors">
+                    <div className="w-7.5 h-7.5 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center shadow-3xs text-neutral-550 group-hover:text-emerald-800 transition-colors">
                       <Plus className="w-4 h-4 stroke-[2.5]" />
                     </div>
                     
                     <div className="flex flex-col space-y-0.5">
-                      <span className="text-[9px] font-black uppercase text-neutral-550 dark:text-stone-500 tracking-wider select-none leading-none">
+                      <span className="text-[9px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider select-none leading-none">
                         Slot {index + 1}
                       </span>
                       <span className="text-[10px] font-extrabold text-neutral-500 dark:text-stone-400 select-none">
@@ -393,7 +393,7 @@ export default function PostPhotoUploader({
 
       {/* 4. Recommended photos checklist */}
       <div className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md rounded-3xl border border-neutral-100 dark:border-neutral-800/80 p-5 shadow-sm space-y-3.5">
-        <h4 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider">
+        <h4 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider">
           Recommended photos Checklist
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -408,13 +408,13 @@ export default function PostPhotoUploader({
                 className={`flex items-center space-x-2.5 p-2.5 rounded-xl border transition-all duration-350 select-none ${
                   isChecked 
                     ? 'bg-emerald-500/5 dark:bg-emerald-950/20 border-emerald-500/20 text-emerald-800 dark:text-emerald-300' 
-                    : 'bg-neutral-50/50 dark:bg-stone-900/10 border-neutral-100/50 dark:border-stone-850 text-neutral-400 dark:text-stone-500'
+                    : 'bg-neutral-50/50 dark:bg-stone-900/10 border-neutral-100/50 dark:border-stone-850 text-neutral-550 dark:text-stone-400'
                 }`}
               >
                 <div className={`w-4.5 h-4.5 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                   isChecked 
-                    ? 'bg-emerald-500 text-white' 
-                    : 'bg-neutral-200 dark:bg-stone-800 text-neutral-400 dark:text-stone-600'
+                    ? 'bg-emerald-700 text-white' 
+                    : 'bg-neutral-200 dark:bg-stone-800 text-neutral-550 dark:text-stone-400'
                 }`}>
                   <Check className="w-2.75 h-2.75 stroke-[3]" />
                 </div>
@@ -435,7 +435,7 @@ export default function PostPhotoUploader({
 
       {/* 6. Photo quality note / banner warning against misrepresentation */}
       <div className="flex items-start space-x-2.5 p-4 bg-orange-500/5 dark:bg-orange-950/10 rounded-2xl border border-orange-500/10 text-orange-850 dark:text-orange-400 font-sans shadow-3xs">
-        <ShieldAlert className="w-5 h-5 text-orange-500 shrink-0 stroke-[2.2] mt-0.5 animate-pulse" />
+        <ShieldAlert className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 stroke-[2.2] mt-0.5 animate-pulse" />
         <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
           Use clear, real photos. Avoid misleading images or photos from other houses. Keep listings honest. Misrepresentation leads to immediate account ban.
         </span>

@@ -53,7 +53,7 @@ export default function AppShell({
 
   return (
     <div className={`min-h-screen w-full flex items-center justify-center md:block relative overflow-hidden md:overflow-visible font-sans transition-colors duration-300 ${
-      isDark ? 'bg-stone-950 text-neutral-100 dark' : 'bg-slate-50 text-neutral-800'
+      isDark ? 'bg-surface-dark text-neutral-100 dark' : 'bg-surface-muted text-neutral-800'
     }`}>
       {/* Premium Background Blurs -- mobile phone-frame ambience only */}
       <div className={`md:hidden absolute -top-40 -right-40 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse transition-colors ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-300'}`} />
@@ -62,7 +62,7 @@ export default function AppShell({
 
       {/* Main App Container: phone-card below md, full-bleed page at md+ */}
       <div className={`w-full h-[100dvh] md:h-auto md:min-h-screen relative flex flex-col overflow-hidden md:overflow-visible border-none backdrop-blur-md md:backdrop-blur-none transition-all duration-300 shadow-none ${
-        isDark ? 'bg-stone-900/95 md:bg-stone-950' : 'bg-white/95 md:bg-slate-50'
+        isDark ? 'bg-stone-900/95 md:bg-surface-dark' : 'bg-surface/95 md:bg-surface-muted'
       }`}>
 
         {/* Subtle internal decor background gradient -- mobile only */}

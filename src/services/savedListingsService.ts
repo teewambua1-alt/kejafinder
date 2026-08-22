@@ -7,7 +7,10 @@ import type { SupabaseListingWithImages } from './listingService';
 // never go stale the way a Firestore-style snapshot could.
 const SAVED_SELECT = 'created_at, listings(*, listing_images(id, storage_path, category, position))';
 
-export async function getUserSavedListings(userId: string): Promise<SupabaseListingWithImages[] | null> {
+/** A saved listing row plus when this user saved it. */
+export type SavedListingRow = SupabaseListingWithImages & { saved_at: string };
+
+export async function getUserSavedListings(userId: string): Promise<SavedListingRow[] | null> {
   const { data, error } = await supabase
     .from('saved_listings')
     .select(SAVED_SELECT)
@@ -22,9 +25,12 @@ export async function getUserSavedListings(userId: string): Promise<SupabaseList
   // A joined listing can be null if it was deleted, or if RLS no longer
   // allows this user to see it (e.g. an owner-deleted draft) — drop those
   // rather than surfacing a broken card.
+  // saved_listings.created_at is carried through as saved_at: it was already
+  // being selected and then discarded, which is why every saved card read
+  // "Saved recently" instead of the real date.
   return data
     .filter((row): row is typeof row & { listings: SupabaseListingWithImages } => row.listings !== null)
-    .map((row) => row.listings);
+    .map((row) => ({ ...row.listings, saved_at: row.created_at }));
 }
 
 export async function saveListingForUser(userId: string, listingId: string): Promise<boolean> {

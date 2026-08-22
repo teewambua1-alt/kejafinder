@@ -1,25 +1,32 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Map as MapIcon, List, LocateFixed } from 'lucide-react';
 import Header from '../components/Header';
 import SearchTopBar from '../components/SearchTopBar';
-import SearchFilterChips from '../components/SearchFilterChips';
-import SearchHouseTypeChips from '../components/SearchHouseTypeChips';
 import ResultsSummary from '../components/ResultsSummary';
 import SearchResultsList from '../components/SearchResultsList';
-import SearchFilterSheet, { SearchFilters, defaultSearchFilters } from '../components/SearchFilterSheet';
+import SearchFilterSheet from '../components/SearchFilterSheet';
 import SaveSearchButton from '../components/SaveSearchButton';
 import { SortOption } from '../components/SortDropdown';
-import ListingCardSkeleton from '../components/ListingCardSkeleton';
+import { PropertyCardHorizontal, PropertyCardVerticalSkeleton } from '../components/property';
+import { PropertyMap } from '../components/map';
 import EmptyState from '../components/ui/EmptyState';
 import { useListings } from '../hooks/useListings';
 import { useNearbyListings } from '../hooks/useNearbyListings';
 import { useMediaQuery } from '../hooks/useMediaQuery';
-import SearchFullMap from '../components/SearchFullMap';
-import { Listing, ListingType } from '../types/listing';
+import { useListingSelection } from '../hooks/useListingSelection';
+import { useServerSearch, unionById } from '../hooks/useServerSearch';
+import { useMotion } from '../lib/motion';
+import {
+  type SearchFilters,
+  defaultSearchFilters,
+  applyFilters,
+  sortListings,
+  amountBounds,
+  activeFilterCount,
+} from '../lib/searchFilters';
 
 interface SearchResultsPageProps {
-  onBackToHome?: () => void;
   onTabChange?: (tab: string) => void;
   onSelectListing?: (id: string) => void;
   initialQuery?: string;
@@ -28,249 +35,117 @@ interface SearchResultsPageProps {
   onRefreshReady?: (refresh: () => Promise<void>) => void;
 }
 
-export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectListing, initialQuery, initialFilters, initialSort, onRefreshReady }: SearchResultsPageProps) {
+/**
+ * Search. Two visible controls above the results -- the search field and one
+ * Filters button -- where there used to be nineteen across three rows.
+ *
+ * Layout follows the device, not one compromise:
+ *   below 1280px  list first, map one tap away behind the FAB. A map is heavy
+ *                 on a low-end phone and on metered data, and it opens empty
+ *                 for any listing whose coordinates were never captured.
+ *   1280px and up persistent Airbnb-style split, results left and a live map
+ *                 right, kept in sync: tap a pin to ring and scroll its card,
+ *                 hover a card to raise its pin.
+ */
+export default function SearchResultsPage({
+  onTabChange, onSelectListing, initialQuery, initialFilters, initialSort, onRefreshReady,
+}: SearchResultsPageProps) {
   const { listings: baseListings, isLoading, refreshListings } = useListings();
+  const m = useMotion();
 
   useEffect(() => {
     onRefreshReady?.(refreshListings);
   }, [refreshListings, onRefreshReady]);
-  const [searchQuery, setSearchQuery] = useState(initialQuery || 'Syokimau');
+
+  // `?? ''`, not `|| 'Syokimau'`. The old default silently pre-filtered every
+  // result, painted a filter chip active, made the summary read "N homes found
+  // in Syokimau", prefilled the save-search label, and persisted
+  // `query: 'Syokimau'` into saved_searches. Because it used `||`, submitting
+  // an empty search from Home could not produce an unfiltered page at all.
+  const [searchQuery, setSearchQuery] = useState(initialQuery ?? '');
   const [selectedSort, setSelectedSort] = useState<SortOption>(initialSort || 'Most relevant');
   const [filters, setFilters] = useState<SearchFilters>(initialFilters || defaultSearchFilters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'list' | 'grid' | 'map'>('list');
-  // At xl+ (1280px) there's room for Airbnb-style side-by-side list+map, so
-  // the map is always visible there instead of behind the FAB toggle. Below
-  // xl (mobile+tablet), behavior is unchanged. Gated by a real media query
-  // (not just CSS visibility) so the Leaflet map only ever mounts into a
-  // container that already has real size -- mounting into a display:none
-  // box and revealing it later is a known source of broken/blank tiles.
-  const isDesktopSplit = useMediaQuery('(min-width: 1280px)');
-  const effectiveViewMode = isDesktopSplit && viewMode === 'map' ? 'list' : viewMode;
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [isMapTakeover, setIsMapTakeover] = useState(false);
 
-  // "Nearest" reuses the same geolocation-driven RPC pattern Home's Nearby
-  // Listings already uses, rather than building a second location flow.
-  const { permissionState: nearbyPermissionState, listings: nearbyListings, isLoading: isNearbyLoading, requestLocation: requestNearbyLocation } = useNearbyListings();
+  // A real media query, not CSS visibility: a Leaflet map must only mount into
+  // a container that already has size, and a mounted map in a hidden container
+  // still fetches tiles.
+  const isDesktopSplit = useMediaQuery('(min-width: 1280px)');
+
+  // "Nearest" reuses the geolocation-driven RPC Home's Nearby Listings uses,
+  // rather than building a second location flow.
+  const {
+    permissionState: nearbyPermissionState,
+    listings: nearbyListings,
+    isLoading: isNearbyLoading,
+    requestLocation: requestNearbyLocation,
+  } = useNearbyListings();
   const isNearestSort = selectedSort === 'Nearest';
 
   useEffect(() => {
-    if (isNearestSort && nearbyPermissionState === 'idle') {
-      requestNearbyLocation();
-    }
+    if (isNearestSort && nearbyPermissionState === 'idle') requestNearbyLocation();
   }, [isNearestSort, nearbyPermissionState, requestNearbyLocation]);
 
-  // The nearby_listings RPC already returns real, server-side distance
-  // ordering -- only switch the source dataset once we actually have that
-  // real ordering to show; otherwise keep browsing the full listing set.
-  const sourceListings = isNearestSort && nearbyPermissionState === 'granted' ? nearbyListings : baseListings;
+  // The RPC returns real server-side distance ordering; only switch source
+  // once we actually have it, otherwise keep browsing the full set.
+  const browseListings =
+    isNearestSort && nearbyPermissionState === 'granted' ? nearbyListings : baseListings;
 
-  // Real aggregation of already-loaded listings for the Rent slider's bounds
-  // and the estate dropdown -- never guessed constants or a curated list.
-  const rentBounds = useMemo(() => {
-    const rents = baseListings.map((l) => l.rent).filter((r) => typeof r === 'number' && r > 0);
-    if (rents.length === 0) return { min: 0, max: 30000 };
-    const min = Math.min(...rents);
-    const max = Math.max(...rents);
-    return min === max ? { min: Math.max(0, min - 1000), max: max + 1000 } : { min, max };
-  }, [baseListings]);
+  // Widens the set with rows past the 60-row browse window that match the
+  // query's tsvector. Additive, so the filter sheet's live count and the
+  // rendered results are still computed from one array by one predicate.
+  const { listings: serverMatches } = useServerSearch(searchQuery);
+  const sourceListings = useMemo(
+    () => (isNearestSort ? browseListings : unionById(browseListings, serverMatches)),
+    [browseListings, serverMatches, isNearestSort]
+  );
 
-  const estates = useMemo(() => {
-    const counts = new Map<string, number>();
-    baseListings.forEach((listing) => {
-      const name = listing.estate?.trim();
-      if (!name) return;
-      counts.set(name, (counts.get(name) || 0) + 1);
-    });
-    return Array.from(counts.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count);
-  }, [baseListings]);
+  // Bounds from the real loaded data. Nothing aggregated deposits before, so
+  // the deposit filter had no range to offer.
+  const rentBounds = useMemo(() => amountBounds(baseListings, 'rent', 30000), [baseListings]);
+  const depositBounds = useMemo(() => amountBounds(baseListings, 'deposit', 60000), [baseListings]);
 
-  const selectedHouseTypeChip = filters.houseTypes.length === 1 ? filters.houseTypes[0] : null;
+  // Memoized: this pipeline used to re-run in full on every keystroke, for
+  // every listing, with the sort re-allocating the array each time.
+  const filteredListings = useMemo(
+    () => applyFilters(sourceListings, filters, searchQuery),
+    [sourceListings, filters, searchQuery]
+  );
 
-  const handleSelectHouseTypeChip = (type: ListingType | null) => {
-    setFilters((prev) => ({ ...prev, houseTypes: type ? [type] : [] }));
-  };
+  const sortedListings = useMemo(
+    () => (isNearestSort ? filteredListings : sortListings(filteredListings, selectedSort)),
+    [filteredListings, selectedSort, isNearestSort]
+  );
 
-  const handleSelectEstate = (name: string | null) => {
-    setSearchQuery(name || '');
-  };
+  const {
+    selectedId, hoveredId, selectFromMap, clearSelection, setHovered, registerCard, selectedListing,
+  } = useListingSelection(sortedListings);
 
-  // 1. Filtering pipeline combining searchQuery and advanced filters
-  const filteredListings = sourceListings.filter((listing) => {
-    // A. House type filter (if any are selected, match one of the selection)
-    if (filters.houseTypes.length > 0) {
-      if (!filters.houseTypes.includes(listing.type)) {
-        return false;
-      }
-    }
+  const activeCount = activeFilterCount(filters);
+  const hasQueryOrFilters = searchQuery.trim().length > 0 || activeCount > 0;
 
-    // B. Rent range limits
-    if (filters.minRent !== "") {
-      if (listing.rent < filters.minRent) return false;
-    }
-    if (filters.maxRent !== "") {
-      if (listing.rent > filters.maxRent) return false;
-    }
-
-    // C. Deposit range limits
-    if (filters.minDeposit !== "") {
-      if (listing.deposit < filters.minDeposit) return false;
-    }
-    if (filters.maxDeposit !== "") {
-      if (listing.deposit > filters.maxDeposit) return false;
-    }
-
-    // D. Available now quick check
-    if (filters.availableNow && !listing.isAvailable) {
-      return false;
-    }
-
-    // E. Verified only quick check
-    if (filters.verifiedOnly) {
-      const isVerified = listing.badges.some((badge) =>
-        badge === 'Scout Verified' ||
-        badge === 'Location Checked' ||
-        badge === 'Phone Verified' ||
-        badge === 'Trusted Landlord'
-      );
-      if (!isVerified) return false;
-    }
-
-    // F. Recently updated quick check
-    if (filters.recentlyUpdatedOnly && !listing.badges.includes('Recently Updated')) {
-      return false;
-    }
-
-    // G. Amenities matching -- exact id match against the real ids stored on
-    // the listing (see PostAmenitiesGrid.tsx), not a substring guess.
-    if (filters.amenities.length > 0) {
-      const matchAllAmenities = filters.amenities.every((id) => listing.amenities.includes(id));
-      if (!matchAllAmenities) return false;
-    }
-
-    // H. Query Keyword text search (case-insensitive & trimmed)
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) {
-      return true;
-    }
-
-    const matchesTitle = listing.title.toLowerCase().includes(q);
-    const matchesLocation = listing.location.toLowerCase().includes(q);
-    const matchesTown = listing.town.toLowerCase().includes(q);
-    const matchesEstate = listing.estate.toLowerCase().includes(q);
-    const matchesLandmark = (listing.landmark || '').toLowerCase().includes(q);
-
-    // Type label custom matching logic
-    const normType = listing.type.toLowerCase();
-    const label = (listing.typeLabel || '').toLowerCase();
-    let matchesType = normType.includes(q) || label.includes(q);
-
-    if (normType === 'single_room' && (q.includes('single room') || 'single room'.includes(q))) matchesType = true;
-    if (normType === 'one_bedroom' && (q.includes('1 bedroom') || q.includes('one bedroom') || '1 bedroom'.includes(q) || 'one bedroom'.includes(q))) matchesType = true;
-    if (normType === 'two_bedroom' && (q.includes('2 bedroom') || q.includes('two bedroom') || '2 bedroom'.includes(q) || 'two bedroom'.includes(q))) matchesType = true;
-    if (normType === 'mabati' && (q.includes('mabati') || 'mabati'.includes(q))) matchesType = true;
-    if (normType === 'bedsitter' && (q.includes('bedsitter') || 'bedsitter'.includes(q))) matchesType = true;
-    if (normType === 'studio' && (q.includes('studio') || 'studio'.includes(q))) matchesType = true;
-
-    const matchesAmenities = listing.amenities.some((a) => a.toLowerCase().includes(q));
-    const matchesBadges = listing.badges.some((b) => b.toLowerCase().includes(q));
-
-    return (
-      matchesTitle ||
-      matchesLocation ||
-      matchesTown ||
-      matchesEstate ||
-      matchesLandmark ||
-      matchesType ||
-      matchesAmenities ||
-      matchesBadges
-    );
-  });
-
-  // 2. Sorting pipeline -- skipped for "Nearest": the RPC already returned
-  // filteredListings in real distance order, re-sorting here would undo that.
-  const sortedListings: Listing[] = isNearestSort ? filteredListings : [...filteredListings].sort((a, b) => {
-    switch (selectedSort) {
-      case 'Most relevant': {
-        // Featured listings prioritized
-        if (a.isFeatured && !b.isFeatured) return -1;
-        if (!a.isFeatured && b.isFeatured) return 1;
-        return 0;
-      }
-      case 'Newest': {
-        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-        return dateB - dateA;
-      }
-      case 'Cheapest': {
-        return a.rent - b.rent;
-      }
-      case 'Verified first': {
-        const aVerified = a.badges.some(badge =>
-          badge === 'Scout Verified' ||
-          badge === 'Location Checked' ||
-          badge === 'Phone Verified'
-        );
-        const bVerified = b.badges.some(badge =>
-          badge === 'Scout Verified' ||
-          badge === 'Location Checked' ||
-          badge === 'Phone Verified'
-        );
-        if (aVerified && !bVerified) return -1;
-        if (!aVerified && bVerified) return 1;
-        return 0;
-      }
-      case 'Recently updated': {
-        const aRecent = a.badges.includes('Recently Updated');
-        const bRecent = b.badges.includes('Recently Updated');
-        if (aRecent && !bRecent) return -1;
-        if (!aRecent && bRecent) return 1;
-
-        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-        return dateB - dateA;
-      }
-      case 'Most viewed': {
-        const viewsA = a.views !== undefined ? a.views : 0;
-        const viewsB = b.views !== undefined ? b.views : 0;
-        return viewsB - viewsA;
-      }
-      default:
-        return 0;
-    }
-  });
-
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchQuery('');
     setSelectedSort('Most relevant');
     setFilters(defaultSearchFilters);
-  };
+  }, []);
 
-  // Container animation configuration for Staggered appearances
-  const containerVariants: any = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  const openFilters = useCallback(() => setIsFilterSheetOpen(true), []);
 
-  const itemVariants: any = {
-    hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15 } },
-  };
-
-  // "Nearest" sort needs its own honest status states (requesting/denied/
-  // unsupported/empty) instead of the normal results list, reusing the exact
-  // same copy and EmptyState pattern Home's NearbyListings.tsx established.
+  /**
+   * "Nearest" has its own honest status states -- requesting / denied /
+   * unsupported -- reusing the copy and EmptyState pattern established by
+   * Home's NearbyListings.
+   */
   const renderResults = (vm: 'list' | 'grid') => {
     if (!isNearestSort && isLoading) {
       return (
         <div className={vm === 'grid' ? 'grid grid-cols-2 gap-3' : 'flex flex-col gap-4'}>
-          {Array.from({ length: vm === 'grid' ? 4 : 3 }).map((_, i) => <ListingCardSkeleton key={i} />)}
+          {Array.from({ length: vm === 'grid' ? 4 : 3 }).map((_, i) => (
+            <PropertyCardVerticalSkeleton key={i} />
+          ))}
         </div>
       );
     }
@@ -297,7 +172,7 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
       if (nearbyPermissionState === 'requesting' || (nearbyPermissionState === 'granted' && isNearbyLoading)) {
         return (
           <div className="flex flex-col gap-4">
-            {Array.from({ length: 3 }).map((_, i) => <ListingCardSkeleton key={i} />)}
+            {Array.from({ length: 3 }).map((_, i) => <PropertyCardVerticalSkeleton key={i} />)}
           </div>
         );
       }
@@ -309,172 +184,186 @@ export default function SearchResultsPage({ onBackToHome, onTabChange, onSelectL
         onClearSearch={handleClearSearch}
         onSelectListing={onSelectListing}
         viewMode={vm}
+        selectedId={selectedId}
+        onHoverListing={isDesktopSplit ? setHovered : undefined}
+        registerCard={registerCard}
+        hasQueryOrFilters={hasQueryOrFilters}
       />
     );
   };
 
+  const controls = (
+    <>
+      <motion.div variants={m.fadeUp} className="w-full">
+        <SearchTopBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onOpenFilters={openFilters}
+          activeFilterCount={activeCount}
+        />
+      </motion.div>
+      <motion.div variants={m.fadeUp} className="w-full">
+        <ResultsSummary
+          count={sortedListings.length}
+          searchQuery={searchQuery}
+          selectedSort={selectedSort}
+          onSortChange={setSelectedSort}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          rightSlot={
+            <SaveSearchButton
+              query={searchQuery}
+              filters={filters}
+              sort={selectedSort}
+              onRequireAuth={() => onTabChange?.('profile')}
+            />
+          }
+        />
+      </motion.div>
+    </>
+  );
+
   return (
     <motion.div
-      variants={containerVariants}
+      variants={m.stagger(0.06)}
       initial="hidden"
       animate="show"
       className="flex-1 flex flex-col pt-1 space-y-5"
     >
-      {/* Real Shared Header Component -- hidden at md+, DesktopNavbar covers that role there */}
+      {/* DesktopNavbar covers this role at md+. */}
       <div className="md:hidden">
-        <Header onNotificationsClick={() => onTabChange?.('notifications')} />
+        <Header
+          onNotificationsClick={() => onTabChange?.('notifications')}
+          onProfileClick={() => onTabChange?.('profile')}
+        />
       </div>
 
       {isDesktopSplit ? (
-        /* Desktop (xl+): Airbnb-style side-by-side list + sticky map, no FAB needed */
         <div className="flex-1 flex gap-6 min-h-0 items-start">
           <div className="flex-1 min-w-0 flex flex-col space-y-5">
-            <motion.div variants={itemVariants} className="w-full">
-              <SearchTopBar
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onOpenFilters={() => setIsFilterSheetOpen(true)}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants} className="w-full">
-              <SearchFilterChips
-                searchQuery={searchQuery}
-                filters={filters}
-                onOpenFilters={() => setIsFilterSheetOpen(true)}
-                estates={estates}
-                onSelectEstate={handleSelectEstate}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants} className="w-full">
-              <SearchHouseTypeChips selectedType={selectedHouseTypeChip} onSelectType={handleSelectHouseTypeChip} />
-            </motion.div>
-            <motion.div variants={itemVariants} className="w-full">
-              <ResultsSummary
-                count={sortedListings.length}
-                searchQuery={searchQuery}
-                selectedSort={selectedSort}
-                onSortChange={setSelectedSort}
-                viewMode={effectiveViewMode}
-                onViewModeChange={setViewMode as any}
-                rightSlot={<SaveSearchButton query={searchQuery} filters={filters} sort={selectedSort} onRequireAuth={() => onTabChange?.('profile')} />}
-              />
-            </motion.div>
-            <motion.div variants={itemVariants} className="w-full">
-              {renderResults(effectiveViewMode === 'map' ? 'list' : effectiveViewMode)}
+            {controls}
+            <motion.div variants={m.fadeUp} className="w-full">
+              {renderResults(viewMode)}
             </motion.div>
           </div>
-          <div className="w-[420px] shrink-0 sticky top-6 h-[calc(100vh-7rem)]">
-            <SearchFullMap listings={sortedListings} onSelectListing={onSelectListing} variant="panel" />
+          {/* The caller owns the height; PropertyMap is always h-full. */}
+          <div className="w-[420px] shrink-0 sticky top-6 h-[calc(100svh-var(--kf-navbar-h)-var(--kf-page-pad-y)-2rem)] rounded-2xl overflow-hidden border border-neutral-100 dark:border-stone-800">
+            <PropertyMap
+              listings={sortedListings}
+              selectedId={selectedId}
+              hoveredId={hoveredId}
+              onSelect={selectFromMap}
+              onHover={setHovered}
+            />
           </div>
         </div>
-      ) : viewMode === 'map' ? (
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex-1 relative"
-          >
-            <SearchFullMap listings={sortedListings} onSelectListing={onSelectListing} />
-          </motion.div>
-        </AnimatePresence>
       ) : (
         <>
-          {/* Real Controlled Search top bar */}
-          <motion.div variants={itemVariants} className="w-full">
-            <SearchTopBar
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              onOpenFilters={() => setIsFilterSheetOpen(true)}
-            />
-          </motion.div>
-
-          {/* 2. Filter Chips Row */}
-          <motion.div variants={itemVariants} className="w-full">
-            <SearchFilterChips
-              searchQuery={searchQuery}
-              filters={filters}
-              onOpenFilters={() => setIsFilterSheetOpen(true)}
-              estates={estates}
-              onSelectEstate={handleSelectEstate}
-            />
-          </motion.div>
-
-          {/* 3. House Type Chips Row */}
-          <motion.div variants={itemVariants} className="w-full">
-            <SearchHouseTypeChips selectedType={selectedHouseTypeChip} onSelectType={handleSelectHouseTypeChip} />
-          </motion.div>
-
-          {/* 4. Map Preview -- real listings on a real map, tap to expand */}
-          <motion.div variants={itemVariants} className="w-full">
-            <button
-              type="button"
-              onClick={() => setViewMode('map')}
-              aria-label="Open full map view"
-              className="relative w-full h-40 rounded-2xl overflow-hidden border border-neutral-100 dark:border-neutral-800/80 shadow-xs cursor-pointer text-left"
-            >
-              <div className="absolute inset-0 pointer-events-none">
-                <SearchFullMap listings={sortedListings} variant="panel" scrollWheelZoom={false} />
-              </div>
-              <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 dark:bg-stone-900/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-xs border border-neutral-150/50 dark:border-neutral-800/60 flex items-center space-x-1.5">
-                <MapIcon className="w-3.5 h-3.5 text-neutral-700 dark:text-stone-300" />
-                <span className="text-[10px] font-black text-neutral-700 dark:text-stone-300 uppercase tracking-wider">Expand map</span>
-              </div>
-            </button>
-          </motion.div>
-
-          {/* 5. Results Summary Row */}
-          <motion.div variants={itemVariants} className="w-full">
-            <ResultsSummary
-              count={sortedListings.length}
-              searchQuery={searchQuery}
-              selectedSort={selectedSort}
-              onSortChange={setSelectedSort}
-              viewMode={viewMode}
-              onViewModeChange={setViewMode as any}
-              rightSlot={<SaveSearchButton query={searchQuery} filters={filters} sort={selectedSort} onRequireAuth={() => onTabChange?.('profile')} />}
-            />
-          </motion.div>
-
-          {/* 6. Listing Results Card Area */}
-          <motion.div variants={itemVariants} className="w-full">
+          {controls}
+          <motion.div variants={m.fadeUp} className="w-full">
             {renderResults(viewMode)}
           </motion.div>
         </>
       )}
 
-      {/* Floating Action Button for Map/List Toggle -- mobile/tablet only, desktop split shows both already */}
-      {!isDesktopSplit && (
+      {/* Mobile/tablet map takeover.
+        *
+        * `inset-0`, not top/bottom arithmetic. AppShell's main container carries
+        * `backdrop-blur-md`, and backdrop-filter makes an element the containing
+        * block for every `position: fixed` descendant -- so `top: navbar-h;
+        * bottom: bottomnav-h` resolved against AppShell's box rather than the
+        * viewport and left a 20px seam at the bottom through which the results
+        * list showed. `inset-0` cannot be wrong about a box it fills entirely.
+        * (This is the same class of bug as the old inline `top:64px;
+        * bottom:64px`, which double-counted for a different reason.)
+        *
+        * Full-bleed means it covers BottomNav, so the exit control lives inside
+        * the takeover rather than outside it -- one way out, where the thumb is.
+        *
+        * The old version instead rendered a second live Leaflet map inline as a
+        * preview wrapped in a <button>: pointer-events-none blocked its clicks
+        * but not tab focus, so the zoom anchors, the attribution link and one
+        * marker per listing all became tab stops inside a button. It also
+        * mounted a whole second map on a page whose users are on metered data. */}
+      <AnimatePresence>
+        {!isDesktopSplit && isMapTakeover && (
+          <motion.div
+            key="map-takeover"
+            initial={m.reduce ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={m.reduce ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+            transition={{ duration: m.duration.fast }}
+            className="fixed inset-0 z-[var(--z-overlay)]"
+          >
+            <PropertyMap
+              listings={sortedListings}
+              selectedId={selectedId}
+              onSelect={selectFromMap}
+              /* Clearance above the docked card (267px) plus the List button
+               * below it, so both the coverage notice and the selected pin stay
+               * visible. MapViewController clamps this for the pan itself. */
+              bottomInset={selectedListing ? 360 : 88}
+            />
+
+            <motion.button
+              type="button"
+              whileTap={m.tap}
+              onClick={() => { setIsMapTakeover(false); clearSelection(); }}
+              className="absolute left-4 z-[var(--z-map-chrome)] flex items-center gap-2 rounded-full border border-transparent bg-emerald-700 px-5 py-3.5 text-white shadow-lg transition-colors hover:bg-emerald-800 outline-none cursor-pointer bottom-[max(1rem,env(safe-area-inset-bottom))]"
+            >
+              <List className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
+              <span className="text-sm font-bold tracking-wide">List</span>
+            </motion.button>
+
+            {/* One selection model, two renderings: this is the mobile half.
+              * The old map put a clickable div inside a Leaflet Popup -- a
+              * second interaction path no keyboard user would find. */}
+            <AnimatePresence>
+              {selectedListing && (
+                <motion.div
+                  initial={m.reduce ? { opacity: 0 } : { y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={m.reduce ? { opacity: 0 } : { y: 24, opacity: 0 }}
+                  transition={m.spring.settle}
+                  className="absolute inset-x-3 z-[var(--z-map-chrome)] bottom-[calc(max(1rem,env(safe-area-inset-bottom))+3.75rem)]"
+                >
+                  <PropertyCardHorizontal
+                    listing={selectedListing}
+                    onSelect={onSelectListing}
+                    className="shadow-lg"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom-LEFT: AIChatbot's launcher already owns the bottom-right corner
+        * (bottom-28 right-6), and at 390px the two overlapped by 60px -- the
+        * chat bubble sat on top of this button's label. */}
+      {!isDesktopSplit && !isMapTakeover && (
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
-          className="absolute bottom-24 md:bottom-6 right-6 z-50 bg-neutral-900 dark:bg-emerald-600 text-white rounded-full px-5 py-3.5 flex items-center space-x-2 shadow-lg border border-neutral-800 dark:border-emerald-500"
+          type="button"
+          whileTap={m.tap}
+          onClick={() => setIsMapTakeover(true)}
+          className="fixed bottom-24 md:bottom-6 left-5 z-[var(--z-overlay)] flex items-center gap-2 rounded-full border border-transparent bg-emerald-700 px-5 py-3.5 text-white shadow-lg transition-colors hover:bg-emerald-800 outline-none cursor-pointer"
         >
-          {viewMode === 'map' ? (
-            <>
-              <List className="w-5 h-5" />
-              <span className="font-bold tracking-wide text-sm">List View</span>
-            </>
-          ) : (
-            <>
-              <MapIcon className="w-5 h-5" />
-              <span className="font-bold tracking-wide text-sm">Map View</span>
-            </>
-          )}
+          <MapIcon className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
+          <span className="text-sm font-bold tracking-wide">Map</span>
         </motion.button>
       )}
 
-      {/* 7. Advanced Filters Drawer Bottom Sheet Modal */}
       <SearchFilterSheet
         isOpen={isFilterSheetOpen}
         onClose={() => setIsFilterSheetOpen(false)}
         filters={filters}
         onApply={setFilters}
-        onClear={() => setFilters(defaultSearchFilters)}
         rentBounds={rentBounds}
+        depositBounds={depositBounds}
+        listings={sourceListings}
+        query={searchQuery}
       />
-
     </motion.div>
   );
 }

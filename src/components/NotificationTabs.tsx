@@ -59,7 +59,7 @@ export default function NotificationTabs({ activeTab, onChange }: NotificationTa
             aria-label={tab.ariaLabel}
             className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 py-2.5 px-1 rounded-2xl text-[11px] font-black uppercase tracking-wider transition-all duration-200 cursor-pointer outline-none ${
               isActive
-                ? 'bg-emerald-600 text-white shadow-2xs'
+                ? 'bg-emerald-700 text-white shadow-2xs'
                 : 'text-neutral-550 dark:text-stone-300 hover:bg-neutral-50 dark:hover:bg-stone-850/60'
             }`}
           >

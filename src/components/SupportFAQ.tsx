@@ -56,7 +56,7 @@ export default function SupportFAQ() {
   return (
     <motion.div variants={itemVariants} className="w-full space-y-4">
       <div className="px-1 text-center sm:text-left mb-2 flex items-center justify-center sm:justify-start space-x-2">
-        <HelpCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <HelpCircle className="w-5 h-5 text-emerald-700 dark:text-emerald-400 shrink-0" />
         <div>
           <h3 className="text-[16px] font-black text-neutral-800 dark:text-stone-100 tracking-tight">
             Support FAQ
@@ -83,9 +83,9 @@ export default function SupportFAQ() {
                   {faq.question}
                 </span>
                 {isOpen ? (
-                  <ChevronUp className="w-4 h-4 text-emerald-600 dark:text-emerald-500 shrink-0" />
+                  <ChevronUp className="w-4 h-4 text-emerald-700 dark:text-emerald-500 shrink-0" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-neutral-400 dark:text-stone-500 shrink-0" />
+                  <ChevronDown className="w-4 h-4 text-neutral-550 dark:text-stone-400 shrink-0" />
                 )}
               </button>
               <AnimatePresence initial={false}>

@@ -26,7 +26,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
       title: "Tenants",
       desc: "People searching for vacant rooms and houses near work, school, road, stage, or town.",
       icon: Search,
-      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400",
+      iconBg: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400",
       needs: [
         "Find homes fast",
         "Compare rent & deposit",
@@ -144,7 +144,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
     >
       {/* 1. Section Header Title Area */}
       <motion.div variants={itemVariants} className="space-y-1.5 border-t border-neutral-200/40 dark:border-stone-800/40 pt-6">
-        <h3 className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+        <h3 className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">
           Who We Serve
         </h3>
         <h2 className="text-lg font-black text-neutral-900 dark:text-stone-100 uppercase tracking-tight">
@@ -185,12 +185,12 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
                     <h4 className="text-[12px] font-black text-neutral-850 dark:text-stone-100 uppercase tracking-tight flex items-center space-x-1.5">
                       <span>{group.title}</span>
                       {group.isSubtle && (
-                        <span className="text-[8px] font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-500 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
+                        <span className="text-[8px] font-black uppercase bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 px-1.5 py-0.5 rounded-md border border-neutral-200/40 dark:border-stone-800/30 font-mono tracking-widest scale-90">
                           MVP Roles
                         </span>
                       )}
                     </h4>
-                    <p className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-none mt-0.5">
+                    <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-none mt-0.5">
                       {group.needs.length} Core Needs
                     </p>
                   </div>
@@ -203,7 +203,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
 
               {/* Needs List */}
               <div className="space-y-2 border-t border-neutral-100 dark:border-stone-850/50 pt-3">
-                <span className="text-[8px] font-black text-neutral-400 dark:text-stone-550 uppercase tracking-widest block">
+                <span className="text-[8px] font-black text-neutral-550 dark:text-stone-550 uppercase tracking-widest block">
                   Key Requirements:
                 </span>
                 <div className="flex flex-wrap gap-1" role="list">
@@ -229,7 +229,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
         className="bg-emerald-500/[0.03] dark:bg-emerald-500/[0.01s] border border-emerald-500/15 dark:border-emerald-950/15 rounded-3xl p-5 flex items-start space-x-4 shadow-4xs"
       >
         <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/15 flex items-center justify-center shrink-0">
-          <Users className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+          <Users className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
         </div>
         <div className="space-y-1">
           <h4 className="text-[11.5px] font-black text-neutral-850 dark:text-stone-105 uppercase tracking-wide">
@@ -257,7 +257,7 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleSearchAction}
-          className="flex-1 h-11 bg-emerald-650 hover:bg-emerald-600 text-white font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Find a room"
         >
           <Search className="w-4 h-4 stroke-[2.2]" />
@@ -267,10 +267,10 @@ export default function AboutWhoWeServe({ onGoSearch, onGoPost, onShowFeedback }
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handlePostAction}
-          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Post a vacancy"
         >
-          <PlusCircle className="w-4 h-4 stroke-[2.2] text-emerald-600 dark:text-emerald-400" />
+          <PlusCircle className="w-4 h-4 stroke-[2.2] text-emerald-700 dark:text-emerald-400" />
           <span>Post a vacancy</span>
         </motion.button>
       </motion.div>

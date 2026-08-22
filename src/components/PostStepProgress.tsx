@@ -34,7 +34,7 @@ export default function PostStepProgress({ currentStep }: PostStepProgressProps)
               width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` 
             }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="h-full bg-emerald-500 rounded-full"
+            className="h-full bg-emerald-700 rounded-full"
           />
         </div>
 
@@ -50,10 +50,10 @@ export default function PostStepProgress({ currentStep }: PostStepProgressProps)
               <div 
                 className={`relative w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
                   isCompleted
-                    ? 'bg-emerald-500 border-emerald-500 dark:border-emerald-600 text-white shadow-xs'
+                    ? 'bg-emerald-700 border-emerald-700 dark:border-emerald-600 text-white shadow-xs'
                     : isActive
-                      ? 'bg-emerald-500 border-emerald-500 dark:border-emerald-600 text-white shadow-md shadow-emerald-500/20'
-                      : 'bg-white dark:bg-stone-850 border-neutral-200 dark:border-stone-800 text-neutral-400 dark:text-stone-500'
+                      ? 'bg-emerald-700 border-emerald-700 dark:border-emerald-600 text-white shadow-md shadow-emerald-500/20'
+                      : 'bg-white dark:bg-stone-850 border-neutral-200 dark:border-stone-800 text-neutral-550 dark:text-stone-400'
                 }`}
               >
                 {/* Visual marker inside node */}
@@ -71,7 +71,7 @@ export default function PostStepProgress({ currentStep }: PostStepProgressProps)
                 className={`text-[10px] sm:text-xs font-bold tracking-tight text-center transition-colors duration-300 ${
                   isCompleted || isActive
                     ? 'text-emerald-700 dark:text-emerald-400 font-extrabold'
-                    : 'text-neutral-400 dark:text-stone-500 font-semibold'
+                    : 'text-neutral-550 dark:text-stone-400 font-semibold'
                 }`}
               >
                 {stepItem.label}

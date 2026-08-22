@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { PropertyCardVerticalSkeleton } from '../components/property';
 import { motion } from 'motion/react';
 import { 
   BellRing,
@@ -14,19 +15,19 @@ import {
 import Header from '../components/Header';
 import SavedSearchBar from '../components/SavedSearchBar';
 import SavedFilterChips from '../components/SavedFilterChips';
+import { applySavedFilter, type SavedFilterId } from '../lib/savedFilters';
 import SavedSortControl from '../components/SavedSortControl';
 import SavedHomesList from '../components/SavedHomesList';
 import SavedEmptyState from '../components/SavedEmptyState';
 import SavedSuggestions from '../components/SavedSuggestions';
 import SavedHelperBanner from '../components/SavedHelperBanner';
-import SavedCollections from '../components/SavedCollections';
 import SavedCompareBar from '../components/SavedCompareBar';
 import SavedCompareSheet from '../components/SavedCompareSheet';
 import SavedViewToggle from '../components/SavedViewToggle';
 import SavedMapView from '../components/SavedMapView';
 import SavedUpdates from '../components/SavedUpdates';
 import SavedSearchesSection from '../components/SavedSearchesSection';
-import ListingCardSkeleton from '../components/ListingCardSkeleton';
+
 import { initialSavedUpdates } from '../data/savedUpdates';
 import { Listing } from '../types/listing';
 import { useSavedListings } from '../hooks/useSavedListings';
@@ -51,9 +52,8 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
   }, [refreshSavedListings, onRefreshReady]);
 
   const [savedSearchQuery, setSavedSearchQuery] = useState('');
-  const [activeSavedFilter, setActiveSavedFilter] = useState('all');
+  const [activeSavedFilter, setActiveSavedFilter] = useState<SavedFilterId>('all');
   const [savedSort, setSavedSort] = useState('Recently saved');
-  const [activeCollection, setActiveCollection] = useState<string | null>(null);
   
   // View toggle selection: 'list' or 'map'
   const [savedView, setSavedView] = useState<'list' | 'map'>('list');
@@ -127,47 +127,9 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
     return fieldsToSearch.some((field) => field.toLowerCase().includes(query));
   });
 
-  // 2. Filter by Category Filter Chips
-  if (activeSavedFilter !== 'all') {
-    if (activeSavedFilter === 'bedsitter') {
-      filtered = filtered.filter((item) => item.type === 'bedsitter');
-    } else if (activeSavedFilter === 'one_bedroom') {
-      filtered = filtered.filter((item) => item.type === 'one_bedroom');
-    } else if (activeSavedFilter === 'verified') {
-      filtered = filtered.filter((item) => 
-        item.badges.some((tag) => tag.toLowerCase().includes('verified') || tag.toLowerCase().includes('checked'))
-      );
-    } else if (activeSavedFilter === 'recently_saved') {
-      // Just keep them all, sorting handles order
-    }
-  }
-
-  // 3. Filter by Active Saved Collections
-  if (activeCollection) {
-    if (activeCollection === 'budget_picks') {
-      filtered = filtered.filter((item) => item.rent <= 10000);
-    } else if (activeCollection === 'near_transport') {
-      filtered = filtered.filter((item) => {
-        const loc = (item.location || '').toLowerCase();
-        const dist = (item.distanceFromRoad || '').toLowerCase();
-        const title = (item.title || '').toLowerCase();
-        return loc.includes('road') || loc.includes('stage') || loc.includes('station') || loc.includes('expressway') ||
-               dist.includes('road') || dist.includes('stage') || dist.includes('walk') || dist.includes('station') ||
-               title.includes('stage') || title.includes('station');
-      });
-    } else if (activeCollection === 'verified_homes') {
-      filtered = filtered.filter((item) => 
-        (item.badges || []).some((badge) => {
-          const b = badge.toLowerCase();
-          return b.includes('verified') || b.includes('checked');
-        })
-      );
-    } else if (activeCollection === 'move_this_month') {
-      filtered = filtered.filter((item) => 
-        (item.badges || []).some((badge) => badge.toLowerCase().includes('updated'))
-      );
-    }
-  }
+  // 2. One filter, one predicate, shared with the chips so the counts on them
+  // are the counts you actually get. See lib/savedFilters.
+  filtered = applySavedFilter(filtered, activeSavedFilter);
 
   // 4. Sort logic
   const sorted = [...filtered].sort((a, b) => {
@@ -199,7 +161,6 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
     setSavedSearchQuery('');
     setActiveSavedFilter('all');
     setSavedSort('Recently saved');
-    setActiveCollection(null);
   };
 
   const handleMarkRead = (id: string) => {
@@ -230,7 +191,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         
         <div className="flex flex-col items-center justify-center pt-24 space-y-6 text-center px-4">
           <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-            <UserCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            <UserCircle className="w-8 h-8 text-emerald-700 dark:text-emerald-400" />
           </div>
           <div className="space-y-2">
             <h1 className="text-2xl font-black text-neutral-800 dark:text-neutral-50 tracking-tight">
@@ -244,7 +205,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => onTabChange?.('profile')}
-              className="w-full h-12 bg-emerald-600 dark:bg-emerald-500 rounded-2xl flex items-center justify-center text-white text-[13px] font-bold uppercase tracking-wider shadow-md hover:bg-emerald-700 transition-colors"
+              className="w-full h-12 bg-emerald-700 dark:bg-emerald-700 rounded-2xl flex items-center justify-center text-white text-[13px] font-bold uppercase tracking-wider shadow-md hover:bg-emerald-800 transition-colors"
             >
               Log in or create account
             </motion.button>
@@ -283,7 +244,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         </p>
         
         {source === 'supabase' && (
-          <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+          <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 mt-1">
             Synced to your account
           </p>
         )}
@@ -313,9 +274,10 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
       {/* Real Filter and Sort Controls Block - Only show if listings exist */}
       {savedListings.length > 0 && !showSavedUpdates && (
         <motion.div variants={itemVariants} className="w-full space-y-3.5">
-          <SavedFilterChips 
-            activeFilter={activeSavedFilter} 
-            onFilterChange={setActiveSavedFilter} 
+          <SavedFilterChips
+            activeFilter={activeSavedFilter}
+            onFilterChange={setActiveSavedFilter}
+            listings={savedListings}
           />
           <div className="flex items-center justify-between px-1 gap-4 flex-wrap">
             <div className="flex items-center space-x-2.5 flex-wrap gap-y-2">
@@ -335,7 +297,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
                   }}
                   className={`h-7 px-3 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center space-x-1.5 border cursor-pointer select-none transition-colors ${
                     isCompareMode
-                      ? 'bg-emerald-600 border-emerald-600 text-white shadow-3xs hover:bg-emerald-500'
+                      ? 'bg-emerald-700 border-emerald-700 text-white shadow-3xs hover:bg-emerald-800'
                       : 'bg-white hover:bg-neutral-50 border-emerald-500/20 text-emerald-700 dark:bg-stone-900 dark:hover:bg-stone-850 dark:text-emerald-400'
                   }`}
                 >
@@ -349,21 +311,10 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
                 onViewChange={setSavedView} 
               />
             </div>
-            
-            <span className="text-[10px] font-extrabold text-neutral-400 dark:text-stone-500 select-none uppercase tracking-wider font-mono">
-              Shortlist ({sorted.length})
-            </span>
-          </div>
-        </motion.div>
-      )}
 
-      {/* Saved Collections section - Only show if saved listings exist */}
-      {savedListings.length > 0 && !showSavedUpdates && (
-        <motion.div variants={itemVariants} className="w-full">
-          <SavedCollections 
-            activeCollection={activeCollection}
-            onCollectionChange={setActiveCollection}
-          />
+            {/* The "Shortlist (N)" label that used to sit here said the same
+              * thing as the "All N" chip two rows above it. */}
+          </div>
         </motion.div>
       )}
 
@@ -373,13 +324,13 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={() => setShowSavedUpdates(true)}
-            className="w-full bg-white/95 dark:bg-stone-900/90 backdrop-blur-md border border-neutral-200/50 dark:border-stone-800/40 rounded-2.5xl p-3.5 shadow-3xs flex items-center justify-between text-left cursor-pointer transition-all"
+            className="w-full bg-white dark:bg-stone-900 border border-neutral-150/70 dark:border-stone-800/40 rounded-2.5xl p-3.5 shadow-3xs flex items-center justify-between text-left cursor-pointer transition-all"
           >
             <div className="flex items-center space-x-3 min-w-0">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 relative">
+              <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0 relative">
                 <Bell className="w-4.5 h-4.5 stroke-[2.2]" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 text-[9px] font-black text-white rounded-full flex items-center justify-center border-2 border-white dark:border-stone-900 animate-pulse">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-700 text-[9px] font-black text-white rounded-full flex items-center justify-center border-2 border-white dark:border-stone-900 animate-pulse">
                     {unreadCount}
                   </span>
                 )}
@@ -396,7 +347,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
               </div>
             </div>
             
-            <div className="flex items-center space-x-1 shrink-0 text-emerald-600 dark:text-emerald-400 text-xs font-black uppercase tracking-wider pl-3.5 border-l border-neutral-200 dark:border-stone-800">
+            <div className="flex items-center space-x-1 shrink-0 text-emerald-700 dark:text-emerald-400 text-xs font-black uppercase tracking-wider pl-3.5 border-l border-neutral-200 dark:border-stone-800">
               <span>View</span>
               <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </div>
@@ -417,7 +368,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         ) : isLoading ? (
           <div className="flex flex-col gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <ListingCardSkeleton key={i} />
+              <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
             ))}
           </div>
         ) : savedListings.length === 0 ? (
@@ -436,7 +387,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           <div className="space-y-6 animate-scaleIn">
             {/* 3. Compact No-results state */}
             <div className="bg-white/60 dark:bg-stone-900/40 backdrop-blur-md rounded-2.5xl border border-dashed border-neutral-250 dark:border-neutral-800 p-6 py-8 shadow-3xs text-center flex flex-col items-center justify-center space-y-3">
-              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-400 dark:text-stone-500">
+              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-550 dark:text-stone-400">
                 <Search className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div className="space-y-1">
@@ -465,9 +416,10 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
           <div className="space-y-5">
             {/* 5. Render list stack of Saved listing cards or interactive mock map */}
             {savedView === 'map' ? (
-              <SavedMapView 
-                listings={sorted} 
+              <SavedMapView
+                listings={sorted}
                 onUnsave={handleUnsave}
+                onSelectListing={onSelectListing}
               />
             ) : (
               <SavedHomesList 

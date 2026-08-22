@@ -28,7 +28,7 @@ export default function LandlordDashboardHeader({ onBack }: LandlordDashboardHea
           Dashboard
         </h1>
 
-        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400" aria-hidden="true">
+        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400" aria-hidden="true">
           <Building2 className="w-5 h-5 stroke-[2.2]" />
         </div>
       </div>

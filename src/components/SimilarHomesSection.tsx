@@ -1,11 +1,15 @@
 import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
-import { KejaListing } from '../types/listings';
-import SimilarHomeCard from './SimilarHomeCard';
+import type { Listing } from '../types/listing';
+import { PropertyCardVertical } from './property';
+import { ArrowRight } from 'lucide-react';
 
 interface SimilarHomesSectionProps {
-  currentListing: KejaListing;
-  allListings: KejaListing[];
+  // Takes Listing rather than KejaListing: the caller already has real
+  // Listing rows from useListings(), and remapping them into the detail
+  // page's shape only to render a card was an extra hop that cost a cast.
+  currentListing: Listing;
+  allListings: Listing[];
   onOpenListingDetails: (id: string) => void;
   onNavigateSearch?: () => void;
   setListingFeedback?: (message: string) => void;
@@ -30,7 +34,7 @@ export default function SimilarHomesSection({
         if (listing.location === currentListing.location) score += 3;
         
         // House Type Match (+2)
-        if (listing.houseType === currentListing.houseType) score += 2;
+        if (listing.type === currentListing.type) score += 2;
         
         // Rent diff within 5000 (+1)
         if (listing.rent && currentListing.rent) {
@@ -38,7 +42,7 @@ export default function SimilarHomesSection({
         }
 
         // Trust badges (+1)
-        if (listing.trustBadges?.includes('Location Checked') || listing.trustBadges?.includes('Scout Verified')) {
+        if (listing.badges?.includes('Location Checked') || listing.badges?.includes('Scout Verified')) {
           score += 1;
         }
 
@@ -81,7 +85,7 @@ export default function SimilarHomesSection({
         </div>
         <button 
           onClick={handleSeeMore}
-          className="text-[11px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full"
+          className="text-[11px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full"
         >
           See more
         </button>
@@ -91,9 +95,16 @@ export default function SimilarHomesSection({
         <motion.div variants={rowVariants} className="flex overflow-x-auto gap-4 pb-4 -mx-1 px-1 snap-x scrollbar-hide">
           {similarHomes.map((listing) => (
             <div key={listing.id} className="snap-start pt-1">
-              <SimilarHomeCard
+              <PropertyCardVertical
                 listing={listing}
-                onView={() => onOpenListingDetails(listing.id)}
+                onSelect={() => onOpenListingDetails(listing.id)}
+                className="w-[260px]"
+                actions={
+                  <span className="flex items-center justify-center gap-1.5 h-10 rounded-lg bg-neutral-900 dark:bg-stone-100 text-white dark:text-stone-900 text-[11px] font-black uppercase tracking-wider">
+                    View home
+                    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" aria-hidden="true" />
+                  </span>
+                }
               />
             </div>
           ))}

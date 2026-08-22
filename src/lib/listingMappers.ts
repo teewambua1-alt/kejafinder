@@ -1,12 +1,11 @@
 import { supabase } from './supabase/client';
 import type { SupabaseListingWithImages } from '../services/listingService';
 import type { Database } from '../types/database';
-import { Listing, ListingType, getListingTypeLabel } from '../types/listing';
+import { Listing, ListingType, getListingTypeLabel, LISTING_TYPES } from '../types/listing';
 import { PostListingDraft } from '../types/postListing';
 
 type ListingInsert = Database['public']['Tables']['listings']['Insert'];
 
-const VALID_LISTING_TYPES: ListingType[] = ['single_room', 'bedsitter', 'studio', 'one_bedroom', 'two_bedroom', 'mabati'];
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
 
@@ -69,9 +68,9 @@ export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Lis
   const sortedImages = [...(row.listing_images || [])].sort((a, b) => a.position - b.position);
   const imageUrls = sortedImages.map((img) => publicImageUrl(img.storage_path));
 
-  const type: ListingType = (VALID_LISTING_TYPES as string[]).includes(row.house_type)
+  const type: ListingType = (LISTING_TYPES as string[]).includes(row.house_type)
     ? (row.house_type as ListingType)
-    : ('other' as ListingType);
+    : 'other';
 
   // Canonical badge vocabulary already established elsewhere (SafetyTrustBadges.tsx,
   // SearchResultCard.tsx, SimilarHomeCard.tsx, data/listings.ts sample data) --
@@ -136,6 +135,10 @@ export function mapSupabaseListingToListing(row: SupabaseListingWithImages): Lis
     contactName: row.contact_name || undefined,
     contactRole: row.contact_role || undefined,
     images: imageUrls.length > 0 ? imageUrls : undefined,
+    agentFee: row.agent_fee ?? 0,
+    viewingFee: row.viewing_fee ?? 0,
+    verificationLevel: (row.verification_level as Listing['verificationLevel']) ?? 'none',
+    availabilityStatus: row.availability_status,
   };
 }
 

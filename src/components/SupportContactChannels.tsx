@@ -27,7 +27,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
       desc: 'Useful for quick support later, but not automated in this prototype.',
       status: 'Planned',
       icon: MessageSquare,
-      statusColor: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400'
+      statusColor: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
     },
     {
       id: 'email',
@@ -43,7 +43,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
       desc: 'Use report actions to flag fake, wrong, unsafe, or outdated listings.',
       status: 'Prototype-only',
       icon: AlertTriangle,
-      statusColor: 'bg-orange-50 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400'
+      statusColor: 'bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400'
     }
   ];
 
@@ -100,7 +100,7 @@ export default function SupportContactChannels({ onShowFeedback }: SupportContac
         <ul className="space-y-2.5">
           {expectations.map((text, i) => (
             <li key={i} className="flex items-start space-x-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-500 shrink-0 mt-0.5 stroke-[2.5]" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-700 dark:text-emerald-500 shrink-0 mt-0.5 stroke-[2.5]" />
               <span className="text-[11.5px] font-bold text-emerald-800/80 dark:text-emerald-200/80 leading-snug">
                 {text}
               </span>

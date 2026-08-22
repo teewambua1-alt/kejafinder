@@ -1,64 +1,66 @@
-import React from 'react';
 import { motion } from 'motion/react';
-import { 
-  LayoutGrid, 
-  Clock, 
-  Bed, 
-  Home, 
-  ShieldCheck 
-} from 'lucide-react';
-
-interface FilterChipOption {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
+import type { Listing } from '../types/listing';
+import { SAVED_FILTERS, savedFilterCounts, type SavedFilterId } from '../lib/savedFilters';
+import { useMotion } from '../lib/motion';
+import { cn } from '../lib/cn';
 
 interface SavedFilterChipsProps {
-  activeFilter: string;
-  onFilterChange: (id: string) => void;
+  activeFilter: SavedFilterId;
+  onFilterChange: (id: SavedFilterId) => void;
+  /** The set being filtered — needed to show real counts. */
+  listings: Listing[];
 }
 
-const FILTER_OPTIONS: FilterChipOption[] = [
-  { id: 'all', label: 'All', icon: LayoutGrid },
-  { id: 'recently_saved', label: 'Recently Saved', icon: Clock },
-  { id: 'bedsitter', label: 'Bedsitter', icon: Bed },
-  { id: 'one_bedroom', label: '1 Bedroom', icon: Home },
-  { id: 'verified', label: 'Verified', icon: ShieldCheck },
-];
+/**
+ * Four chips, each with a real count, each backed by a real predicate.
+ * See lib/savedFilters for what this replaced and why.
+ *
+ * Chips that would match nothing are not rendered: a chip that leads only to an
+ * empty list is a dead end, and hiding it is the honest form of a disabled
+ * state here — there is nothing the user could do to make it match.
+ */
+export default function SavedFilterChips({ activeFilter, onFilterChange, listings }: SavedFilterChipsProps) {
+  const m = useMotion();
+  const counts = savedFilterCounts(listings);
+  const visible = SAVED_FILTERS.filter((f) => f.id === 'all' || counts[f.id] > 0);
 
-export default function SavedFilterChips({ activeFilter, onFilterChange }: SavedFilterChipsProps) {
+  // One real option is not a choice.
+  if (visible.length < 2) return null;
+
   return (
-    <div className="w-full overflow-x-auto no-scrollbar pb-1 -mb-1 flex items-center space-x-2 scroll-smooth select-none">
-      <div className="flex space-x-2.5 px-0.5">
-        {FILTER_OPTIONS.map((option) => {
-          const IconComponent = option.icon;
-          const isActive = activeFilter === option.id;
-
-          return (
-            <motion.button
-              key={option.id}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => onFilterChange(option.id)}
-              aria-pressed={isActive}
-              className={`flex items-center space-x-2 px-4 py-2.5 rounded-full border text-[12.5px] font-extrabold whitespace-nowrap transition-all shadow-3xs cursor-pointer ${
-                isActive
-                  ? 'bg-emerald-500/10 border-emerald-500/60 text-emerald-600 dark:text-emerald-400 font-black'
-                  : 'bg-white/90 dark:bg-stone-880/90 border-neutral-100/80 dark:border-neutral-800 text-neutral-600 dark:text-stone-300 hover:text-neutral-800 dark:hover:text-stone-100'
-              }`}
-            >
-              <IconComponent 
-                className={`w-4 h-4 shrink-0 transition-transform ${
-                  isActive 
-                    ? 'text-emerald-600 dark:text-emerald-400 scale-105 stroke-[2.5]' 
-                    : 'text-neutral-400 dark:text-stone-500 stroke-[2]'
-                }`} 
-              />
-              <span>{option.label}</span>
-            </motion.button>
-          );
-        })}
-      </div>
+    <div
+      className="flex w-full flex-wrap gap-2"
+      role="group"
+      aria-label="Filter saved homes"
+    >
+      {visible.map((option) => {
+        const isActive = activeFilter === option.id;
+        const Icon = option.icon;
+        return (
+          <motion.button
+            key={option.id}
+            type="button"
+            whileTap={m.tap}
+            onClick={() => onFilterChange(option.id)}
+            aria-pressed={isActive}
+            className={cn(
+              'flex items-center gap-1.5 rounded-full border px-3.5 h-9 text-2xs font-bold whitespace-nowrap transition-[background-color,border-color,color] cursor-pointer outline-none',
+              isActive
+                ? 'bg-emerald-700 border-emerald-700 text-white'
+                : 'bg-white dark:bg-stone-900 border-neutral-150 dark:border-stone-800 text-neutral-700 dark:text-stone-300 hover:border-neutral-300 dark:hover:border-stone-700'
+            )}
+          >
+            <Icon
+              className={cn('h-3.5 w-3.5 shrink-0 stroke-[2.2]', isActive ? 'text-white' : 'text-emerald-700 dark:text-emerald-400')}
+              aria-hidden="true"
+            />
+            <span>{option.label}</span>
+            <span className={cn('font-black tabular-nums', isActive ? 'text-white/80' : 'text-neutral-500 dark:text-stone-400')}>
+              {counts[option.id]}
+            </span>
+          </motion.button>
+        );
+      })}
     </div>
   );
 }

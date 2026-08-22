@@ -1,6 +1,5 @@
-import { Bell, MapPinHouse, Sun, Moon } from 'lucide-react';
+import { Bell, MapPinHouse } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useTheme } from './ThemeContext';
 import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
@@ -9,7 +8,6 @@ interface HeaderProps {
 }
 
 export default function Header({ onNotificationsClick, onProfileClick }: HeaderProps = {}) {
-  const { isDark, toggleTheme } = useTheme();
   const { user, profile } = useAuth();
   const initial = profile?.full_name?.trim()?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase();
 
@@ -24,14 +22,14 @@ export default function Header({ onNotificationsClick, onProfileClick }: HeaderP
       <div className="flex items-center space-x-2.5">
         <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center shadow-xs">
           {/* Custom styled green house/location style icon */}
-          <MapPinHouse className="w-5.5 h-5.5 text-emerald-600 dark:text-emerald-500 stroke-[2.2]" />
+          <MapPinHouse className="w-5.5 h-5.5 text-emerald-700 dark:text-emerald-500 stroke-[2.2]" />
         </div>
         <div className="flex flex-col">
           <div className="text-xl tracking-tight leading-none font-sans font-extrabold select-none">
-            <span className="text-emerald-600 dark:text-emerald-500">Keja</span>
+            <span className="text-emerald-700 dark:text-emerald-500">Keja</span>
             <span className="text-neutral-800 dark:text-neutral-100">Finder</span>
           </div>
-          <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-medium font-sans mt-0.5 tracking-wider uppercase">
+          <span className="text-[10px] text-neutral-550 dark:text-neutral-400 font-medium font-sans mt-0.5 tracking-wider uppercase">
             Vacancies Hub
           </span>
         </div>
@@ -39,21 +37,6 @@ export default function Header({ onNotificationsClick, onProfileClick }: HeaderP
  
       {/* Quick Action Controls on the Right */}
       <div className="flex items-center space-x-3">
-        {/* Premium Dark Theme Toggle Button */}
-        <motion.button 
-          id="btn-theme-toggle"
-          whileTap={{ scale: 0.95 }}
-          onClick={toggleTheme}
-          className="relative w-10 h-10 rounded-full bg-white dark:bg-stone-800/90 border border-neutral-100/80 dark:border-neutral-700/80 flex items-center justify-center text-neutral-700 dark:text-neutral-200 shadow-xs hover:bg-neutral-50 dark:hover:bg-stone-700/80 transition-all outline-none cursor-pointer"
-          aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-        >
-          {isDark ? (
-            <Sun className="w-5 h-5 text-amber-400 stroke-[2] animate-pulse" />
-          ) : (
-            <Moon className="w-5 h-5 text-neutral-600 stroke-[2]" />
-          )}
-        </motion.button>
-
         {/* Bell Notification Button */}
         <button 
           id="btn-notifications"
@@ -91,7 +74,7 @@ export default function Header({ onNotificationsClick, onProfileClick }: HeaderP
           </div>
           {/* Online status indicator -- only meaningful when actually signed in */}
           {user && (
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-stone-800" />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-700 rounded-full border-2 border-white dark:border-stone-800" />
           )}
         </button>
       </div>

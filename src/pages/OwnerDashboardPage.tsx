@@ -94,7 +94,7 @@ function ListingRow({
           {cover ? (
             <img src={publicThumbUrl(cover)} alt={listing.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" decoding="async" />
           ) : (
-            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-600" />
+            <ImageOff className="w-5 h-5 text-neutral-550 dark:text-stone-400" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -112,7 +112,7 @@ function ListingRow({
         <div className="flex items-center justify-between text-[10.5px] font-bold text-neutral-500 dark:text-stone-400 px-0.5">
           <span className="flex items-center space-x-1"><Eye className="w-3.5 h-3.5" /><span>{listing.views_count} views</span></span>
           <span className="flex items-center space-x-1"><MessageSquare className="w-3.5 h-3.5" /><span>{listing.call_clicks_count + listing.whatsapp_clicks_count} contacts</span></span>
-          <span className={`flex items-center space-x-1 ${isLive ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-550'}`}>
+          <span className={`flex items-center space-x-1 ${isLive ? 'text-emerald-700 dark:text-emerald-400' : 'text-neutral-550'}`}>
             {isLive ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Ban className="w-3.5 h-3.5" />}
             <span>{isLive ? 'Live' : 'Taken'}</span>
           </span>
@@ -169,7 +169,7 @@ function ListingRow({
           onClick={handleToggle}
           className="w-full h-9 rounded-xl border border-neutral-200 dark:border-stone-800 text-neutral-700 dark:text-stone-300 text-[11px] font-black uppercase tracking-wider flex items-center justify-center space-x-1.5 disabled:opacity-60"
         >
-          {isLive ? <ToggleRight className="w-4 h-4 text-emerald-600" /> : <ToggleLeft className="w-4 h-4" />}
+          {isLive ? <ToggleRight className="w-4 h-4 text-emerald-700" /> : <ToggleLeft className="w-4 h-4" />}
           <span>{isBusy ? 'Updating...' : isLive ? 'Mark as taken' : 'Mark as available'}</span>
         </motion.button>
       )}
@@ -251,7 +251,7 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
 
             <motion.div variants={itemVariants} className="grid grid-cols-3 gap-2">
               <motion.button type="button" whileTap={{ scale: 0.96 }} onClick={onGoPost} className="flex flex-col items-center justify-center p-3 rounded-2xl bg-white dark:bg-stone-900 border border-neutral-200/60 dark:border-stone-800/60 shadow-sm space-y-1.5 hover:bg-neutral-50 dark:hover:bg-stone-800 transition-colors">
-                <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
                   <PlusCircle className="w-4 h-4" />
                 </div>
                 <span className="text-[10px] font-bold text-neutral-700 dark:text-stone-300 text-center leading-tight">Post new vacancy</span>
@@ -263,7 +263,7 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
                 <span className="text-[10px] font-bold text-neutral-700 dark:text-stone-300 text-center leading-tight">View public listings</span>
               </motion.button>
               <motion.button type="button" whileTap={{ scale: 0.96 }} onClick={onGoSafety} className="flex flex-col items-center justify-center p-3 rounded-2xl bg-white dark:bg-stone-900 border border-neutral-200/60 dark:border-stone-800/60 shadow-sm space-y-1.5 hover:bg-neutral-50 dark:hover:bg-stone-800 transition-colors">
-                <div className="w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400 flex items-center justify-center">
                   <BookOpen className="w-4 h-4" />
                 </div>
                 <span className="text-[10px] font-bold text-neutral-700 dark:text-stone-300 text-center leading-tight">Read safety tips</span>
@@ -285,14 +285,14 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
                 </div>
               ) : listings.length === 0 ? (
                 <div className="bg-white/70 dark:bg-stone-900/40 border border-dashed border-neutral-300 dark:border-stone-700 rounded-2xl p-6 text-center space-y-3">
-                  <Home className="w-8 h-8 text-neutral-550 dark:text-stone-600 mx-auto" />
+                  <Home className="w-8 h-8 text-neutral-550 dark:text-stone-400 mx-auto" />
                   <p className="text-[12px] font-bold text-neutral-500 dark:text-stone-400">
                     You haven't posted any vacancies yet.
                   </p>
                   <motion.button
                     whileTap={{ scale: 0.96 }}
                     onClick={onGoPost}
-                    className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-black uppercase tracking-wider"
+                    className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-black uppercase tracking-wider"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span>Post your first vacancy</span>
@@ -314,7 +314,7 @@ export default function OwnerDashboardPage({ onBack, onGoPost, onGoSearch, onGoS
             </motion.div>
 
             <motion.div variants={itemVariants} className="bg-orange-50/50 dark:bg-orange-950/10 border border-orange-200/60 dark:border-orange-900/30 rounded-2.5xl p-4 shadow-sm flex items-start space-x-3">
-              <ShieldCheck className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+              <ShieldCheck className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-[11.5px] font-black text-orange-900 dark:text-orange-300 leading-tight mb-1">
                   Never send deposit before physically viewing the house and confirming the caretaker or landlord.

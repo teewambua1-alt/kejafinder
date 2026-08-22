@@ -31,7 +31,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
       title: "No hidden costs",
       desc: "Rent, deposit, water, electricity, and agent fees should be shown clearly upfront.",
       icon: Receipt,
-      color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/45"
     },
     {
       title: "Fresh listings",
@@ -111,7 +111,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
     >
       {/* 1. Header Title Block */}
       <motion.div variants={itemVariants} className="space-y-1.5 border-t border-neutral-200/40 dark:border-stone-800/40 pt-6">
-        <h3 className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+        <h3 className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">
           Trust &amp; Safety Promise
         </h3>
         <h2 className="text-lg font-black text-neutral-900 dark:text-stone-100 uppercase tracking-tight">
@@ -182,7 +182,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5 shadow-3xs space-y-3.5"
       >
         <div className="flex items-center space-x-2 text-neutral-850 dark:text-stone-100">
-          <BadgeCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+          <BadgeCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
           <h4 className="text-[11.5px] font-black uppercase tracking-wider">
             What badges should mean
           </h4>
@@ -191,7 +191,7 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         <div className="space-y-2.5" role="list">
           {badgesExplained.map((badge, idx) => (
             <div key={idx} className="flex items-start space-x-2.5 text-[11px]" role="listitem">
-              <span className="text-emerald-600 dark:text-emerald-400 font-black shrink-0 mt-0.5">
+              <span className="text-emerald-700 dark:text-emerald-400 font-black shrink-0 mt-0.5">
                 <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />
               </span>
               <p className="text-neutral-600 dark:text-stone-350 font-semibold leading-snug">
@@ -231,17 +231,17 @@ export default function AboutTrustPromise({ onGoSafety, onGoSearch, onShowFeedba
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleSafetyAction}
-          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Read safety tips"
         >
-          <BookOpen className="w-4 h-4 stroke-[2.2] text-amber-550" />
+          <BookOpen className="w-4 h-4 stroke-[2.2] text-amber-500" />
           <span>Read safety tips</span>
         </motion.button>
 
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleSearchAction}
-          className="flex-1 h-11 bg-emerald-650 hover:bg-emerald-600 text-white font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Search verified homes"
         >
           <Search className="w-4 h-4 stroke-[2.2]" />

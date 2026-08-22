@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bookmark, PlusCircle, Building2, Settings, Bug, Palette, LogOut, UserCircle } from 'lucide-react';
+import { Bookmark, PlusCircle, Building2, Settings, Bug, Palette, LogOut, UserCircle, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useIsAdmin } from '../hooks/useIsAdmin';
+import { isPosterRole } from '../lib/roles';
 
 interface ProfileMenuProps {
   isOpen: boolean;
@@ -22,13 +24,15 @@ interface MenuItem {
 
 /**
  * Desktop/tablet navbar profile dropdown. Mirrors the same curated
- * shortcuts as ProfileShortcuts.tsx (src/components/ProfileShortcuts.tsx)
+ * shortcuts as the profile page's own ProfileLinks list.
  * rather than the full granular settings list in data/profileData.ts --
  * a compact navbar menu needs top-level destinations, not every settings
  * sub-screen.
  */
 export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, onOpenTestMode, onOpenDesignSystem }: ProfileMenuProps) {
   const { user, profile, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
+  const canPost = isPosterRole(profile);
 
   const go = (tab: string) => {
     onTabChange(tab);
@@ -45,23 +49,41 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
     }
   };
 
+  // Role-gated, matching BottomNav, DesktopNavbar and ProfileLinks. This
+  // menu was the one surface that gated nothing: every signed-in account -- a
+  // tenant included -- was offered "Post a vacancy" and "Dashboard", both of
+  // which then dead-end (usePostListingDraft rejects tenants on submit, and the
+  // owner dashboard has nothing to show them).
   const items: MenuItem[] = [
     { id: 'saved', label: 'Saved homes', icon: Bookmark, onClick: () => go('saved') },
-    { id: 'post', label: 'Post a vacancy', icon: PlusCircle, onClick: () => go('post') },
-    { id: 'dashboard', label: 'Dashboard', icon: Building2, onClick: () => go('landlord-dashboard') },
+    ...(canPost
+      ? [
+          { id: 'post', label: 'Post a vacancy', icon: PlusCircle, onClick: () => go('post') },
+          { id: 'dashboard', label: 'Dashboard', icon: Building2, onClick: () => go('landlord-dashboard') },
+        ]
+      : []),
+    ...(isAdmin
+      ? [{ id: 'admin', label: 'Admin dashboard', icon: ShieldAlert, onClick: () => go('admin-dashboard') }]
+      : []),
     { id: 'profile', label: 'My profile & settings', icon: Settings, onClick: () => go('profile') },
   ];
 
-  const devItems: MenuItem[] = [
-    { id: 'test-mode', label: 'Test Mode', icon: Bug, onClick: () => { onOpenTestMode?.(); onClose(); } },
-    { id: 'design-system', label: 'Design System', icon: Palette, onClick: () => { onOpenDesignSystem?.(); onClose(); } },
-  ];
+  // Development tooling, and it was reaching production: every visitor to the
+  // deployed site saw "Test Mode" and "Design System" in this menu. Vite
+  // statically replaces import.meta.env.DEV, so this whole branch is dropped
+  // from the production bundle rather than merely hidden.
+  const devItems: MenuItem[] = import.meta.env.DEV
+    ? [
+        { id: 'test-mode', label: 'Test Mode', icon: Bug, onClick: () => { onOpenTestMode?.(); onClose(); } },
+        { id: 'design-system', label: 'Design System', icon: Palette, onClick: () => { onOpenDesignSystem?.(); onClose(); } },
+      ]
+    : [];
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-40" onClick={onClose} aria-hidden="true" />
+          <div className="fixed inset-0 z-[var(--z-navbar)]" onClick={onClose} aria-hidden="true" />
           <motion.div
             initial={{ opacity: 0, y: -8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -81,7 +103,7 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
                   <p className="text-xs font-black text-neutral-850 dark:text-stone-100 truncate">
                     {profile?.full_name || 'KejaFinder User'}
                   </p>
-                  <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-500 truncate">
+                  <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 truncate">
                     {profile?.role ? profile.role[0].toUpperCase() + profile.role.slice(1) : user.email}
                   </p>
                 </div>
@@ -94,7 +116,7 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
                 </div>
                 <button
                   onClick={() => { onOpenAuth(); onClose(); }}
-                  className="w-full h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-2xs font-extrabold uppercase tracking-wider cursor-pointer"
+                  className="w-full h-9 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-2xs font-extrabold uppercase tracking-wider cursor-pointer"
                 >
                   Log in or sign up
                 </button>
@@ -109,32 +131,34 @@ export default function ProfileMenu({ isOpen, onClose, onTabChange, onOpenAuth, 
                   onClick={item.onClick}
                   className="w-full flex items-center space-x-2.5 px-4 py-2.5 text-left text-xs font-bold text-neutral-700 dark:text-stone-300 hover:bg-neutral-50 dark:hover:bg-stone-850/60 transition-colors cursor-pointer"
                 >
-                  <item.icon className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.2] shrink-0" />
+                  <item.icon className="w-4 h-4 text-emerald-700 dark:text-emerald-400 stroke-[2.2] shrink-0" />
                   <span>{item.label}</span>
                 </button>
               ))}
             </div>
 
+            {devItems.length > 0 && (
             <div className="py-1.5 border-t border-neutral-100 dark:border-stone-800">
               {devItems.map((item) => (
                 <button
                   key={item.id}
                   role="menuitem"
                   onClick={item.onClick}
-                  className="w-full flex items-center space-x-2.5 px-4 py-2 text-left text-2xs font-bold text-neutral-550 dark:text-stone-500 hover:bg-neutral-50 dark:hover:bg-stone-850/60 transition-colors cursor-pointer"
+                  className="w-full flex items-center space-x-2.5 px-4 py-2 text-left text-2xs font-bold text-neutral-550 dark:text-stone-400 hover:bg-neutral-50 dark:hover:bg-stone-850/60 transition-colors cursor-pointer"
                 >
                   <item.icon className="w-3.5 h-3.5 stroke-[2.2] shrink-0" />
                   <span>{item.label}</span>
                 </button>
               ))}
             </div>
+            )}
 
             {user && (
               <div className="py-1.5 border-t border-neutral-100 dark:border-stone-800">
                 <button
                   role="menuitem"
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-2.5 px-4 py-2.5 text-left text-xs font-bold text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors cursor-pointer"
+                  className="w-full flex items-center space-x-2.5 px-4 py-2.5 text-left text-xs font-bold text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4 stroke-[2.2] shrink-0" />
                   <span>Log out</span>

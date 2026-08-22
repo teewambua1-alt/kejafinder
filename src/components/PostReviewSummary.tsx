@@ -116,12 +116,12 @@ export default function PostReviewSummary({
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md rounded-3xl border border-neutral-100 dark:border-neutral-800/80 p-8 shadow-md flex flex-col items-center justify-center text-center py-12 space-y-6"
       >
-        <div className="w-16 h-16 rounded-full bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-450 shadow-xs animate-bounce">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 dark:bg-emerald-950/30 border border-emerald-500/20 flex items-center justify-center text-emerald-700 dark:text-emerald-450 shadow-xs animate-bounce">
           <CheckCircle className="w-8 h-8 stroke-[2.2]" />
         </div>
 
         <div className="space-y-2.5 max-w-[340px]">
-          <div className="flex items-center justify-center space-x-1.5 justify-self-center px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-450">
+          <div className="flex items-center justify-center space-x-1.5 justify-self-center px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono uppercase tracking-wider font-extrabold text-emerald-700 dark:text-emerald-450">
             <Sparkles className="w-2.5 h-2.5" />
             <span>Listing Submitted</span>
           </div>
@@ -138,7 +138,7 @@ export default function PostReviewSummary({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={onReset}
-            className="w-full h-12 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs tracking-tight shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
+            className="w-full h-12 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs tracking-tight shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer transition-colors"
           >
             <PlusIcon className="w-4 h-4 stroke-[2.5]" />
             <span>Post another vacancy</span>
@@ -180,7 +180,7 @@ export default function PostReviewSummary({
             exit={{ opacity: 0, y: -10 }}
             className="p-3 bg-emerald-650/10 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-xl text-emerald-800 dark:text-emerald-450 text-[11px] font-extrabold flex items-center space-x-2"
           >
-            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle className="w-4 h-4 text-emerald-700 shrink-0" />
             <span>{feedback}</span>
           </motion.div>
         )}
@@ -203,7 +203,7 @@ export default function PostReviewSummary({
           draft={draft} 
           coverPhotoUrl={coverUrl} 
         />
-        <p className="text-[10px] font-extrabold text-neutral-400 dark:text-stone-500 pl-4">
+        <p className="text-[10px] font-extrabold text-neutral-550 dark:text-stone-400 pl-4">
           This is how your listing may appear to tenants after approval.
         </p>
       </div>
@@ -225,7 +225,7 @@ export default function PostReviewSummary({
               <Home className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 House details
               </h5>
               <div className="space-y-0.5 mt-0.5">
@@ -236,7 +236,7 @@ export default function PostReviewSummary({
                   {formatHouseType(draft.houseType)}
                 </p>
                 <p className="text-[10.5px] font-bold text-neutral-500 dark:text-stone-400">
-                  Rent: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{draft.rent ? `KSh ${Number(draft.rent).toLocaleString()} /month` : 'Not added'}</span>
+                  Rent: <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">{draft.rent ? `KSh ${Number(draft.rent).toLocaleString()} /month` : 'Not added'}</span>
                 </p>
                 <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
                   Deposit: {draft.deposit ? `KSh ${Number(draft.deposit).toLocaleString()}` : 'Not added'}
@@ -251,7 +251,7 @@ export default function PostReviewSummary({
                     {draft.viewingFee && `Viewing fee: KSh ${Number(draft.viewingFee).toLocaleString()}`}
                   </p>
                 )}
-                <p className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500 italic truncate max-w-[210px]">
+                <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 italic truncate max-w-[210px]">
                   &ldquo;{draft.description || 'No description added'}&rdquo;
                 </p>
                 {(draft.waterCharge || draft.electricityType || draft.toiletType || draft.bathroomType || draft.floorLevel || draft.security) && (
@@ -273,7 +273,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(1)}
             aria-label="Edit house details"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -289,7 +289,7 @@ export default function PostReviewSummary({
               <MapPin className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 Location & directions
               </h5>
               <div className="space-y-0.5 mt-0.5 text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
@@ -299,12 +299,12 @@ export default function PostReviewSummary({
                 <p>County: {draft.county || 'Not added'}</p>
                 <p>Benchmark landmark: {draft.landmark || 'Not added'}</p>
                 {draft.distanceFromRoad && (
-                  <p className="flex items-center text-[10px] font-bold text-neutral-400">
+                  <p className="flex items-center text-[10px] font-bold text-neutral-550">
                     <Compass className="w-3 h-3 mr-0.5" />
                     <span>{draft.distanceFromRoad} from tarmac</span>
                   </p>
                 )}
-                <p className={`flex items-center gap-1 text-[10px] font-bold ${draft.lat !== null && draft.lng !== null ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
+                <p className={`flex items-center gap-1 text-[10px] font-bold ${draft.lat !== null && draft.lng !== null ? 'text-emerald-700 dark:text-emerald-450' : 'text-neutral-550'}`}>
                   {draft.lat !== null && draft.lng !== null
                     ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Real GPS location captured</>
                     : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> No GPS location added</>}
@@ -317,7 +317,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(2)}
             aria-label="Edit location"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -333,7 +333,7 @@ export default function PostReviewSummary({
               <Grid className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 Selected amenities
               </h5>
               <div className="mt-1 flex flex-wrap gap-1 max-w-[210px]">
@@ -347,7 +347,7 @@ export default function PostReviewSummary({
                     </span>
                   ))
                 ) : (
-                  <span className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500 italic">
+                  <span className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 italic">
                     Not added
                   </span>
                 )}
@@ -359,7 +359,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(3)}
             aria-label="Edit amenities"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -375,7 +375,7 @@ export default function PostReviewSummary({
               <ImageIcon className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 House photographs
               </h5>
               <p className="text-[10.5px] font-extrabold text-neutral-700 dark:text-stone-300 mt-0.5">
@@ -397,7 +397,7 @@ export default function PostReviewSummary({
                         className="w-full h-full object-cover"
                       />
                       {index === 0 && (
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-500" title="Cover photo" />
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-emerald-700" title="Cover photo" />
                       )}
                     </div>
                   ))}
@@ -408,7 +408,7 @@ export default function PostReviewSummary({
                   )}
                 </div>
               ) : (
-                <p className="text-[10.5px] font-semibold text-neutral-400 dark:text-stone-500 italic mt-0.5">
+                <p className="text-[10.5px] font-semibold text-neutral-550 dark:text-stone-400 italic mt-0.5">
                   No photos added
                 </p>
               )}
@@ -419,7 +419,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(4)}
             aria-label="Edit photos"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -435,16 +435,16 @@ export default function PostReviewSummary({
               <User className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 Contact information
               </h5>
               <div className="space-y-0.5 mt-0.5 text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
                 <p className="font-extrabold text-neutral-800 dark:text-stone-200">
-                  {draft.contactName || 'Not added'} <span className="text-[9.5px] font-extrabold px-1.5 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded uppercase tracking-wide ml-1.5">{draft.contactRole}</span>
+                  {draft.contactName || 'Not added'} <span className="text-[9.5px] font-extrabold px-1.5 py-0.2 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded uppercase tracking-wide ml-1.5">{draft.contactRole}</span>
                 </p>
                 {draft.allowCalls && draft.contactPhone && (
                   <p className="flex items-center">
-                    <Phone className="w-3 h-3 text-neutral-400 mr-1" />
+                    <Phone className="w-3 h-3 text-neutral-550 mr-1" />
                     <span>Call: {draft.contactPhone}</span>
                   </p>
                 )}
@@ -462,7 +462,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(1)}
             aria-label="Edit contact info"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -478,26 +478,26 @@ export default function PostReviewSummary({
               <ShieldCheck className="w-4.5 h-4.5" />
             </div>
             <div className="flex flex-col space-y-1">
-              <h5 className="text-[11px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider leading-none">
+              <h5 className="text-[11px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider leading-none">
                 Trust & Verification requests
               </h5>
               <div className="space-y-1 mt-1 flex flex-col">
-                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.allowPhoneVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400'}`}>
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.allowPhoneVerification ? 'text-emerald-700 dark:text-emerald-450' : 'text-neutral-550'}`}>
                   {draft.allowPhoneVerification
                     ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> SMS Phone Validation active</>
                     : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Password/OTP verification ignored</>}
                 </span>
-                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestLocationCheck ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestLocationCheck ? 'text-emerald-700 dark:text-emerald-450' : 'text-neutral-550 dark:text-stone-400'}`}>
                   {draft.requestLocationCheck
                     ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Physical Landmark/Location pin check requested</>
                     : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Location check disabled</>}
                 </span>
-                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestScoutVerification ? 'text-emerald-600 dark:text-emerald-450' : 'text-neutral-400 dark:text-stone-600'}`}>
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.requestScoutVerification ? 'text-emerald-700 dark:text-emerald-450' : 'text-neutral-550 dark:text-stone-400'}`}>
                   {draft.requestScoutVerification
                     ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> On-site KejaFinder Scout audit requested</>
                     : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Scout audit disabled</>}
                 </span>
-                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.remindToUpdate ? 'text-emerald-650' : 'text-neutral-400'}`}>
+                <span className={`flex items-center gap-1 text-[10px] font-extrabold ${draft.remindToUpdate ? 'text-emerald-700' : 'text-neutral-550'}`}>
                   {draft.remindToUpdate
                     ? <><Check className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> Remind me to update availability status</>
                     : <><X className="w-3 h-3 stroke-[2.5] shrink-0" aria-hidden="true" /> reminders disabled</>}
@@ -510,7 +510,7 @@ export default function PostReviewSummary({
             type="button"
             onClick={() => onEditStep(3)}
             aria-label="Edit verification requests"
-            className="px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
+            className="px-2.5 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/5 rounded-md border border-emerald-500/20 cursor-pointer transition-colors"
           >
             Edit
           </button>
@@ -527,7 +527,7 @@ export default function PostReviewSummary({
               setIsConfirmed(e.target.checked);
               if (e.target.checked) setShowError(false);
             }}
-            className="mt-0.5 w-4.5 h-4.5 rounded text-emerald-600 border-neutral-300 dark:border-stone-850 accent-emerald-650 focus:ring-emerald-500 cursor-pointer shrink-0" 
+            className="mt-0.5 w-4.5 h-4.5 rounded text-emerald-700 border-neutral-300 dark:border-stone-850 accent-emerald-650 focus:ring-emerald-500 cursor-pointer shrink-0" 
           />
           <div className="flex flex-col space-y-0.5">
             <h4 className="text-[11.5px] font-white font-black text-neutral-800 dark:text-stone-200">
@@ -541,7 +541,7 @@ export default function PostReviewSummary({
 
         {/* Accuracy validation warning banner */}
         {showError && (
-          <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl flex items-start space-x-2 text-red-650 dark:text-red-400 animate-pulse">
+          <div className="p-3 bg-red-500/5 border border-red-500/15 rounded-xl flex items-start space-x-2 text-red-600 dark:text-red-400 animate-pulse">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.2] mt-0.5" />
             <span className="text-[10.5px] font-extrabold leading-tight">Please confirm your listing details are accurate.</span>
           </div>
@@ -550,7 +550,7 @@ export default function PostReviewSummary({
 
       {/* 6. Legal / Verification Trust note below the checkbox */}
       <div className="flex items-start space-x-2.5 p-4 bg-emerald-500/5 dark:bg-emerald-950/10 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400 font-sans shadow-3xs">
-        <Lock className="w-5 h-5 text-emerald-600 shrink-0 stroke-[2] mt-0.5" />
+        <Lock className="w-5 h-5 text-emerald-700 shrink-0 stroke-[2] mt-0.5" />
         <span className="text-[10.5px] font-bold tracking-tight leading-relaxed select-none">
           Listings are reviewed before going live to reduce scams and outdated vacancies. Submitting does not publish the listing live immediately.
         </span>
@@ -590,7 +590,7 @@ export default function PostReviewSummary({
             disabled={!isConfirmed || isSaving || isSubmitting}
             className={`flex-[2] h-13 rounded-2xl font-extrabold text-sm tracking-wide shadow-sm flex items-center justify-center space-x-2 cursor-pointer transition-all font-sans ${
               isConfirmed && !isSaving && !isSubmitting
-                ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-500/15'
+                ? 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-emerald-500/15'
                 : 'bg-emerald-600/35 text-white/50 cursor-not-allowed border border-emerald-600/10'
             }`}
           >

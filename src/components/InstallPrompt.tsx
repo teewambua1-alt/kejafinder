@@ -50,7 +50,7 @@ export default function InstallPrompt() {
           exit={{ opacity: 0, y: 50 }}
           className="fixed bottom-24 left-4 right-4 z-50 lg:left-1/2 lg:right-auto lg:w-96 lg:-ml-48"
         >
-          <div className="bg-emerald-600 dark:bg-emerald-700 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between">
+          <div className="bg-emerald-700 dark:bg-emerald-700 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2 rounded-xl">
                 <Download className="w-5 h-5 text-white" />
@@ -70,7 +70,7 @@ export default function InstallPrompt() {
               </button>
               <button 
                 onClick={handleDismiss}
-                className="p-1.5 text-emerald-200 hover:text-white hover:bg-emerald-500 rounded-lg transition-colors"
+                className="p-1.5 text-emerald-200 hover:text-white hover:bg-emerald-800 rounded-lg transition-colors"
                 aria-label="Dismiss"
               >
                 <X className="w-4 h-4" />

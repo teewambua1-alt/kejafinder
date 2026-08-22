@@ -97,11 +97,11 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
         className="flex items-center space-x-1.5 text-xs font-semibold select-none outline-none border-none bg-transparent cursor-pointer p-1"
       >
         <span className="text-neutral-500 dark:text-stone-400 font-medium">Sort by:</span>
-        <span className="text-emerald-600 dark:text-emerald-400 font-bold transition-colors">
+        <span className="text-emerald-700 dark:text-emerald-400 font-bold transition-colors">
           {selected}
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 stroke-[2.2] text-emerald-600 dark:text-emerald-450 transition-transform duration-200 ${
+          className={`w-3.5 h-3.5 stroke-[2.2] text-emerald-700 dark:text-emerald-450 transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -115,7 +115,7 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white/95 dark:bg-stone-850/95 backdrop-blur-md border border-neutral-100/90 dark:border-neutral-700/80 shadow-lg z-60 py-1 origin-top-right focus:outline-none"
+            className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white dark:bg-stone-850 border border-neutral-100 dark:border-stone-700 shadow-lg z-[var(--z-overlay)] py-1 origin-top-right focus:outline-none"
             role="listbox"
             onKeyDown={handleMenuKeyDown}
           >
@@ -134,7 +134,7 @@ export default function SortDropdown({ selected: propSelected, onChange }: SortD
               >
                 <span>{option}</span>
                 {selected === option && (
-                  <Check className="w-3.5 h-3.5 text-emerald-650 dark:text-emerald-400 stroke-[2.5]" />
+                  <Check className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 stroke-[2.5]" />
                 )}
               </button>
             ))}

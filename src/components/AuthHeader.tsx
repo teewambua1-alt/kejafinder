@@ -27,7 +27,7 @@ export default function AuthHeader({ onBack }: AuthHeaderProps) {
         </span>
       </div>
 
-      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400">
+      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400">
         <ShieldCheck className="w-5 h-5" />
       </div>
     </motion.header>

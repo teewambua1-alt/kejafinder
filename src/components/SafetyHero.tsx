@@ -45,7 +45,7 @@ export default function SafetyHero({
 
       <div className="relative z-10 flex flex-col items-center text-center">
         <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mb-4">
-          <ShieldCheck className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
+          <ShieldCheck className="w-7 h-7 text-emerald-700 dark:text-emerald-400" />
         </div>
 
         <h2 className="text-2xl font-black text-neutral-850 dark:text-stone-100 tracking-tight leading-tight mb-2">
@@ -64,7 +64,7 @@ export default function SafetyHero({
         <div className="flex flex-col space-y-3 w-full mb-6">
           <div className="flex items-center bg-neutral-50 dark:bg-stone-950 rounded-2xl p-3 border border-neutral-100 dark:border-stone-800">
             <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mr-3 shrink-0">
-              <PhoneCall className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <PhoneCall className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             </div>
             <div className="text-left flex-1">
               <h3 className="text-xs font-black text-neutral-800 dark:text-stone-200 uppercase tracking-wider mb-0.5">Confirm first</h3>
@@ -74,7 +74,7 @@ export default function SafetyHero({
 
           <div className="flex items-center bg-neutral-50 dark:bg-stone-950 rounded-2xl p-3 border border-neutral-100 dark:border-stone-800">
             <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mr-3 shrink-0">
-              <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <Eye className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             </div>
             <div className="text-left flex-1">
               <h3 className="text-xs font-black text-neutral-800 dark:text-stone-200 uppercase tracking-wider mb-0.5">View physically</h3>
@@ -84,7 +84,7 @@ export default function SafetyHero({
 
           <div className="flex items-center bg-neutral-50 dark:bg-stone-950 rounded-2xl p-3 border border-neutral-100 dark:border-stone-800">
             <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mr-3 shrink-0">
-              <Flag className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+              <Flag className="w-4 h-4 text-orange-700 dark:text-orange-400" />
             </div>
             <div className="text-left flex-1">
               <h3 className="text-xs font-black text-neutral-800 dark:text-stone-200 uppercase tracking-wider mb-0.5">Report scams</h3>
@@ -98,7 +98,7 @@ export default function SafetyHero({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleBrowse}
-            className="w-full bg-emerald-600 dark:bg-emerald-500 text-white rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all font-black uppercase text-[12px] tracking-wider"
+            className="w-full bg-emerald-700 dark:bg-emerald-700 text-white rounded-2xl py-3.5 px-4 shadow-md hover:shadow-lg transition-all font-black uppercase text-[12px] tracking-wider"
             aria-label="Browse homes safely"
           >
             Browse homes safely

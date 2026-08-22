@@ -59,14 +59,14 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
               {/* Role badge */}
               <div className="flex flex-wrap items-center gap-1.5">
                 <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400">
-                  <User className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <User className="w-3 h-3 text-emerald-700 dark:text-emerald-400" />
                   <span className="text-[10px] font-black uppercase tracking-wider">
                     {roleLabel}
                   </span>
                 </div>
                 {isAdmin && (
                   <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-orange-500/10 dark:bg-orange-500/15 border border-orange-500/20 text-orange-700 dark:text-orange-400">
-                    <ShieldCheck className="w-3 h-3 text-orange-600 dark:text-orange-400" />
+                    <ShieldCheck className="w-3 h-3 text-orange-700 dark:text-orange-400" />
                     <span className="text-[10px] font-black uppercase tracking-wider">Admin</span>
                   </div>
                 )}
@@ -76,19 +76,19 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
               <div className="space-y-1 pt-1">
                 {profile?.phone && (
                   <div className="flex items-center space-x-2 text-neutral-500 dark:text-stone-400">
-                    <Phone className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500 shrink-0" />
+                    <Phone className="w-3.5 h-3.5 text-neutral-550 dark:text-stone-400 shrink-0" />
                     <span className="text-[11.5px] font-semibold tracking-tight">{profile.phone}</span>
                   </div>
                 )}
                 {profile?.town && (
                   <div className="flex items-center space-x-2 text-neutral-500 dark:text-stone-400">
-                    <MapPin className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500 shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-neutral-550 dark:text-stone-400 shrink-0" />
                     <span className="text-[11.5px] font-semibold tracking-tight truncate">{profile.town}</span>
                   </div>
                 )}
                 {(user?.email || profile?.email) && (
                   <div className="flex items-center space-x-2 text-neutral-500 dark:text-stone-400">
-                    <Mail className="w-3.5 h-3.5 text-neutral-400 dark:text-stone-500 shrink-0" />
+                    <Mail className="w-3.5 h-3.5 text-neutral-550 dark:text-stone-400 shrink-0" />
                     <span className="text-[11.5px] font-semibold tracking-tight truncate">{user?.email || profile?.email}</span>
                   </div>
                 )}
@@ -97,13 +97,11 @@ export default function ProfileIdentityCard({ isAdmin = false }: ProfileIdentity
           </div>
         </div>
 
-        {/* Verification badges along the bottom */}
-        <div className="flex flex-wrap gap-1.5 border-t border-neutral-100 dark:border-stone-800/30 mt-4.5 pt-3.5">
-          <div className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-550/20 text-emerald-700 dark:text-emerald-400 select-none">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
-            <span className="text-[9.5px] font-extrabold tracking-tight">Email Login</span>
-          </div>
-        </div>
+        {/* The "Email Login" badge that used to sit here was hardcoded: it
+            rendered for every account regardless of anything, styled as a
+            verification badge in the same emerald as the real ones. The email
+            row above already shows the address, and real verification state
+            lives in ProfileTrustStatus. */}
       </motion.div>
     </div>
   );

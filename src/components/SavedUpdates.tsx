@@ -64,7 +64,7 @@ export default function SavedUpdates({
         );
       case 'verification':
         return (
-          <div className="w-8 h-8 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-450 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-450 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
           </div>
         );
@@ -136,7 +136,7 @@ export default function SavedUpdates({
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={onMarkAllRead}
-                className="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-450 hover:underline flex items-center space-x-1 cursor-pointer"
+                className="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-450 hover:underline flex items-center space-x-1 cursor-pointer"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 <span>Mark all read</span>
@@ -145,7 +145,7 @@ export default function SavedUpdates({
 
             <button
               onClick={onClearRead}
-              className="text-[10px] font-black uppercase tracking-wider text-neutral-400 dark:text-stone-500 hover:text-red-500 cursor-pointer bg-transparent border-none"
+              className="text-[10px] font-black uppercase tracking-wider text-neutral-550 dark:text-stone-400 hover:text-red-500 cursor-pointer bg-transparent border-none"
             >
               Clear read
             </button>
@@ -156,7 +156,7 @@ export default function SavedUpdates({
       {/* 2. Headline banner block */}
       <div className="space-y-1">
         <h2 className="text-base font-black text-neutral-800 dark:text-neutral-50 tracking-tight flex items-center space-x-1.5">
-          <Bell className="w-4 h-4 text-emerald-500 shrink-0" />
+          <Bell className="w-4 h-4 text-emerald-700 shrink-0" />
           <span>Saved Updates & Alerts</span>
         </h2>
         <p className="text-[11.5px] font-semibold text-neutral-500 dark:text-stone-400 leading-normal">
@@ -171,7 +171,7 @@ export default function SavedUpdates({
           animate={{ opacity: 1 }}
           className="bg-white/95 dark:bg-stone-900/90 border border-neutral-100 dark:border-stone-850 rounded-2.5xl p-8 text-center space-y-4"
         >
-          <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-400 dark:text-stone-500 mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-550 dark:text-stone-400 mx-auto">
             <Bell className="w-6 h-6 stroke-[1.8]" />
           </div>
           <div className="space-y-1 max-w-xs mx-auto">
@@ -183,7 +183,7 @@ export default function SavedUpdates({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={onBack}
-            className="px-5 h-9 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-[11px] rounded-xl cursor-pointer"
+            className="px-5 h-9 bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-[11px] rounded-xl cursor-pointer"
           >
             Back to saved homes
           </motion.button>
@@ -212,13 +212,13 @@ export default function SavedUpdates({
                     
                     {/* Header line info time / unread indicator */}
                     <div className="flex items-center justify-between space-x-2">
-                      <span className="text-[10px] font-black uppercase text-neutral-400 dark:text-stone-500 tracking-wider font-mono">
+                      <span className="text-[10px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider font-mono">
                         {item.type.replace('_', ' ')}
                       </span>
-                      <div className="flex items-center space-x-1.5 font-mono text-[9px] text-neutral-400 font-bold select-none">
+                      <div className="flex items-center space-x-1.5 font-mono text-[9px] text-neutral-550 font-bold select-none">
                         <span>{item.timeAgo}</span>
                         {!item.isRead && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
                         )}
                       </div>
                     </div>
@@ -231,7 +231,7 @@ export default function SavedUpdates({
                       {item.message}
                     </p>
 
-                    <span className="flex items-center gap-1 text-[10px] text-neutral-400 dark:text-stone-500 font-semibold truncate pt-0.5">
+                    <span className="flex items-center gap-1 text-[10px] text-neutral-550 dark:text-stone-400 font-semibold truncate pt-0.5">
                       <MapPin className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
                       {item.location}
                     </span>
@@ -247,7 +247,7 @@ export default function SavedUpdates({
                     className="h-7.5 px-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-stone-850 dark:hover:bg-stone-800 text-[10.5px] font-extrabold text-neutral-700 dark:text-stone-200 flex items-center space-x-1 cursor-pointer border-none"
                   >
                     <span>{getActionText(item.type)}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
+                    <ChevronRight className="w-3.5 h-3.5 text-neutral-550" />
                   </motion.button>
                 </div>
 
@@ -259,7 +259,7 @@ export default function SavedUpdates({
 
       {/* 4. Renting safety warning message banner */}
       <div className="w-full bg-orange-500/[0.03] dark:bg-orange-950/10 border border-orange-500/10 p-3 rounded-2.5xl flex items-start space-x-2.5 leading-tight select-none mt-2.5">
-        <AlertTriangle className="w-4.5 h-4.5 text-orange-500 shrink-0 mt-0.5" />
+        <AlertTriangle className="w-4.5 h-4.5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
           <h4 className="text-[11.5px] font-black text-orange-850 dark:text-orange-400">
             Tenant Protection Guidelines
@@ -275,12 +275,12 @@ export default function SavedUpdates({
         
         {/* Preference header */}
         <div className="flex items-start space-x-2.5">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-700 shrink-0">
             <Settings className="w-4 h-4" />
           </div>
           <div>
             <h4 className="text-xs font-black text-neutral-850 dark:text-stone-100 uppercase tracking-wider">Alert preferences</h4>
-            <span className="block text-[10px] font-semibold text-neutral-400 dark:text-stone-500 leading-none">
+            <span className="block text-[10px] font-semibold text-neutral-550 dark:text-stone-400 leading-none">
               Customize how we notify you on saved Kejas changes
             </span>
           </div>
@@ -297,7 +297,7 @@ export default function SavedUpdates({
               aria-pressed={prefPrice}
               aria-label="Toggle price drop notifications preference"
               className={`w-10 h-5.5 rounded-full transition-colors relative cursor-pointer outline-none border-none ${
-                prefPrice ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-850'
+                prefPrice ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-850'
               }`}
             >
               <div className={`w-4.5 h-4.5 bg-white rounded-full absolute top-[2px] transition-all ${
@@ -314,7 +314,7 @@ export default function SavedUpdates({
               aria-pressed={prefAvail}
               aria-label="Toggle availability changes preference"
               className={`w-10 h-5.5 rounded-full transition-colors relative cursor-pointer outline-none border-none ${
-                prefAvail ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-850'
+                prefAvail ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-850'
               }`}
             >
               <div className={`w-4.5 h-4.5 bg-white rounded-full absolute top-[2px] transition-all ${
@@ -331,7 +331,7 @@ export default function SavedUpdates({
               aria-pressed={prefVerify}
               aria-label="Toggle verification updates preference"
               className={`w-10 h-5.5 rounded-full transition-colors relative cursor-pointer outline-none border-none ${
-                prefVerify ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-850'
+                prefVerify ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-850'
               }`}
             >
               <div className={`w-4.5 h-4.5 bg-white rounded-full absolute top-[2px] transition-all ${
@@ -348,7 +348,7 @@ export default function SavedUpdates({
               aria-pressed={prefRecent}
               aria-label="Toggle recently updated homes preference"
               className={`w-10 h-5.5 rounded-full transition-colors relative cursor-pointer outline-none border-none ${
-                prefRecent ? 'bg-emerald-600' : 'bg-neutral-200 dark:bg-stone-850'
+                prefRecent ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-850'
               }`}
             >
               <div className={`w-4.5 h-4.5 bg-white rounded-full absolute top-[2px] transition-all ${
@@ -360,7 +360,7 @@ export default function SavedUpdates({
         </div>
 
         {/* Small mockup footnote */}
-        <div className="flex items-center justify-center gap-1 pt-2 border-t border-neutral-100 dark:border-stone-800 text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 font-mono text-center">
+        <div className="flex items-center justify-center gap-1 pt-2 border-t border-neutral-100 dark:border-stone-800 text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 font-mono text-center">
           <Info className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
           Alerts configuration is prototype-only for now.
         </div>

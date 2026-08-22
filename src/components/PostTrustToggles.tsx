@@ -31,14 +31,14 @@ export default function PostTrustToggles({
     >
       {/* Title block */}
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <ShieldCheck className="w-4.5 h-4.5 stroke-[2.2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
           <h3 className="text-sm font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
             Trust & Verification
           </h3>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Help KejaFinder review your listing and build renter trust.
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function PostTrustToggles({
 
       {/* Safety warning disclaimer note */}
       <div className="flex items-start space-x-2.5 p-3.5 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 text-emerald-800 dark:text-emerald-400">
-        <ShieldCheck className="w-4.5 h-4.5 text-emerald-500 shrink-0 stroke-[2.2]" />
+        <ShieldCheck className="w-4.5 h-4.5 text-emerald-700 shrink-0 stroke-[2.2]" />
         <span className="text-[10px] font-bold tracking-tight leading-relaxed">
           Verification requests are reviewed by KejaFinder. Your listing will appear with a "Pending Check" status until physically or remotely verified by our scouts.
         </span>
@@ -59,8 +59,8 @@ export default function PostTrustToggles({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowPhoneVerification 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <PhoneCall className="w-4 h-4 stroke-[2]" />
             </div>
@@ -68,7 +68,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Allow phone verification
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 We may confirm this number before showing trust badges.
               </span>
             </div>
@@ -80,7 +80,7 @@ export default function PostTrustToggles({
             aria-checked={allowPhoneVerification}
             onClick={() => onChange({ allowPhoneVerification: !allowPhoneVerification })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              allowPhoneVerification ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              allowPhoneVerification ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span
@@ -96,8 +96,8 @@ export default function PostTrustToggles({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               requestLocationCheck 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <MapPin className="w-4 h-4 stroke-[2]" />
             </div>
@@ -105,7 +105,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Request location check
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 KejaFinder can review the location details before approval.
               </span>
             </div>
@@ -117,7 +117,7 @@ export default function PostTrustToggles({
             aria-checked={requestLocationCheck}
             onClick={() => onChange({ requestLocationCheck: !requestLocationCheck })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              requestLocationCheck ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              requestLocationCheck ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span
@@ -133,8 +133,8 @@ export default function PostTrustToggles({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               requestScoutVerification 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <CheckSquare className="w-4 h-4 stroke-[2]" />
             </div>
@@ -142,7 +142,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Request scout verification
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 A local scout may physically check the house later.
               </span>
             </div>
@@ -154,7 +154,7 @@ export default function PostTrustToggles({
             aria-checked={requestScoutVerification}
             onClick={() => onChange({ requestScoutVerification: !requestScoutVerification })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              requestScoutVerification ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              requestScoutVerification ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span
@@ -170,8 +170,8 @@ export default function PostTrustToggles({
           <div className="flex items-start space-x-3">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               remindToUpdate 
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-400'
+                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
             }`}>
               <Clock className="w-4 h-4 stroke-[2]" />
             </div>
@@ -179,7 +179,7 @@ export default function PostTrustToggles({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Remind me to update availability
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-400 dark:text-stone-500 leading-normal">
+              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Fresh listings help renters avoid wasted visits.
               </span>
             </div>
@@ -191,7 +191,7 @@ export default function PostTrustToggles({
             aria-checked={remindToUpdate}
             onClick={() => onChange({ remindToUpdate: !remindToUpdate })}
             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-1 focus:ring-emerald-500/20 ${
-              remindToUpdate ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-stone-800'
+              remindToUpdate ? 'bg-emerald-700' : 'bg-neutral-200 dark:bg-stone-800'
             }`}
           >
             <span

@@ -20,13 +20,13 @@ export default function NotificationSafetyCard({
     >
       <div className="flex items-start space-x-3.5">
         {/* Warm orange icon badge */}
-        <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-orange-550/10 border border-orange-550/20 text-orange-650 dark:text-orange-400 shrink-0">
+        <div className="w-11 h-11 rounded-2xl flex items-center justify-center bg-orange-550/10 border border-orange-550/20 text-orange-700 dark:text-orange-400 shrink-0">
           <AlertTriangle className="w-5.25 h-5.25 stroke-[2.2]" />
         </div>
 
         <div className="flex-1 min-w-0">
           {/* Tag heading label */}
-          <span className="block text-[9.5px] font-black text-orange-650 dark:text-orange-400 uppercase tracking-widest leading-none">
+          <span className="block text-[9.5px] font-black text-orange-700 dark:text-orange-400 uppercase tracking-widest leading-none">
             Safety reminder
           </span>
 
@@ -49,7 +49,7 @@ export default function NotificationSafetyCard({
           whileTap={{ scale: 0.96 }}
           onClick={onViewSafetyTips}
           aria-label="View safety tips"
-          className="py-1.5 px-4 rounded-xl text-[10.5px] font-extrabold uppercase tracking-wide bg-emerald-600 hover:bg-emerald-650 text-white shadow-3xs cursor-pointer outline-none transition-all"
+          className="py-1.5 px-4 rounded-xl text-[10.5px] font-extrabold uppercase tracking-wide bg-emerald-700 hover:bg-emerald-800 text-white shadow-3xs cursor-pointer outline-none transition-all"
         >
           View safety tips
         </motion.button>

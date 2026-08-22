@@ -34,7 +34,7 @@ export default function EmptyState({ icon: Icon, title, description, primaryActi
       transition={{ duration: 0.35, ease: 'easeOut' }}
       className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md rounded-2.5xl border border-dashed border-neutral-250 dark:border-neutral-800/80 p-8 py-10 shadow-3xs text-center flex flex-col items-center justify-center space-y-5"
     >
-      <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-3xs">
+      <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shadow-3xs">
         <Icon className="w-7.5 h-7.5 stroke-[2]" />
       </div>
 

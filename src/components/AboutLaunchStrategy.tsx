@@ -99,7 +99,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
     >
       {/* 1. Header Block */}
       <motion.div variants={itemVariants} className="space-y-1.5 border-t border-neutral-200/40 dark:border-stone-800/40 pt-6">
-        <h3 className="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+        <h3 className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">
           Launch &amp; Focus Area
         </h3>
         <h2 className="text-lg font-black text-neutral-900 dark:text-stone-100 uppercase tracking-tight">
@@ -118,7 +118,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         variants={itemVariants}
         className="bg-emerald-500/[0.02] dark:bg-emerald-500/[0.015] border border-emerald-500/15 dark:border-emerald-950/15 rounded-3xl p-5.5 shadow-3xs space-y-3"
       >
-        <div className="flex items-center space-x-2 text-emerald-650 dark:text-emerald-450">
+        <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-450">
           <Target className="w-5 h-5 stroke-[2.2]" />
           <h4 className="text-[11.5px] font-black uppercase tracking-wider">
             Our launch approach
@@ -137,7 +137,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
 
       {/* 3. Pilot Area Selection list */}
       <motion.div variants={itemVariants} className="space-y-2.5">
-        <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-stone-500 block">
+        <span className="text-[10px] font-black uppercase tracking-widest text-neutral-550 dark:text-stone-400 block">
           Pilot Candidate Neighborhoods
         </span>
 
@@ -153,7 +153,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
                   : "bg-white dark:bg-stone-900 text-neutral-600 dark:text-stone-300 border-neutral-200/50 dark:border-stone-850"
               }`}
             >
-              <MapPin className={`w-3.5 h-3.5 ${area.type === "first-focus" ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`} />
+              <MapPin className={`w-3.5 h-3.5 ${area.type === "first-focus" ? "text-amber-600 dark:text-amber-400" : "text-emerald-700 dark:text-emerald-400"}`} />
               <span>{area.name}</span>
               {area.type === "first-focus" && (
                 <span className="text-[8px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 px-1 py-0.2 rounded-md">
@@ -163,7 +163,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
             </motion.div>
           ))}
         </div>
-        <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-500 uppercase tracking-normal">
+        <p className="text-[9px] font-semibold text-neutral-550 dark:text-stone-400 uppercase tracking-normal">
           * Focused pilot Candidate list for initial physical area scouting campaigns.
         </p>
       </motion.div>
@@ -175,7 +175,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
       >
         <div className="space-y-2 max-w-xs">
           <h4 className="text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-wider flex items-center space-x-2">
-            <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <TrendingUp className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             <span>First serious milestone</span>
           </h4>
           <p className="text-[11px] font-semibold text-neutral-500 dark:text-stone-400 leading-snug">
@@ -184,7 +184,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         </div>
 
         <div className="flex flex-col items-center justify-center bg-neutral-50 dark:bg-stone-850 rounded-2xl p-4 border border-neutral-150/40 dark:border-stone-800/40 min-w-[130px] shrink-0">
-          <span className="text-2xl font-black text-emerald-650 dark:text-emerald-400 tracking-tight leading-none">
+          <span className="text-2xl font-black text-emerald-700 dark:text-emerald-400 tracking-tight leading-none">
             100
           </span>
           <span className="text-[9px] font-bold text-neutral-550 dark:text-stone-450 uppercase tracking-widest mt-1">
@@ -198,13 +198,13 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         variants={itemVariants}
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5.5 shadow-3xs space-y-3"
       >
-        <span className="text-[9px] font-black text-neutral-400 dark:text-stone-500 uppercase tracking-widest block">
+        <span className="text-[9px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
           Milestone Listing Requirements
         </span>
         <div className="grid grid-cols-2 gap-2.5" role="list">
           {milestoneBullets.map((bullet, index) => (
             <div key={index} className="flex items-center space-x-2 text-[10.5px] font-bold text-neutral-700 dark:text-stone-300" role="listitem">
-              <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <Check className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
               <span className="truncate">{bullet}</span>
             </div>
           ))}
@@ -226,7 +226,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <div className="space-y-3" role="list">
           {manualSteps.map((step, idx) => (
             <div key={idx} className="flex space-x-3 items-start" role="listitem">
-              <div className="w-5 h-5 rounded-md bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-[10px] shrink-0 border border-emerald-500/10">
+              <div className="w-5 h-5 rounded-md bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-black text-[10px] shrink-0 border border-emerald-500/10">
                 {idx + 1}
               </div>
               <p className="text-[11px] font-semibold text-neutral-600 dark:text-stone-350 leading-relaxed pt-0.5">
@@ -235,7 +235,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
             </div>
           ))}
         </div>
-        <p className="text-[9px] font-medium text-neutral-400 dark:text-stone-500 italic mt-1 leading-snug">
+        <p className="text-[9px] font-medium text-neutral-550 dark:text-stone-400 italic mt-1 leading-snug">
           * To ensure maximum truthfulness, listing collection starts by visiting rental plots manually before creating large automated syndications later.
         </p>
       </motion.div>
@@ -246,7 +246,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5 shadow-3xs space-y-3.5"
       >
         <div className="flex items-center space-x-2 text-neutral-800 dark:text-stone-100">
-          <ListChecks className="w-5 h-5 text-emerald-600 dark:text-emerald-400 stroke-[2.2]" />
+          <ListChecks className="w-5 h-5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
           <h4 className="text-[11.5px] font-black uppercase tracking-wider">
             Why local focus matters
           </h4>
@@ -255,7 +255,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <ul className="space-y-2.5" role="list">
           {whyLocalFocus.map((point, index) => (
             <li key={index} className="flex items-start space-x-2" role="listitem">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-700 shrink-0 mt-1.5" />
               <span className="text-[10.5px] font-semibold text-neutral-600 dark:text-stone-350 leading-relaxed">
                 {point}
               </span>
@@ -275,7 +275,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400 leading-relaxed">
           KejaFinder should grow area by area after listings are useful, contact details work, reports are handled, and renters trust the experience.
         </p>
-        <strong className="text-[9.5px] font-black text-emerald-650 dark:text-emerald-400 uppercase tracking-widest block pt-1">
+        <strong className="text-[9.5px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block pt-1">
           Trust before growth.
         </strong>
       </motion.div>
@@ -285,7 +285,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         variants={itemVariants}
         className="bg-amber-500/[0.04] dark:bg-amber-500/[0.02] border border-amber-500/15 dark:border-amber-900/20 rounded-2.5xl p-4.5 flex items-start space-x-3.5 shadow-4xs"
       >
-        <AlertTriangle className="w-5.5 h-5.5 text-amber-650 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5" />
+        <AlertTriangle className="w-5.5 h-5.5 text-amber-600 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5" />
         <div className="space-y-1">
           <p className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-500 leading-tight">
             “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
@@ -301,7 +301,7 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleSearchAction}
-          className="flex-1 h-11 bg-emerald-650 hover:bg-emerald-600 text-white font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Search pilot areas"
         >
           <Search className="w-4 h-4 stroke-[2.2]" />
@@ -311,10 +311,10 @@ export default function AboutLaunchStrategy({ onGoSearch, onGoPost, onShowFeedba
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handlePostAction}
-          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+          className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Post a vacancy"
         >
-          <PlusCircle className="w-4 h-4 stroke-[2.2] text-emerald-600 dark:text-emerald-400" />
+          <PlusCircle className="w-4 h-4 stroke-[2.2] text-emerald-700 dark:text-emerald-400" />
           <span>Post a vacancy</span>
         </motion.button>
       </motion.div>

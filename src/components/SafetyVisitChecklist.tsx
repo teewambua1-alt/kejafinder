@@ -91,7 +91,7 @@ export default function SafetyVisitChecklist({
       {/* Section Header */}
       <div>
         <div className="flex items-center space-x-2 mb-1">
-          <ClipboardCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <ClipboardCheck className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
           <h3 className="text-xl font-black text-neutral-850 dark:text-stone-100 tracking-tight">
             Before you visit
           </h3>
@@ -113,7 +113,7 @@ export default function SafetyVisitChecklist({
             <span className="text-sm font-black text-neutral-800 dark:text-stone-200" aria-label={`${completedCount} of ${totalCount} safety checks completed`}>
               {completedCount} of {totalCount} checks done
             </span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
               {completedCount === totalCount ? 'Ready to visit carefully.' : 'Keep checking'}
             </span>
           </div>
@@ -126,7 +126,7 @@ export default function SafetyVisitChecklist({
             aria-label="Safety checklist completion progress"
           >
             <motion.div 
-              className="h-full bg-emerald-500 rounded-full"
+              className="h-full bg-emerald-700 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 0.4, ease: "easeOut" }}
@@ -154,9 +154,9 @@ export default function SafetyVisitChecklist({
               >
                 <div className="shrink-0 mt-0.5">
                   {isChecked ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-700" />
                   ) : (
-                    <Circle className={`w-5 h-5 ${isCritical ? 'text-orange-400 dark:text-orange-500' : 'text-neutral-300 dark:text-stone-600'}`} />
+                    <Circle className={`w-5 h-5 ${isCritical ? 'text-orange-400 dark:text-orange-500' : 'text-neutral-550 dark:text-stone-400'}`} />
                   )}
                 </div>
                 <div className="flex-1">
@@ -180,13 +180,13 @@ export default function SafetyVisitChecklist({
       </div>
 
       {/* Screenshot note */}
-      <p className="text-center text-[11px] font-bold text-neutral-400 dark:text-stone-500 uppercase tracking-wider">
+      <p className="text-center text-[11px] font-bold text-neutral-550 dark:text-stone-400 uppercase tracking-wider">
         Tip: Screenshot this checklist before going to view a house.
       </p>
 
       {/* Critical reminder card */}
-      <div className="bg-orange-50/90 dark:bg-amber-950/20 border border-orange-200/60 dark:border-amber-900/40 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
-        <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+      <div className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
+        <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
         <div>
           <p className="text-[13px] font-black text-orange-800 dark:text-orange-300 leading-snug mb-1">
             Never send deposit before physically viewing the house and confirming the caretaker or landlord.

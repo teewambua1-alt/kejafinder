@@ -24,12 +24,12 @@ interface PostHouseTypeSelectorProps {
 
 export default function PostHouseTypeSelector({ value, onChange }: PostHouseTypeSelectorProps) {
   const options: HouseTypeOption[] = [
-    { id: 'single_room', label: 'Single Room', icon: Bed, iconColor: 'text-emerald-600 dark:text-emerald-450' },
-    { id: 'bedsitter', label: 'Bedsitter', icon: Bed, iconColor: 'text-orange-500 dark:text-orange-400' },
-    { id: 'studio', label: 'Studio', icon: Sofa, iconColor: 'text-emerald-600 dark:text-emerald-450' },
-    { id: 'one_bedroom', label: '1 Bedroom', icon: Home, iconColor: 'text-emerald-600 dark:text-emerald-450' },
-    { id: 'two_bedroom', label: '2 Bedroom', icon: Building, iconColor: 'text-emerald-600 dark:text-emerald-450' },
-    { id: 'mabati_other', label: 'Other', icon: LayoutGrid, iconColor: 'text-emerald-600 dark:text-emerald-450' },
+    { id: 'single_room', label: 'Single Room', icon: Bed, iconColor: 'text-emerald-700 dark:text-emerald-450' },
+    { id: 'bedsitter', label: 'Bedsitter', icon: Bed, iconColor: 'text-orange-700 dark:text-orange-400' },
+    { id: 'studio', label: 'Studio', icon: Sofa, iconColor: 'text-emerald-700 dark:text-emerald-450' },
+    { id: 'one_bedroom', label: '1 Bedroom', icon: Home, iconColor: 'text-emerald-700 dark:text-emerald-450' },
+    { id: 'two_bedroom', label: '2 Bedroom', icon: Building, iconColor: 'text-emerald-700 dark:text-emerald-450' },
+    { id: 'mabati_other', label: 'Other', icon: LayoutGrid, iconColor: 'text-emerald-700 dark:text-emerald-450' },
   ];
 
   const containerVariants = {
@@ -58,7 +58,7 @@ export default function PostHouseTypeSelector({ value, onChange }: PostHouseType
     >
       {/* Section Indicator and Title Container */}
       <div className="flex items-start space-x-3">
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/30 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
           <Home className="w-4.5 h-4.5 stroke-[2]" />
         </div>
         <div className="flex flex-col space-y-0.5">
@@ -68,10 +68,10 @@ export default function PostHouseTypeSelector({ value, onChange }: PostHouseType
             </h3>
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-700"></span>
             </span>
           </div>
-          <p className="text-[10px] font-semibold text-neutral-400 dark:text-stone-500">
+          <p className="text-[10px] font-semibold text-neutral-550 dark:text-stone-400">
             Select the type of property you’re listing.
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function PostHouseTypeSelector({ value, onChange }: PostHouseType
               aria-pressed={isSelected}
               className={`flex flex-col items-center justify-center p-3.5 h-22 rounded-2xl border text-center transition-all duration-200 cursor-pointer select-none outline-none focus:ring-1 focus:ring-emerald-500/30 ${
                 isSelected
-                  ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-500 dark:border-emerald-600/85 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/20'
+                  ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-700 dark:border-emerald-600/85 text-emerald-800 dark:text-emerald-300 shadow-xs ring-1 ring-emerald-500/20'
                   : 'bg-white/40 dark:bg-stone-850/40 border-neutral-100 dark:border-neutral-800/65 text-neutral-600 dark:text-stone-400 hover:border-neutral-200 dark:hover:border-stone-850 hover:bg-neutral-50/30 dark:hover:bg-stone-850/20'
               }`}
             >
@@ -111,8 +111,8 @@ export default function PostHouseTypeSelector({ value, onChange }: PostHouseType
                   className={`w-4.5 h-4.5 stroke-[2] ${
                     isSelected 
                       ? option.id === 'bedsitter' 
-                        ? 'text-orange-500 dark:text-orange-400' 
-                        : 'text-emerald-600 dark:text-emerald-400' 
+                        ? 'text-orange-700 dark:text-orange-400' 
+                        : 'text-emerald-700 dark:text-emerald-400' 
                       : option.iconColor
                   }`}
                 />
@@ -123,9 +123,9 @@ export default function PostHouseTypeSelector({ value, onChange }: PostHouseType
                 className={`text-[10px] font-bold tracking-tight select-none transition-colors leading-tight ${
                   isSelected 
                     ? option.id === 'bedsitter'
-                      ? 'text-orange-600 dark:text-orange-300 font-extrabold'
+                      ? 'text-orange-700 dark:text-orange-300 font-extrabold'
                       : 'text-emerald-700 dark:text-emerald-300 font-extrabold' 
-                    : 'text-neutral-500 dark:text-stone-500'
+                    : 'text-neutral-500 dark:text-stone-400'
                 }`}
               >
                 {option.label}

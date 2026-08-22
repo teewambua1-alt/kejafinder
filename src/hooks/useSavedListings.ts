@@ -40,7 +40,9 @@ export function useSavedListings() {
       const rows = await getUserSavedListings(user.id);
       if (isStale()) return;
       if (rows) {
-        setSavedListings(rows.map(mapSupabaseListingToListing));
+        setSavedListings(
+          rows.map((row) => ({ ...mapSupabaseListingToListing(row), savedAt: row.saved_at }))
+        );
         setSource('supabase');
       } else {
         setSavedListings([]);

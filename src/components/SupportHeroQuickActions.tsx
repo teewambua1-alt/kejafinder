@@ -36,7 +36,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
         <p className="text-[13px] font-semibold text-neutral-500 dark:text-stone-400 leading-relaxed max-w-[280px] mx-auto">
           Get help with listings, safety, posting, contact issues, or suspicious rental requests.
         </p>
-        <p className="text-[10px] font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 py-1.5 px-3 rounded-full inline-block mt-2">
+        <p className="text-[10px] font-medium text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/20 py-1.5 px-3 rounded-full inline-block mt-2">
           Support tools are prototype-only for now. Real support workflows will be added later.
         </p>
       </div>
@@ -86,8 +86,8 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
               className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/60 dark:border-stone-800/60 rounded-2xl p-4 shadow-sm flex flex-col items-start text-left space-y-2.5 outline-none cursor-pointer hover:bg-neutral-50 dark:hover:bg-stone-800/50 transition-colors"
             >
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center
-                ${item.color === 'orange' ? 'bg-orange-50 dark:bg-orange-950/30 text-orange-500' :
-                  item.color === 'emerald' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500' :
+                ${item.color === 'orange' ? 'bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400' :
+                  item.color === 'emerald' ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700' :
                   item.color === 'blue' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-500' :
                   'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500'
                 }`}
@@ -112,7 +112,7 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
           type="button"
           whileTap={{ scale: 0.98 }}
           onClick={handleSearch}
-          className="flex-1 h-12 bg-emerald-650 hover:bg-emerald-600 text-white font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 shadow-sm transition-colors cursor-pointer"
+          className="flex-1 h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-sm transition-colors cursor-pointer"
         >
           <Search className="w-4 h-4" />
           <span>Browse homes</span>
@@ -121,9 +121,9 @@ export default function SupportHeroQuickActions({ onGoSearch, onGoSafety, onShow
           type="button"
           whileTap={{ scale: 0.98 }}
           onClick={handleSafety}
-          className="flex-1 h-12 bg-white dark:bg-stone-800 text-neutral-800 dark:text-stone-200 border border-neutral-200/80 dark:border-stone-700 font-black text-[11.5px] uppercase tracking-wider rounded-xl.5 flex items-center justify-center space-x-2 shadow-sm hover:bg-neutral-50 dark:hover:bg-stone-750 transition-colors cursor-pointer"
+          className="flex-1 h-12 bg-white dark:bg-stone-800 text-neutral-800 dark:text-stone-200 border border-neutral-200/80 dark:border-stone-700 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 shadow-sm hover:bg-neutral-50 dark:hover:bg-stone-750 transition-colors cursor-pointer"
         >
-          <BookOpen className="w-4 h-4 text-amber-550" />
+          <BookOpen className="w-4 h-4 text-amber-500" />
           <span>Read safety tips</span>
         </motion.button>
       </div>
