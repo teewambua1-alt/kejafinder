@@ -116,19 +116,19 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
         variants={itemVariants}
         className="bg-white/95 dark:bg-stone-900/95 border border-neutral-200/50 dark:border-stone-850/40 rounded-3xl p-5 shadow-3xs space-y-3.5 relative overflow-hidden"
       >
-        <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 dark:bg-amber-500/[0.02] rounded-bl-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/5 dark:bg-orange-500/[0.02] rounded-bl-full pointer-events-none" />
         
-        <div className="flex items-center space-x-2 text-amber-600 dark:text-amber-500">
+        <div className="flex items-center space-x-2 text-orange-700 dark:text-orange-500">
           <AlertCircle className="w-5 h-5 shrink-0 stroke-[2.2]" />
-          <h4 className="text-[12px] font-black uppercase tracking-wider">
+          <h3 className="text-[12px] font-black uppercase tracking-wider">
             Today, finding a keja is too manual
-          </h4>
+          </h3>
         </div>
 
         <ul className="space-y-2" role="list">
           {problemPoints.map((point, index) => (
             <li key={index} className="flex items-start space-x-2" role="listitem">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-600 shrink-0 mt-1.5" />
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-700 dark:bg-orange-600 shrink-0 mt-1.5" />
               <span className="text-[11px] font-semibold text-neutral-605 dark:text-stone-400 leading-snug">
                 {point}
               </span>
@@ -146,9 +146,9 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
 
         <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-400">
           <CheckCircle2 className="w-5 h-5 shrink-0 stroke-[2.2]" />
-          <h4 className="text-[12px] font-black uppercase tracking-wider">
+          <h3 className="text-[12px] font-black uppercase tracking-wider">
             With KejaFinder, the search starts online
-          </h4>
+          </h3>
         </div>
 
         <ul className="space-y-2" role="list">
@@ -175,15 +175,15 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
         <div className="space-y-2.5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {/* Before Column */}
-            <div className="bg-amber-500/[0.03] dark:bg-amber-500/[0.01] border border-amber-500/10 dark:border-amber-900/15 rounded-2xl p-3.5 space-y-2">
-              <span className="flex items-center gap-1 text-[10px] font-black text-amber-700 dark:text-amber-500 uppercase tracking-wider">
+            <div className="bg-orange-500/[0.03] dark:bg-orange-500/[0.01] border border-orange-500/10 dark:border-orange-900/15 rounded-2xl p-3.5 space-y-2">
+              <span className="flex items-center gap-1 text-[10px] font-black text-orange-700 dark:text-orange-500 uppercase tracking-wider">
                 <AlertCircle className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
                 Before KejaFinder
               </span>
               <ul className="space-y-1.5 text-[10.5px] font-semibold text-neutral-510 dark:text-stone-400">
                 {comparisonBefore.map((item, idx) => (
                   <li key={idx} className="flex items-center space-x-1.5">
-                    <X className="w-3 h-3 stroke-[2.5] text-amber-500 shrink-0" aria-hidden="true" />
+                    <X className="w-3 h-3 stroke-[2.5] text-orange-700 dark:text-orange-400 shrink-0" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -216,9 +216,9 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
       >
         <div className="flex items-center space-x-2 text-neutral-800 dark:text-stone-100">
           <TrendingUp className="w-4.5 h-4.5 text-emerald-700 dark:text-emerald-400 stroke-[2.2]" />
-          <h4 className="text-[11.5px] font-black uppercase tracking-tight">
+          <h3 className="text-[11.5px] font-black uppercase tracking-tight">
             Why this matters
-          </h4>
+          </h3>
         </div>
         <p className="text-[11px] font-semibold text-neutral-510 dark:text-stone-400 leading-relaxed">
           For many renters, house hunting costs valuable time, transport fare, and daily energy before they even locate a real vacancy. KejaFinder helps tenants narrow down the options safely from home before they travel.
@@ -228,21 +228,6 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
         </p>
       </motion.div>
 
-      {/* 6. Safety Warning Footer */}
-      <motion.div
-        variants={itemVariants}
-        className="bg-amber-500/[0.03] dark:bg-amber-500/[0.02] border border-amber-500/15 dark:border-amber-900/20 rounded-2.5xl p-4 flex items-start space-x-3.5 shadow-4xs"
-      >
-        <ShieldCheck className="w-5.5 h-5.5 text-amber-600 dark:text-amber-500 shrink-0 stroke-[2.2] mt-0.5" />
-        <div className="space-y-1">
-          <span className="text-[10.5px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-500 block">
-            Critical Deposit Advisory
-          </span>
-          <p className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-500 leading-tight">
-            “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
-          </p>
-        </div>
-      </motion.div>
 
       {/* 7. Action navigation buttons */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-2.5">
@@ -262,7 +247,7 @@ export default function AboutProblemSolution({ onGoSearch, onGoSafety, onShowFee
           className="flex-1 h-11 bg-white dark:bg-stone-900 hover:bg-neutral-50 dark:hover:bg-stone-850 text-neutral-800 dark:text-stone-105 border border-neutral-300 dark:border-stone-800 font-black text-[11.5px] uppercase tracking-wider rounded-2xl flex items-center justify-center space-x-2 transition-colors cursor-pointer"
           aria-label="Read safety advice"
         >
-          <BookOpen className="w-4 h-4 stroke-[2.2] text-amber-500" />
+          <BookOpen className="w-4 h-4 stroke-[2.2] text-orange-700 dark:text-orange-400" />
           <span>Read safety tips</span>
         </motion.button>
       </motion.div>

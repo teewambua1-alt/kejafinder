@@ -52,7 +52,7 @@ export default function SavedUpdates({
     switch (type) {
       case 'price_drop':
         return (
-          <div className="w-8 h-8 rounded-full bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-orange-500/10 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400 flex items-center justify-center shrink-0">
             <TrendingDown className="w-4 h-4 stroke-[2.5]" />
           </div>
         );
@@ -82,7 +82,7 @@ export default function SavedUpdates({
         );
       default:
         return (
-          <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-stone-800 text-neutral-500 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-full bg-neutral-100 dark:bg-stone-800 text-neutral-700 flex items-center justify-center shrink-0">
             <Info className="w-4 h-4" />
           </div>
         );
@@ -101,7 +101,7 @@ export default function SavedUpdates({
     }
   };
 
-  // Interactive callback mapping for prototype simulation
+  // Interactive callback mapping
   const handleActionClick = (e: React.MouseEvent, item: SavedUpdate) => {
     e.stopPropagation();
     onMarkRead(item.id);
@@ -171,7 +171,7 @@ export default function SavedUpdates({
           animate={{ opacity: 1 }}
           className="bg-white/95 dark:bg-stone-900/90 border border-neutral-100 dark:border-stone-850 rounded-2.5xl p-8 text-center space-y-4"
         >
-          <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-550 dark:text-stone-400 mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-neutral-100 dark:bg-stone-850 flex items-center justify-center text-neutral-700 dark:text-stone-400 mx-auto">
             <Bell className="w-6 h-6 stroke-[1.8]" />
           </div>
           <div className="space-y-1 max-w-xs mx-auto">
@@ -215,7 +215,7 @@ export default function SavedUpdates({
                       <span className="text-[10px] font-black uppercase text-neutral-550 dark:text-stone-400 tracking-wider font-mono">
                         {item.type.replace('_', ' ')}
                       </span>
-                      <div className="flex items-center space-x-1.5 font-mono text-[9px] text-neutral-550 font-bold select-none">
+                      <div className="flex items-center space-x-1.5 font-mono text-2xs text-neutral-550 font-bold select-none">
                         <span>{item.timeAgo}</span>
                         {!item.isRead && (
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
@@ -360,9 +360,9 @@ export default function SavedUpdates({
         </div>
 
         {/* Small mockup footnote */}
-        <div className="flex items-center justify-center gap-1 pt-2 border-t border-neutral-100 dark:border-stone-800 text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 font-mono text-center">
+        <div className="flex items-center justify-center gap-1 pt-2 border-t border-neutral-100 dark:border-stone-800 text-2xs font-semibold text-neutral-550 dark:text-stone-400 font-mono text-center">
           <Info className="w-3 h-3 stroke-[2.2] shrink-0" aria-hidden="true" />
-          Alerts configuration is prototype-only for now.
+          Alert preferences aren't saved to your account yet.
         </div>
 
       </div>

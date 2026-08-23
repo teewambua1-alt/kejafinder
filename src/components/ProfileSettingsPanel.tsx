@@ -128,11 +128,11 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                 <h4 className="text-[13px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight leading-none">
                   {displayName}
                 </h4>
-                <p className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-450 leading-none mt-1 uppercase tracking-wider">
+                <p className="text-2xs font-semibold text-neutral-550 dark:text-stone-450 leading-none mt-1 uppercase tracking-wider">
                   {profile?.role || 'Member'}{memberSince ? ` · Member since ${memberSince}` : ''}
                 </p>
               </div>
-              <span className="text-[8px] font-black px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/35 text-emerald-700 dark:text-emerald-400 border border-emerald-100/40 dark:border-emerald-900/30 uppercase tracking-widest font-sans">
+              <span className="text-2xs font-black px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/35 text-emerald-700 dark:text-emerald-400 border border-emerald-100/40 dark:border-emerald-900/30 uppercase tracking-widest font-sans">
                 Active
               </span>
             </div>
@@ -177,7 +177,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
                       <span className="block text-[12px] font-black text-neutral-805 dark:text-stone-100 uppercase tracking-tight leading-tight">
                         {row.title}
                       </span>
-                      <span className="block text-[9px] font-semibold text-neutral-550 dark:text-stone-400 leading-none mt-0.5">
+                      <span className="block text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-none mt-0.5">
                         {row.desc}
                       </span>
                     </div>
@@ -209,7 +209,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
 
             <div className="space-y-3 pt-2">
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Full Name</label>
+                <label className="text-2xs font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Full Name</label>
                 <input
                   type="text"
                   value={fullName}
@@ -220,7 +220,7 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Phone Number</label>
+                <label className="text-2xs font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Phone Number</label>
                 <input
                   type="text"
                   value={phone}
@@ -231,18 +231,18 @@ export default function ProfileSettingsPanel({ type, isOpen, onClose, onSave, on
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Email Address</label>
+                <label className="text-2xs font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Email Address</label>
                 <input
                   type="email"
                   value={user?.email || ''}
                   disabled
-                  className="w-full bg-neutral-100 dark:bg-stone-850 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-500 dark:text-stone-400 outline-none cursor-not-allowed"
+                  className="w-full bg-neutral-100 dark:bg-stone-850 border border-neutral-100 dark:border-stone-850 rounded-xl px-3.5 py-2.5 text-xs font-black text-neutral-700 dark:text-stone-400 outline-none cursor-not-allowed"
                   placeholder="No email on this account"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[9.5px] font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Town / Area</label>
+                <label className="text-2xs font-extrabold text-neutral-550 dark:text-stone-400 uppercase tracking-widest block pl-1">Town / Area</label>
                 <input
                   type="text"
                   value={town}

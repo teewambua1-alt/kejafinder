@@ -158,7 +158,7 @@ export default function PostContactOptions({
               }
               className={`w-full h-12 pl-11 pr-4 rounded-2xl border text-xs font-bold tracking-wider focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
                 !allowCalls
-                  ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-550 cursor-not-allowed'
+                  ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-700 cursor-not-allowed'
                   : 'bg-white/50 dark:bg-stone-850/40 text-neutral-800 dark:text-stone-105'
               } ${
                 errors.contactPhone || errors.contactPhoneFormat
@@ -216,7 +216,7 @@ export default function PostContactOptions({
             }
             className={`w-full h-12 pl-11 pr-4 rounded-2xl border text-xs font-bold tracking-wider focus:outline-hidden focus:ring-2 focus:bg-white dark:focus:bg-stone-900 transition-all ${
               !allowWhatsApp
-                ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-550 cursor-not-allowed'
+                ? 'bg-neutral-100/50 dark:bg-stone-900/50 border-neutral-150/40 text-neutral-700 cursor-not-allowed'
                 : 'bg-white/50 dark:bg-stone-850/40 text-neutral-800 dark:text-stone-105'
             } ${
               errors.whatsappPhone || errors.whatsappPhoneFormat
@@ -249,7 +249,7 @@ export default function PostContactOptions({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowCalls 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <Phone className="w-4 h-4 stroke-[2]" />
             </div>
@@ -257,7 +257,7 @@ export default function PostContactOptions({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 Call
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Allow tenants to call you directly.
               </span>
             </div>
@@ -287,7 +287,7 @@ export default function PostContactOptions({
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
               allowWhatsApp 
                 ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-450' 
-                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550'
+                : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700'
             }`}>
               <MessageCircle className="w-4 h-4 stroke-[2]" />
             </div>
@@ -295,7 +295,7 @@ export default function PostContactOptions({
               <span className="text-xs font-bold text-neutral-800 dark:text-stone-200">
                 WhatsApp
               </span>
-              <span className="text-[9.5px] font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
+              <span className="text-2xs font-semibold text-neutral-550 dark:text-stone-400 leading-normal">
                 Allow tenants to message you on WhatsApp.
               </span>
             </div>

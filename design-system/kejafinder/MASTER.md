@@ -156,6 +156,22 @@ The "no emoji as structural icons" rule was violated in 9 files where an emoji s
 
 `text-neutral-450` (`#a3a3a3`) measured **2.5:1** against a white surface — below both the 3:1 large-text floor and the 4.5:1 normal-text floor. `text-neutral-350` (`#bcbcbc`-ish color-mix) measured **~1.9:1**, worse still. Both were used exclusively as the light-mode half of an already-correct `dark:text-stone-*` pair (verified before changing anything — only one place in the whole codebase, `SearchResultCard.tsx:185`, uses `dark:text-neutral-350` as an intentional *dark-surface* value, and that one was left untouched). Swapped all 76 other occurrences (67 + 9) across 38 files to `text-neutral-550` (`#737373`, ~4.7:1, passes AA). `npm run typecheck` verified clean after the change.
 
+### Two hues, not seven (added Phase 9)
+
+`amber` appeared **119 times across 22 files** and existed in neither the `@theme` block nor this document. `blue`, `purple`, `rose`, `teal`, `indigo` and `sky` were used as decorative per-item tints on About and Support cards. The palette is **emerald (primary) + orange (warning/accent)** plus neutrals — nothing else.
+
+- **amber is orange.** They are visually adjacent, which is exactly why having both produced warnings that were sometimes one and sometimes the other. All 119 uses were renamed; the AA sweep then lifted any resulting sub-`700` orange.
+- **Differentiate a set by icon, not by hue.** A row of role cards or category cards gets one accent and different Lucide icons. Inventing a colour per item is what turned About into a rainbow.
+- **No opacity on warning text.** `text-orange-800/80` measured 3.67:1 — the `/80` alone broke the deposit guarantee, the one sentence that must be legible.
+- **10px (`text-2xs`) is the floor for any text.** `text-[8px]` and `text-[9px]` appeared 52 times; they fail contrast at any colour that still reads as muted, and they are unreadable at arm's length regardless. `--text-3xs` (8px) exists in the theme but should not be used for text a user has to read.
+- **A tint changes the maths.** `text-neutral-550` passes on white and measures 4.35:1 on `bg-neutral-100`. Check muted text against the surface it actually sits on, not against white.
+
+### One deposit warning per decision point (added Phase 9)
+
+The deposit rule was written out in **19 files** and rendered **16 times on the Safety page** and **10 on About**. Past the third repeat a warning stops being read. `ui/SafetyNote` is now the single component and the single wording; `AuthSafetyNote` and `listing/parts`' `SafetyNote` re-export it.
+
+The rule is **once per decision point, not once per section.** A page about safety states it once at the top. A listing states it where the money decision happens. A section that merely mentions deposits does not get its own copy.
+
 ### AA-safe colour pairs (added Phase 8) — measured, not assumed
 
 A full-page contrast audit found **37 AA failures on the brand colours**. An earlier pass had reported zero, but it only sampled text on card surfaces — it never sampled filled buttons or brand-coloured text, which is where every failure was. Ratios below were measured in the running app with alpha layers composited.

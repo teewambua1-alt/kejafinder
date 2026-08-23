@@ -80,7 +80,7 @@ export default function RecommendedForYou({
       className="w-full flex flex-col space-y-3.5 pt-4 pb-2"
     >
       <div className="flex items-center space-x-2 px-0.5">
-        <Sparkles className="w-5 h-5 text-amber-500" />
+        <Sparkles className="w-5 h-5 text-orange-700 dark:text-orange-400" />
         <h2 className="font-display text-lg font-extrabold text-neutral-800 dark:text-neutral-100 tracking-tight">
           Recommended for you
         </h2>

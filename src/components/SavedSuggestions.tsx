@@ -78,7 +78,7 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
                   />
 
                   {/* House type overlay tag */}
-                  <span className="absolute bottom-2 left-2 text-[8px] font-black tracking-wider uppercase bg-black/65 backdrop-blur-xs text-white px-1.5 py-0.5 rounded-md">
+                  <span className="absolute bottom-2 left-2 text-2xs font-black tracking-wider uppercase bg-black/65 backdrop-blur-xs text-white px-1.5 py-0.5 rounded-md">
                     {item.type === 'one_bedroom' ? '1 Bedroom' : item.type === 'bedsitter' ? 'Bedsitter' : 'Studio'}
                   </span>
 
@@ -118,11 +118,11 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
                     <span className="text-xs font-black text-emerald-700 dark:text-emerald-400">
                       {formatCurrency(item.rent)}
                     </span>
-                    <span className="text-[8.5px] text-neutral-550 font-bold">/mo</span>
+                    <span className="text-2xs text-neutral-550 font-bold">/mo</span>
                   </div>
 
                   {item.badges && item.badges[0] && (
-                    <span className="inline-flex items-center gap-0.5 text-[8.5px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/20 px-1 py-0.5 rounded border border-emerald-500/10">
+                    <span className="inline-flex items-center gap-0.5 text-2xs font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-50/70 dark:bg-emerald-950/20 px-1 py-0.5 rounded border border-emerald-500/10">
                       <Check className="w-2.5 h-2.5 stroke-[3] shrink-0" aria-hidden="true" />
                       {item.badges[0]}
                     </span>
@@ -133,7 +133,7 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
               {/* View/Save bottom action row */}
               <div className="mt-3 pt-2 border-t border-neutral-100 dark:border-stone-800/60 flex items-center justify-end">
                 {isAlreadySaved ? (
-                  <div className="text-[9.5px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-950/30 px-3.5 py-1.5 rounded-lg flex items-center space-x-1 select-none">
+                  <div className="text-2xs font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-950/30 px-3.5 py-1.5 rounded-lg flex items-center space-x-1 select-none">
                     <Check className="w-3 h-3 stroke-[3]" />
                     <span>Saved</span>
                   </div>
@@ -141,7 +141,7 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
                   <motion.button
                     whileTap={{ scale: 0.96 }}
                     onClick={() => handleSave(item)}
-                    className="flex items-center space-x-1 h-7.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white text-[9.5px] font-extrabold rounded-lg shadow-3xs cursor-pointer transition-colors"
+                    className="flex items-center space-x-1 h-7.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white text-2xs font-extrabold rounded-lg shadow-3xs cursor-pointer transition-colors"
                   >
                     <Plus className="w-3 h-3 stroke-[3]" />
                     <span>Save Home</span>

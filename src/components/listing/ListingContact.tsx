@@ -80,7 +80,7 @@ export default function ListingContact({
                   type="button"
                   onClick={copyPhone}
                   aria-label="Copy phone number"
-                  className="rounded-md p-1 text-neutral-550 transition-colors hover:bg-neutral-100 dark:hover:bg-stone-800"
+                  className="rounded-md p-1 text-neutral-700 transition-colors hover:bg-neutral-100 dark:hover:bg-stone-800"
                 >
                   <Copy className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
@@ -109,7 +109,7 @@ export default function ListingContact({
             <button
               type="button"
               disabled
-              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-stone-850 py-3.5 text-xs font-black uppercase tracking-wider text-neutral-550 dark:text-stone-400"
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-stone-850 py-3.5 text-xs font-black uppercase tracking-wider text-neutral-700 dark:text-stone-400"
             >
               <Phone className="h-4 w-4" aria-hidden="true" />
               No phone
@@ -133,7 +133,7 @@ export default function ListingContact({
             <button
               type="button"
               disabled
-              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-stone-850 py-3.5 text-xs font-black uppercase tracking-wider text-neutral-550 dark:text-stone-400"
+              className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-stone-850 py-3.5 text-xs font-black uppercase tracking-wider text-neutral-700 dark:text-stone-400"
             >
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
               No WhatsApp

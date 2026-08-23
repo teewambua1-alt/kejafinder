@@ -21,7 +21,7 @@ export default function ListingImageGallery({ listing, onSaveToggle, onShare, is
 
   if (images.length === 0) {
     return (
-      <div className="w-full h-64 bg-neutral-100 dark:bg-stone-850 rounded-3xl border border-neutral-200/50 dark:border-stone-800/40 shadow-sm flex flex-col items-center justify-center p-6 text-neutral-550 dark:text-stone-400">
+      <div className="w-full h-64 bg-neutral-100 dark:bg-stone-850 rounded-3xl border border-neutral-200/50 dark:border-stone-800/40 shadow-sm flex flex-col items-center justify-center p-6 text-neutral-700 dark:text-stone-400">
         <div className="w-16 h-16 rounded-full bg-white dark:bg-stone-800 shadow-sm flex items-center justify-center mb-3">
           <Home className="w-8 h-8 stroke-[1.5]" />
         </div>

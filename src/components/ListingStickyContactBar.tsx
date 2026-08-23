@@ -81,7 +81,7 @@ export default function ListingStickyContactBar({ rent, phone, whatsapp, onCallC
           ) : (
             <button
               disabled
-              className="flex-1 h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
+              className="flex-1 h-11 rounded-xl bg-neutral-100 dark:bg-stone-850 text-neutral-700 dark:text-stone-400 flex items-center justify-center gap-1.5 text-xs font-bold cursor-not-allowed outline-none"
               aria-label="No WhatsApp number on file"
             >
               <MessageCircle className="w-4 h-4 stroke-[2.2]" />

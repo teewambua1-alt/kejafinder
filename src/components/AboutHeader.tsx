@@ -24,9 +24,11 @@ export default function AboutHeader({ onBack }: AboutHeaderProps) {
       </motion.button>
       
       <div className="flex-1 flex justify-center">
-        <h1 className="text-base font-black text-neutral-800 dark:text-stone-100 tracking-tight uppercase">
+        {/* Not a heading: "About KejaFinder" below is this page's h1, and two
+          * h1s give AT users two competing page titles. This is a toolbar label. */}
+        <p className="text-base font-black text-neutral-800 dark:text-stone-100 tracking-tight uppercase">
           About
-        </h1>
+        </p>
       </div>
 
       <div className="w-10 h-10 flex items-center justify-center rounded-full bg-neutral-100/30 dark:bg-stone-900/30 text-emerald-700 dark:text-emerald-400" aria-label="About KejaFinder icon text representation">

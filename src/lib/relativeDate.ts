@@ -33,3 +33,24 @@ export function daysSince(iso?: string | null): number | null {
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/**
+ * Relative time for a notification. Returns null for a missing timestamp so a
+ * caller hides the line rather than printing "just now" about an unknown time
+ * -- the old page stored a `timeAgo` string like "10:24 AM" on hardcoded data,
+ * which never changed no matter when you opened it.
+ */
+export function formatNotificationTime(iso?: string | null): string | null {
+  if (!iso) return null;
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return null;
+  const mins = Math.floor((Date.now() - then) / 60000);
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return `${days} days ago`;
+  return new Date(iso).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+}

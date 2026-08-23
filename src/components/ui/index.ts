@@ -10,5 +10,6 @@ export { default as Skeleton } from './Skeleton';
 // least likely to be reached for.
 export { default as Sheet } from './Sheet';
 export { default as PropertyImage } from './PropertyImage';
+export { default as SafetyNote, DEPOSIT_WARNING } from './SafetyNote';
 export { default as EmptyState } from './EmptyState';
 export { default as ErrorState } from './ErrorState';

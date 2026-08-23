@@ -1,5 +1,4 @@
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '../../lib/cn';
 
@@ -113,23 +112,7 @@ export function formatKES(amount: number): string {
 }
 
 /**
- * The deposit warning. It appeared verbatim in three separate cards on this
- * page (pricing, contact, trust) plus a fourth near-variant in the location
- * section. It is the most important sentence on the page, and repeating it
- * four times is how a warning becomes wallpaper — so it now appears once, in
- * the contact card, where the money decision actually happens.
+ * Re-exported from ui/SafetyNote so the detail page's sections keep importing
+ * from one place. The wording lives there -- it was duplicated across 19 files.
  */
-export function SafetyNote({ children }: { children?: React.ReactNode }) {
-  return (
-    <div className="flex items-start gap-3 rounded-2xl border border-orange-200/60 dark:border-orange-900/40 bg-orange-50/80 dark:bg-orange-950/20 p-4">
-      <AlertTriangle
-        className="mt-0.5 h-4.5 w-4.5 shrink-0 text-orange-700 dark:text-orange-400 stroke-[2.2]"
-        aria-hidden="true"
-      />
-      <p className="text-xs font-semibold leading-relaxed text-orange-800 dark:text-orange-300">
-        {children ??
-          'Never send a deposit before you have seen the house in person and confirmed the caretaker or landlord. KejaFinder never collects deposits.'}
-      </p>
-    </div>
-  );
-}
+export { default as SafetyNote } from '../ui/SafetyNote';

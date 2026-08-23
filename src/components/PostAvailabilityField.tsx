@@ -27,7 +27,7 @@ export default function PostAvailabilityField({
             <Calendar className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
             Availability Date <span className="text-emerald-700 dark:text-emerald-450">*</span>
           </span>
-          <span className="text-[9.5px] font-mono text-neutral-550 uppercase tracking-widest font-black">Step 1 of 4</span>
+          <span className="text-2xs font-mono text-neutral-550 uppercase tracking-widest font-black">Step 1 of 4</span>
         </label>
 
         <p className="text-[10px] font-bold text-neutral-550 dark:text-stone-400 pb-1">

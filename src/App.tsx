@@ -373,7 +373,7 @@ export default function App() {
       ) : activeTab === 'design-system' ? (
         <DesignSystemPage onBack={closeDesignSystem} />
       ) : activeTab === 'notifications' ? (
-        <NotificationsPage onBackToHome={() => setActiveTab('home')} onOpenSafety={openSafetyPage} />
+        <NotificationsPage onOpenSafety={openSafetyPage} onOpenAuth={() => setActiveTab('auth')} />
       ) : activeTab === 'listing-details' ? (
         <ListingDetailsPage 
           listingId={selectedListingId} 

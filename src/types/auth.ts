@@ -4,7 +4,10 @@
  * the codebase. 'trust' is now where the account is actually created, so the
  * order reads welcome -> signup -> role -> trust.
  */
-export type AuthMode = "welcome" | "login" | "signup" | "role" | "trust";
+// "confirm" is a real destination, not a toast: with email confirmation on,
+// signUp() returns no session, so the account exists but cannot be used yet.
+// That state needs a screen you can act from -- resend, or go and log in.
+export type AuthMode = "welcome" | "login" | "signup" | "role" | "trust" | "confirm";
 
 export type AuthRole =
   | "tenant"

@@ -6,7 +6,6 @@ import {
   UserCheck, 
   KeyRound, 
   Clock, 
-  AlertTriangle,
   ShieldCheck
 } from 'lucide-react';
 
@@ -113,7 +112,7 @@ export default function SafetyTrustBadges({
               <div className="flex items-start space-x-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
                   isAmber 
-                    ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400' 
+                    ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400' 
                     : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
                 }`}>
                   <Icon className="w-5 h-5" />
@@ -123,7 +122,7 @@ export default function SafetyTrustBadges({
                     <h4 className="text-[14px] font-black text-neutral-800 dark:text-stone-200 uppercase tracking-tight">
                       {badge.title}
                     </h4>
-                    <span className="text-[9px] font-black uppercase tracking-widest bg-neutral-100 dark:bg-stone-800 text-neutral-500 dark:text-stone-400 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-2xs font-black uppercase tracking-widest bg-neutral-100 dark:bg-stone-800 text-neutral-700 dark:text-stone-400 px-2 py-0.5 rounded-full shrink-0">
                       Trust signal
                     </span>
                   </div>
@@ -145,32 +144,12 @@ export default function SafetyTrustBadges({
         <h4 className="text-[13px] font-black text-emerald-800 dark:text-emerald-300 tracking-tight leading-tight mb-2">
           Best signal combination
         </h4>
-        <p className="text-[12px] font-medium text-emerald-900/80 dark:text-emerald-100/80 leading-snug mb-2">
+        <p className="text-[12px] font-medium text-emerald-900 dark:text-emerald-100 leading-snug mb-2">
           A listing with Phone Verified, Location Checked, Scout Verified, and Recently Updated is stronger than a listing with no badges.
         </p>
-        <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400/80 uppercase tracking-wider">
+        <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
           Still confirm availability before visiting.
         </p>
-      </motion.div>
-
-      {/* Important caution card */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center space-x-2 mb-2">
-          <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0" />
-          <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 tracking-tight">
-            Badges are not a payment guarantee
-          </h4>
-        </div>
-        
-        <p className="text-[12px] font-semibold text-neutral-700 dark:text-stone-300 leading-relaxed mb-3">
-          Even with badges, you should still confirm the house physically, verify the caretaker or landlord, and check rent, deposit, water, electricity, and agent fees before paying.
-        </p>
-
-        <div className="bg-white/80 dark:bg-stone-900/80 rounded-xl p-3 border border-orange-100 dark:border-orange-900/20">
-          <p className="text-[12px] font-black text-orange-700 dark:text-orange-400 leading-snug">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </p>
-        </div>
       </motion.div>
 
       {/* Action */}

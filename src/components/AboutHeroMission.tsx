@@ -42,13 +42,13 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
       title: "Check local details",
       desc: "See rent, deposit, landmark, water, toilet, and road access.",
       icon: MapPin,
-      color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40"
+      color: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
     },
     {
       title: "Contact directly",
       desc: "Call or WhatsApp the caretaker or landlord.",
       icon: PhoneCall,
-      color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40"
+      color: "text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40"
     }
   ];
 
@@ -120,7 +120,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
 
         {/* Local rental focus chips */}
         <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-stone-850/60">
-          <span className="text-[9.5px] font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
+          <span className="text-2xs font-black text-neutral-550 dark:text-stone-400 uppercase tracking-widest block">
             Focus rental types:
           </span>
           <div className="flex flex-wrap gap-1.5" role="list">
@@ -129,7 +129,7 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
               const isOrange = chip.accent === 'orange';
               const bgClass = isHighlight
                 ? isOrange
-                  ? "bg-amber-500/10 dark:bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20"
+                  ? "bg-orange-500/10 dark:bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-500/20"
                   : "bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
                 : "bg-neutral-100 dark:bg-stone-850 text-neutral-600 dark:text-stone-350 border-neutral-200/40 dark:border-stone-800/40";
               
@@ -162,9 +162,9 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
                 <IconComp className="w-4 h-4 stroke-[2.2]" />
               </div>
               <div className="space-y-0.5">
-                <h4 className="text-[11px] font-black text-neutral-800 dark:text-stone-100 uppercase tracking-wider">
+                <h3 className="text-[11px] font-black text-neutral-800 dark:text-stone-100 uppercase tracking-wider">
                   {item.title}
-                </h4>
+                </h3>
                 <p className="text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400 leading-tight">
                   {item.desc}
                 </p>
@@ -217,24 +217,6 @@ export default function AboutHeroMission({ onGoSearch, onGoPost, onShowFeedback 
         </motion.button>
       </motion.div>
 
-      {/* 5. Trust and Safety Note */}
-      <motion.div
-        variants={itemVariants}
-        className="bg-amber-500/[0.04] dark:bg-amber-500/[0.03] border border-amber-500/15 dark:border-amber-900/25 rounded-2.5xl p-4.5 space-y-2 shadow-4xs"
-      >
-        <div className="flex items-center space-x-2 text-amber-700 dark:text-amber-500">
-          <ShieldCheck className="w-4.5 h-4.5 shrink-0 stroke-[2.2]" />
-          <h4 className="text-[11px] font-black uppercase tracking-wider">
-            Trust &amp; Verification First
-          </h4>
-        </div>
-        <p className="text-[11px] font-bold text-neutral-700 dark:text-stone-300 leading-relaxed">
-          KejaFinder is built around trust, clear pricing, local details, and physical viewing before payment.
-        </p>
-        <p className="text-[10px] font-black text-amber-700 dark:text-amber-500 border-t border-amber-500/10 dark:border-amber-900/15 pt-1.5 leading-normal uppercase">
-          “Never send deposit before physically viewing the house and confirming the caretaker or landlord.”
-        </p>
-      </motion.div>
     </motion.div>
   );
 }

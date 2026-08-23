@@ -14,6 +14,7 @@ interface AuthContextType {
   authError: string | null;
   signUp: (params: SignUpParams) => Promise<{ requiresEmailConfirmation: boolean }>;
   signIn: (email: string, password: string) => Promise<void>;
+  resendConfirmation: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearAuthError: () => void;
   refreshProfile: () => Promise<void>;
@@ -96,6 +97,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: params.email,
         password: params.password,
         options: {
+          // Without this, the confirmation link is built from the project's
+          // dashboard "Site URL", which defaults to http://localhost:3000 --
+          // so a link mailed to a real user on the deployed site opened
+          // nothing. Sending the live origin makes the link work wherever the
+          // app is actually running. The origin must still be listed under
+          // Auth > URL Configuration > Redirect URLs, or Supabase ignores it.
+          emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
           data: {
             full_name: params.fullName,
             phone: params.phone,
@@ -128,6 +136,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw error;
     } finally {
       setIsAuthLoading(false);
+    }
+  };
+
+  /**
+   * Re-sends the confirmation email. Subject to the same project-wide email
+   * quota as signup, so the caller must surface the error rather than assume
+   * success -- a silent "sent!" when the quota is full is how the original
+   * problem stayed invisible.
+   */
+  const resendConfirmation = async (email: string) => {
+    setAuthError(null);
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+      },
+    });
+    if (error) {
+      setAuthError(getSupabaseErrorMessage(error));
+      throw error;
     }
   };
 
@@ -178,6 +207,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authError,
       signUp,
       signIn,
+      resendConfirmation,
       signOut,
       clearAuthError,
       refreshProfile,

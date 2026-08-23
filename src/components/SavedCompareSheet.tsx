@@ -97,7 +97,7 @@ export default function SavedCompareSheet({
               whileTap={{ scale: 0.9 }}
               onClick={onClose}
               aria-label="Close comparison"
-              className="w-7.5 h-7.5 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-stone-800 dark:hover:bg-stone-750 flex items-center justify-center text-neutral-550 dark:text-stone-300 transition-colors cursor-pointer"
+              className="w-7.5 h-7.5 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-stone-800 dark:hover:bg-stone-750 flex items-center justify-center text-neutral-700 dark:text-stone-300 transition-colors cursor-pointer"
             >
               <X className="w-4 h-4 stroke-[2.2]" />
             </motion.button>
@@ -132,7 +132,7 @@ export default function SavedCompareSheet({
                           loading="lazy"
                           decoding="async"
                         />
-                        <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-700 border border-emerald-500/20 text-[8.5px] font-mono font-black uppercase text-white rounded-md tracking-wider">
+                        <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-700 border border-emerald-500/20 text-2xs font-mono font-black uppercase text-white rounded-md tracking-wider">
                           {formatHouseType(listing.type)}
                         </div>
                       </div>
@@ -154,7 +154,7 @@ export default function SavedCompareSheet({
                       {/* Price fields */}
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
+                          <span className="block text-2xs font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Rent
                           </span>
                           <span className="text-[12px] font-black text-emerald-700 dark:text-emerald-400">
@@ -162,7 +162,7 @@ export default function SavedCompareSheet({
                           </span>
                         </div>
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
+                          <span className="block text-2xs font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Deposit
                           </span>
                           <span className="text-[11px] font-bold text-neutral-700 dark:text-stone-200">
@@ -173,14 +173,14 @@ export default function SavedCompareSheet({
 
                       {/* Amenities Details */}
                       <div>
-                        <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
+                        <span className="block text-2xs font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
                           In-House Amenities
                         </span>
                         <div className="flex flex-wrap gap-1">
                           {listing.amenities && listing.amenities.map((amenity) => (
                             <span 
                               key={amenity} 
-                              className="text-[9px] font-bold text-neutral-600 dark:text-stone-300 bg-white dark:bg-stone-850/70 py-0.5 px-1.5 rounded-md border border-neutral-150/40 dark:border-stone-800"
+                              className="text-2xs font-bold text-neutral-600 dark:text-stone-300 bg-white dark:bg-stone-850/70 py-0.5 px-1.5 rounded-md border border-neutral-150/40 dark:border-stone-800"
                             >
                               {amenity}
                             </span>
@@ -190,14 +190,14 @@ export default function SavedCompareSheet({
 
                       {/* Badges details check */}
                       <div>
-                        <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
+                        <span className="block text-2xs font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest mb-1 leading-none">
                           Trust status
                         </span>
                         <div className="flex flex-wrap gap-1">
                           {getBadgesList(listing.badges).map((badge) => (
                             <span 
                               key={badge} 
-                              className="text-[8px] font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/5 py-0.5 px-1.5 rounded-md border border-emerald-500/10 flex items-center space-x-0.5"
+                              className="text-2xs font-extrabold text-emerald-700 dark:text-emerald-400 bg-emerald-500/5 py-0.5 px-1.5 rounded-md border border-emerald-500/10 flex items-center space-x-0.5"
                             >
                               <ShieldCheck className="w-2.5 h-2.5 shrink-0 text-emerald-700" />
                               <span>{badge}</span>
@@ -209,7 +209,7 @@ export default function SavedCompareSheet({
                       {/* Distance summary */}
                       {listing.distanceFromRoad && (
                         <div>
-                          <span className="block text-[8px] font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
+                          <span className="block text-2xs font-black text-neutral-550 dark:text-neutral-400 uppercase tracking-widest leading-none">
                             Accessibility
                           </span>
                           <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-neutral-600 dark:text-stone-300">
@@ -220,7 +220,7 @@ export default function SavedCompareSheet({
                       )}
 
                       {/* Saved Dates */}
-                      <div className="flex items-center space-x-1 pt-1 text-[9px] font-bold text-neutral-550 dark:text-stone-400">
+                      <div className="flex items-center space-x-1 pt-1 text-2xs font-bold text-neutral-550 dark:text-stone-400">
                         <Calendar className="w-3 h-3 stroke-[2]" />
                         <span>Saved: {listing.savedAt || "Recently"}</span>
                       </div>
@@ -242,7 +242,7 @@ export default function SavedCompareSheet({
                       ) : (
                         <button
                           disabled
-                          className="w-full h-10 flex items-center justify-center space-x-1 bg-neutral-100 dark:bg-stone-850 text-neutral-550 dark:text-stone-400 font-extrabold text-[10.5px] rounded-xl cursor-not-allowed"
+                          className="w-full h-10 flex items-center justify-center space-x-1 bg-neutral-100 dark:bg-stone-850 text-neutral-700 dark:text-stone-400 font-extrabold text-[10.5px] rounded-xl cursor-not-allowed"
                         >
                           <span>No WhatsApp on file</span>
                         </button>

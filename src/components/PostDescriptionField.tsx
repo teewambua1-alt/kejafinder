@@ -28,7 +28,7 @@ export default function PostDescriptionField({
             <AlignLeft className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-450 stroke-[2]" />
             Description
           </label>
-          <span className="text-[9.5px] font-mono font-extrabold text-neutral-550 dark:text-stone-400">
+          <span className="text-2xs font-mono font-extrabold text-neutral-550 dark:text-stone-400">
             {value.length}/{maxLength} characters
           </span>
         </div>

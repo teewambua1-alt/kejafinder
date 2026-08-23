@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import ContactSupportHeader from '../components/ContactSupportHeader';
 import SupportHeroQuickActions from '../components/SupportHeroQuickActions';
 import SupportCategories from '../components/SupportCategories';
-import SupportIssueFormMockup from '../components/SupportIssueFormMockup';
+import SupportReportPointer from '../components/SupportReportPointer';
 import SupportContactChannels from '../components/SupportContactChannels';
 import SupportSafetyScamBlock from '../components/SupportSafetyScamBlock';
 import SupportFAQ from '../components/SupportFAQ';
@@ -34,7 +34,7 @@ export default function ContactSupportPage({ onBack, onGoSearch, onGoSafety }: C
         {/* Animated Background Blur Elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
           <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[40%] bg-emerald-100/40 dark:bg-emerald-900/10 blur-3xl rounded-full" />
-          <div className="absolute top-[20%] -right-[10%] w-[50%] h-[40%] bg-blue-100/30 dark:bg-stone-800/30 blur-3xl rounded-full" />
+          <div className="absolute top-[20%] -right-[10%] w-[50%] h-[40%] bg-emerald-100/30 dark:bg-stone-800/30 blur-3xl rounded-full" />
         </div>
 
         <ContactSupportHeader onBack={onBack} />
@@ -56,9 +56,9 @@ export default function ContactSupportPage({ onBack, onGoSearch, onGoSafety }: C
               onShowFeedback={handleShowFeedback}
             />
 
-            <SupportIssueFormMockup 
-              onShowFeedback={handleShowFeedback}
-            />
+            {/* Was SupportIssueFormMockup -- a working-looking report form
+              * that discarded every submission. See SupportReportPointer. */}
+            <SupportReportPointer onBrowseHomes={onGoSearch} />
 
             <SupportContactChannels 
               onShowFeedback={handleShowFeedback}

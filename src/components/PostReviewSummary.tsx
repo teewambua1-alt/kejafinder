@@ -121,7 +121,7 @@ export default function PostReviewSummary({
         </div>
 
         <div className="space-y-2.5 max-w-[340px]">
-          <div className="flex items-center justify-center space-x-1.5 justify-self-center px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9px] font-mono uppercase tracking-wider font-extrabold text-emerald-700 dark:text-emerald-450">
+          <div className="flex items-center justify-center space-x-1.5 justify-self-center px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-2xs font-mono uppercase tracking-wider font-extrabold text-emerald-700 dark:text-emerald-450">
             <Sparkles className="w-2.5 h-2.5" />
             <span>Listing Submitted</span>
           </div>
@@ -166,7 +166,7 @@ export default function PostReviewSummary({
         <h3 className="text-md font-black tracking-tight text-neutral-800 dark:text-neutral-100">
           Review your listing
         </h3>
-        <span className="text-[10px] bg-neutral-100 dark:bg-stone-800 text-neutral-500 px-2 py-0.5 rounded-md font-extrabold">
+        <span className="text-[10px] bg-neutral-100 dark:bg-stone-800 text-neutral-700 px-2 py-0.5 rounded-md font-extrabold">
           Step 5 of 5
         </span>
       </div>
@@ -259,7 +259,7 @@ export default function PostReviewSummary({
                     {[draft.waterCharge, draft.electricityType, draft.toiletType, draft.bathroomType, draft.floorLevel, draft.security]
                       .filter(Boolean)
                       .map((tag, idx) => (
-                        <span key={idx} className="bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded text-[9.5px] font-bold border border-neutral-200/40 dark:border-stone-750">
+                        <span key={idx} className="bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded text-2xs font-bold border border-neutral-200/40 dark:border-stone-750">
                           {tag}
                         </span>
                       ))}
@@ -341,7 +341,7 @@ export default function PostReviewSummary({
                   draft.amenities.map((amenityId) => (
                     <span 
                       key={amenityId} 
-                      className="bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded text-[9.5px] font-bold border border-neutral-200/40 dark:border-stone-750"
+                      className="bg-neutral-100 dark:bg-stone-800 text-neutral-600 dark:text-stone-300 px-2 py-0.5 rounded text-2xs font-bold border border-neutral-200/40 dark:border-stone-750"
                     >
                       {AMENITY_LABELS[amenityId] || amenityId}
                     </span>
@@ -402,7 +402,7 @@ export default function PostReviewSummary({
                     </div>
                   ))}
                   {photoPreviews.length > 4 && (
-                    <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-stone-800 text-[10px] font-black flex items-center justify-center text-neutral-500">
+                    <div className="w-8 h-8 rounded-md bg-neutral-100 dark:bg-stone-800 text-[10px] font-black flex items-center justify-center text-neutral-700">
                       +{photoPreviews.length - 4}
                     </div>
                   )}
@@ -440,7 +440,7 @@ export default function PostReviewSummary({
               </h5>
               <div className="space-y-0.5 mt-0.5 text-[10.5px] font-semibold text-neutral-500 dark:text-stone-400">
                 <p className="font-extrabold text-neutral-800 dark:text-stone-200">
-                  {draft.contactName || 'Not added'} <span className="text-[9.5px] font-extrabold px-1.5 py-0.2 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded uppercase tracking-wide ml-1.5">{draft.contactRole}</span>
+                  {draft.contactName || 'Not added'} <span className="text-2xs font-extrabold px-1.5 py-0.2 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded uppercase tracking-wide ml-1.5">{draft.contactRole}</span>
                 </p>
                 {draft.allowCalls && draft.contactPhone && (
                   <p className="flex items-center">
@@ -564,7 +564,7 @@ export default function PostReviewSummary({
           type="button"
           onClick={handleSaveDraft}
           disabled={isSaving || isSubmitting}
-          className="h-10 text-xs font-extrabold text-neutral-500 dark:text-stone-400 hover:text-stone-700 bg-neutral-100/40 dark:bg-stone-850/20 border border-neutral-200/50 dark:border-stone-800 rounded-xl flex items-center justify-center space-x-1 cursor-pointer hover:bg-neutral-100 dark:hover:bg-amber-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-10 text-xs font-extrabold text-neutral-700 dark:text-stone-400 hover:text-stone-700 bg-neutral-100/40 dark:bg-stone-850/20 border border-neutral-200/50 dark:border-stone-800 rounded-xl flex items-center justify-center space-x-1 cursor-pointer hover:bg-neutral-100 dark:hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save className="w-3.5 h-3.5" />
           <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>

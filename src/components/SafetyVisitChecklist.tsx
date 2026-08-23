@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ClipboardCheck, CheckCircle2, Circle, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { ClipboardCheck, CheckCircle2, Circle, ShieldCheck } from 'lucide-react';
 
 interface SafetyVisitChecklistProps {
   onGoSearch?: () => void;
@@ -167,7 +167,7 @@ export default function SafetyVisitChecklist({
                     {item.title}
                   </h4>
                   <p className={`text-[12px] leading-snug ${
-                    isChecked ? 'text-emerald-700/80 dark:text-emerald-300/80' : 'text-neutral-500 dark:text-stone-400'
+                    isChecked ? 'text-emerald-700 dark:text-emerald-300' : 'text-neutral-500 dark:text-stone-400'
                   }`}>
                     {item.description}
                   </p>
@@ -183,19 +183,6 @@ export default function SafetyVisitChecklist({
       <p className="text-center text-[11px] font-bold text-neutral-550 dark:text-stone-400 uppercase tracking-wider">
         Tip: Screenshot this checklist before going to view a house.
       </p>
-
-      {/* Critical reminder card */}
-      <div className="bg-orange-50/90 dark:bg-orange-950/20 border border-orange-200/60 dark:border-orange-900/40 rounded-2xl p-4 flex items-start space-x-3 shadow-sm">
-        <AlertTriangle className="w-5 h-5 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-[13px] font-black text-orange-800 dark:text-orange-300 leading-snug mb-1">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </p>
-          <p className="text-[11px] font-semibold text-orange-700/80 dark:text-orange-400/80 leading-snug">
-            If anyone pressures you to pay before viewing, treat it as suspicious and report the listing.
-          </p>
-        </div>
-      </div>
 
       {/* Quick Action Buttons */}
       <div className="flex flex-col space-y-3">

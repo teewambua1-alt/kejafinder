@@ -9,7 +9,6 @@ import {
   Eye, 
   CheckCircle2, 
   XCircle, 
-  AlertTriangle, 
   ShieldAlert, 
   Lock,
   Search,
@@ -166,7 +165,7 @@ export default function SafetyPaymentGuide({
           </h4>
           <ul className="space-y-2.5">
             {saferItems.map((item, idx) => (
-              <li key={idx} className="flex items-start text-[12px] font-semibold text-emerald-900/80 dark:text-emerald-100/80 leading-snug">
+              <li key={idx} className="flex items-start text-[12px] font-semibold text-emerald-900 dark:text-emerald-100 leading-snug">
                 <span className="text-emerald-700 mr-2 shrink-0">•</span>
                 <span>{item}</span>
               </li>
@@ -182,27 +181,12 @@ export default function SafetyPaymentGuide({
           </h4>
           <ul className="space-y-2.5">
             {riskyItems.map((item, idx) => (
-              <li key={idx} className="flex items-start text-[12px] font-semibold text-orange-900/80 dark:text-orange-200/80 leading-snug">
+              <li key={idx} className="flex items-start text-[12px] font-semibold text-orange-900 dark:text-orange-200 leading-snug">
                 <span className="text-orange-700 dark:text-orange-400 mr-2 shrink-0">•</span>
                 <span>{item}</span>
               </li>
             ))}
           </ul>
-        </div>
-      </motion.div>
-
-      {/* Main Payment Warning Card */}
-      <motion.div variants={itemVariants} className="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-900/50 rounded-2xl p-5 shadow-sm">
-        <div className="flex items-start space-x-3 mb-2">
-          <AlertTriangle className="w-6 h-6 text-orange-700 dark:text-orange-400 shrink-0 mt-0.5" />
-          <h4 className="text-[14px] font-black text-orange-800 dark:text-orange-300 leading-snug tracking-tight">
-            Never send deposit before physically viewing the house and confirming the caretaker or landlord.
-          </h4>
-        </div>
-        <div className="pl-9">
-          <p className="text-[12px] font-semibold text-neutral-700 dark:text-stone-300 leading-relaxed">
-            KejaFinder does not collect rent, deposits, booking fees, viewing fees, or agent fees in this prototype.
-          </p>
         </div>
       </motion.div>
 

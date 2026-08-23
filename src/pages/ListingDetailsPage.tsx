@@ -154,7 +154,7 @@ export default function ListingDetailsPage({ listingId, onBack }: ListingDetails
       showFeedback("Log in to save homes.");
     } else {
       setLocalSaved(!currentlySaved);
-      showFeedback(!currentlySaved ? "Saved locally for this prototype." : "Removed from temporary saved list.");
+      showFeedback(!currentlySaved ? "Saved on this device only — log in to keep it." : "Removed from this device.");
     }
   };
 

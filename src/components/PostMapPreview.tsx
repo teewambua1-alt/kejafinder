@@ -140,7 +140,7 @@ export default function PostMapPreview({ lat, lng, onLocationCaptured }: PostMap
         <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
           captureState === 'captured' ? 'bg-emerald-700 animate-pulse' : captureState === 'denied' || captureState === 'unsupported' ? 'bg-orange-700' : 'bg-neutral-400'
         }`} />
-        <span className="text-[9.5px] font-extrabold text-neutral-750 dark:text-stone-200 tracking-tight truncate">
+        <span className="text-2xs font-extrabold text-neutral-750 dark:text-stone-200 tracking-tight truncate">
           {badgeText}
         </span>
       </div>

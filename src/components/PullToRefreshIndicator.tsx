@@ -23,7 +23,7 @@ export default function PullToRefreshIndicator({ pullDistance, isRefreshing, thr
         className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
           isReady
             ? 'bg-emerald-700 text-white'
-            : 'bg-neutral-100 dark:bg-stone-800 text-neutral-550 dark:text-stone-400'
+            : 'bg-neutral-100 dark:bg-stone-800 text-neutral-700 dark:text-stone-400'
         }`}
       >
         {isRefreshing ? <Loader2 className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
