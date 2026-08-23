@@ -4,6 +4,7 @@ import { Check } from 'lucide-react';
 import AuthHeader from '../components/AuthHeader';
 import AuthWelcomeChoice from '../components/AuthWelcomeChoice';
 import AuthPitch from '../components/AuthPitch';
+import AuthConfirmEmail from '../components/AuthConfirmEmail';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import AuthPhoneLoginForm from '../components/AuthPhoneLoginForm';
 import AuthSignupBasicsForm from '../components/AuthSignupBasicsForm';
@@ -29,6 +30,10 @@ const PREVIOUS_STEP: Partial<Record<AuthMode, AuthMode>> = {
   signup: 'welcome',
   role: 'signup',
   trust: 'role',
+  // Back from "confirm your email" goes to login, not back into the signup
+  // wizard: the account already exists, so re-running signup would only earn a
+  // "user already exists" error.
+  confirm: 'login',
 };
 
 export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
@@ -114,8 +119,10 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
       passwordRef.current = '';
 
       if (result?.requiresEmailConfirmation) {
-        handleShowFeedback('Account created. Check your email to confirm it, then log in.');
-        setAuthMode('welcome');
+        // A screen, not a toast. This is the most common successful outcome on
+        // a project with email confirmation on, and it used to look identical
+        // to a failure: a message that vanished, back on the welcome screen.
+        setAuthMode('confirm');
         return true;
       }
 
@@ -221,6 +228,13 @@ export default function AuthPage({ onBack, onTabChange }: AuthPageProps) {
                   authDraftUser={authDraftUser}
                   onSetAuthMode={setAuthMode}
                   onSetAuthDraftUser={handleSetAuthDraftUser}
+                />
+              )}
+
+              {authMode === 'confirm' && (
+                <AuthConfirmEmail
+                  email={authDraftUser.email || ''}
+                  onGoToLogin={() => setAuthMode('login')}
                 />
               )}
 
