@@ -97,10 +97,10 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
         <div
           role="list"
           aria-labelledby="nearby-listings-heading"
-          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start"
         >
           {Array.from({ length: 3 }).map((_, i) => (
-            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
+            <PropertyCardVerticalSkeleton key={i} className="w-full" />
           ))}
         </div>
       )}
@@ -117,7 +117,7 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
         <div
           role="list"
           aria-labelledby="nearby-listings-heading"
-          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start"
         >
           {listings.map((listing, index) => (
             <motion.div
@@ -128,7 +128,7 @@ export default function NearbyListings({ onSelectListing }: NearbyListingsProps)
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
               className="relative"
             >
-              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-[268px] shrink-0 md:w-auto" />
+              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-full" />
               {userCoords && typeof listing.lat === 'number' && typeof listing.lng === 'number' && (
                 <div className="absolute top-2.5 left-2.5 z-10 bg-black/60 backdrop-blur-md text-white text-2xs font-bold px-2 py-1 rounded-md border border-white/20 shadow-sm pointer-events-none">
                   {distanceKm(userCoords, { lat: listing.lat, lng: listing.lng }).toFixed(1)} km away

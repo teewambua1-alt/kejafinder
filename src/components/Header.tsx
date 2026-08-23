@@ -16,7 +16,7 @@ export default function Header({ onNotificationsClick, onProfileClick }: HeaderP
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="w-full flex items-center justify-between py-3 mb-6 relative z-10"
+      className="w-full flex items-center justify-between py-2 relative z-10"
     >
       {/* KejaFinder Logo */}
       <div className="flex items-center space-x-2.5">

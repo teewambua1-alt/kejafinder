@@ -74,10 +74,10 @@ export default function AIChatbot() {
           setShowNudge(false);
           localStorage.setItem(OPENED_KEY, '1');
         }}
-        className={`absolute bottom-28 right-6 z-[var(--z-assistant)] bg-emerald-700 text-white rounded-full p-4 shadow-lg ${isOpen ? 'hidden' : 'flex'} items-center justify-center`}
+        className={`absolute bottom-[76px] right-3.5 z-[var(--z-assistant)] bg-emerald-700 text-white rounded-full p-3 shadow-lg ${isOpen ? 'hidden' : 'flex'} items-center justify-center`}
         aria-label="Open AI Assistant"
       >
-        <MessageSquare className="w-6 h-6" />
+        <MessageSquare className="w-5 h-5" />
         {showNudge && (
           <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-orange-700 border-2 border-white dark:border-stone-950 animate-pulse" />
         )}

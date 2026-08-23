@@ -368,7 +368,7 @@ export default function SavedPage({ onExploreHomes, onTabChange, onSelectListing
         ) : isLoading ? (
           <div className="flex flex-col gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
+              <PropertyCardVerticalSkeleton key={i} className="w-full" />
             ))}
           </div>
         ) : savedListings.length === 0 ? (

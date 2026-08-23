@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, Calendar } from 'lucide-react';
 import { Listing } from '../types/listing';
-import { PropertyCardHorizontal } from './property';
+import { PropertyCardVertical } from './property';
 import { formatSavedOn } from '../lib/relativeDate';
 
 interface SavedHomesListProps {
@@ -23,7 +23,8 @@ export default function SavedHomesList({
   onSelectListing,
 }: SavedHomesListProps) {
   return (
-    <motion.div layout className="w-full flex flex-col gap-4">
+    // Grid, matching Search -- listings use one layout everywhere now.
+    <motion.div layout className="w-full grid grid-cols-2 gap-3 sm:grid-cols-3 items-start">
       <AnimatePresence mode="popLayout">
         {listings.map((item) => {
           const isSelected = selectedCompareIds.includes(item.id);
@@ -35,11 +36,11 @@ export default function SavedHomesList({
               layout
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, x: -30, scale: 0.95 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-              className="w-full"
+              className="min-w-0"
             >
-              <PropertyCardHorizontal
+              <PropertyCardVertical
                 listing={item}
                 onUnsave={onUnsave}
                 // In compare mode the whole card toggles selection instead of
@@ -52,7 +53,7 @@ export default function SavedHomesList({
                 photoOverlay={
                   isCompareMode ? (
                     <span
-                      className={`absolute top-2 right-2 z-10 w-6 h-6 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors ${
+                      className={`absolute top-2.5 left-2.5 z-10 w-6 h-6 rounded-full flex items-center justify-center border-2 shadow-sm transition-colors ${
                         isSelected
                           ? 'bg-emerald-700 border-emerald-700 text-white'
                           : 'bg-white/90 border-neutral-300 text-transparent dark:bg-stone-850/90 dark:border-stone-600'

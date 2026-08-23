@@ -54,8 +54,10 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
         )}
       </AnimatePresence>
 
-      {/* Horizontal horizontal Scroll Grid on Mobile */}
-      <div className="w-full overflow-x-auto no-scrollbar pb-2 -mb-2 flex items-stretch space-x-3.5 scroll-smooth select-none px-1">
+      {/* Grid, like every other listing surface -- this was the last sideways
+        * rail, and a suggestion you have to scroll to find is a suggestion
+        * most people never see. */}
+      <div className="w-full grid grid-cols-2 gap-3 sm:grid-cols-3 items-stretch select-none">
         {suggestions.map((item) => {
           const isAlreadySaved = savedIds.includes(item.id);
 
@@ -63,7 +65,7 @@ export default function SavedSuggestions({ onSaveSuggestion, savedIds }: SavedSu
             <motion.div
               key={item.id}
               whileTap={{ scale: 0.99 }}
-              className="w-[240px] xs:w-[260px] flex-shrink-0 bg-white/95 dark:bg-stone-900/90 border border-neutral-100 dark:border-neutral-800 rounded-2.5xl p-3 shadow-3xs hover:shadow-2xs transition-shadow flex flex-col justify-between"
+              className="min-w-0 bg-white dark:bg-stone-900 border border-neutral-100 dark:border-neutral-800 rounded-2.5xl p-3 shadow-3xs hover:shadow-2xs transition-shadow flex flex-col justify-between"
             >
               <div className="space-y-2.5">
                 {/* Compact Thumbnail Container */}

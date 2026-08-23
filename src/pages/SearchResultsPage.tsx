@@ -66,7 +66,6 @@ export default function SearchResultsPage({
   const [selectedSort, setSelectedSort] = useState<SortOption>(initialSort || 'Most relevant');
   const [filters, setFilters] = useState<SearchFilters>(initialFilters || defaultSearchFilters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [isMapTakeover, setIsMapTakeover] = useState(false);
 
   // A real media query, not CSS visibility: a Leaflet map must only mount into
@@ -139,11 +138,11 @@ export default function SearchResultsPage({
    * unsupported -- reusing the copy and EmptyState pattern established by
    * Home's NearbyListings.
    */
-  const renderResults = (vm: 'list' | 'grid') => {
+  const renderResults = () => {
     if (!isNearestSort && isLoading) {
       return (
-        <div className={vm === 'grid' ? 'grid grid-cols-2 gap-3' : 'flex flex-col gap-4'}>
-          {Array.from({ length: vm === 'grid' ? 4 : 3 }).map((_, i) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {Array.from({ length: 4 }).map((_, i) => (
             <PropertyCardVerticalSkeleton key={i} />
           ))}
         </div>
@@ -171,8 +170,8 @@ export default function SearchResultsPage({
       }
       if (nearbyPermissionState === 'requesting' || (nearbyPermissionState === 'granted' && isNearbyLoading)) {
         return (
-          <div className="flex flex-col gap-4">
-            {Array.from({ length: 3 }).map((_, i) => <PropertyCardVerticalSkeleton key={i} />)}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {Array.from({ length: 4 }).map((_, i) => <PropertyCardVerticalSkeleton key={i} />)}
           </div>
         );
       }
@@ -183,7 +182,6 @@ export default function SearchResultsPage({
         listings={sortedListings}
         onClearSearch={handleClearSearch}
         onSelectListing={onSelectListing}
-        viewMode={vm}
         selectedId={selectedId}
         onHoverListing={isDesktopSplit ? setHovered : undefined}
         registerCard={registerCard}
@@ -208,8 +206,6 @@ export default function SearchResultsPage({
           searchQuery={searchQuery}
           selectedSort={selectedSort}
           onSortChange={setSelectedSort}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
           rightSlot={
             <SaveSearchButton
               query={searchQuery}
@@ -243,7 +239,7 @@ export default function SearchResultsPage({
           <div className="flex-1 min-w-0 flex flex-col space-y-5">
             {controls}
             <motion.div variants={m.fadeUp} className="w-full">
-              {renderResults(viewMode)}
+              {renderResults()}
             </motion.div>
           </div>
           {/* The caller owns the height; PropertyMap is always h-full. */}
@@ -261,7 +257,7 @@ export default function SearchResultsPage({
         <>
           {controls}
           <motion.div variants={m.fadeUp} className="w-full">
-            {renderResults(viewMode)}
+            {renderResults()}
           </motion.div>
         </>
       )}
@@ -347,7 +343,7 @@ export default function SearchResultsPage({
           type="button"
           whileTap={m.tap}
           onClick={() => setIsMapTakeover(true)}
-          className="fixed bottom-24 md:bottom-6 left-5 z-[var(--z-overlay)] flex items-center gap-2 rounded-full border border-transparent bg-emerald-700 px-5 py-3.5 text-white shadow-lg transition-colors hover:bg-emerald-800 outline-none cursor-pointer"
+          className="fixed bottom-[76px] md:bottom-6 left-3.5 z-[var(--z-overlay)] flex items-center gap-2 rounded-full border border-transparent bg-emerald-700 px-4 py-3 text-white shadow-lg transition-colors hover:bg-emerald-800 outline-none cursor-pointer"
         >
           <MapIcon className="w-5 h-5 stroke-[2.2]" aria-hidden="true" />
           <span className="text-sm font-bold tracking-wide">Map</span>
