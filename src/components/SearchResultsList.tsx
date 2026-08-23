@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Search } from 'lucide-react';
 import { Listing } from '../types/listing';
-import { PropertyCardVertical, PropertyCardHorizontal } from './property';
+import { PropertyCardVertical } from './property';
 import EmptyState from './ui/EmptyState';
 import { useMotion } from '../lib/motion';
 import { cn } from '../lib/cn';
@@ -11,7 +11,6 @@ interface SearchResultsListProps {
   listings: Listing[];
   onClearSearch?: () => void;
   onSelectListing?: (id: string) => void;
-  viewMode?: 'list' | 'grid';
   /** Map selection -- ringed and scrolled into view. */
   selectedId?: string | null;
   /** Hovering a card highlights its marker. Desktop split only. */
@@ -26,7 +25,6 @@ export default function SearchResultsList({
   listings,
   onClearSearch,
   onSelectListing,
-  viewMode = 'list',
   selectedId = null,
   onHoverListing,
   registerCard,
@@ -60,7 +58,10 @@ export default function SearchResultsList({
       className={cn(
         // Bottom padding clears the mobile BottomNav; there is none at md+.
         'w-full pb-28 md:pb-4',
-        viewMode === 'grid' ? 'grid grid-cols-2 md:grid-cols-3 gap-3' : 'flex flex-col gap-4'
+        // Grid only. The horizontal card squeezed the price onto two lines and
+        // truncated titles at phone widths, and a list/grid toggle offered a
+        // choice between two layouts nobody needed.
+        'grid grid-cols-2 gap-3 sm:grid-cols-3 items-start'
       )}
     >
       {listings.map((listing, i) => {
@@ -81,11 +82,7 @@ export default function SearchResultsList({
             onMouseLeave={onHoverListing ? () => onHoverListing(null) : undefined}
             className={cn('min-w-0', ring)}
           >
-            {viewMode === 'grid' ? (
-              <PropertyCardVertical listing={listing} onSelect={onSelectListing} priority={i < 4} />
-            ) : (
-              <PropertyCardHorizontal listing={listing} onSelect={onSelectListing} />
-            )}
+            <PropertyCardVertical listing={listing} onSelect={onSelectListing} priority={i < 4} />
           </motion.div>
         );
       })}

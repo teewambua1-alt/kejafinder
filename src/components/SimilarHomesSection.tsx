@@ -92,15 +92,15 @@ export default function SimilarHomesSection({
       </motion.div>
 
       {similarHomes.length > 0 ? (
-        <motion.div variants={rowVariants} className="flex overflow-x-auto gap-4 pb-4 -mx-1 px-1 snap-x scrollbar-hide">
+        <motion.div variants={rowVariants} className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start pb-2">
           {similarHomes.map((listing) => (
-            <div key={listing.id} className="snap-start pt-1">
+            <div key={listing.id} className="min-w-0 pt-1">
               <PropertyCardVertical
                 listing={listing}
                 onSelect={() => onOpenListingDetails(listing.id)}
-                className="w-[260px]"
+                className="w-full"
                 actions={
-                  <span className="flex items-center justify-center gap-1.5 h-10 rounded-lg bg-neutral-900 dark:bg-stone-100 text-white dark:text-stone-900 text-[11px] font-black uppercase tracking-wider">
+                  <span className="flex items-center justify-center gap-1.5 h-10 rounded-lg bg-emerald-700 text-white text-2xs font-black uppercase tracking-wider">
                     View home
                     <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" aria-hidden="true" />
                   </span>

@@ -73,17 +73,17 @@ export default function FeaturedListings({ onSelectListing }: FeaturedListingsPr
         <div
           role="list"
           aria-labelledby="featured-listings-heading"
-          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start"
         >
           {Array.from({ length: 3 }).map((_, i) => (
-            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
+            <PropertyCardVerticalSkeleton key={i} className="w-full" />
           ))}
         </div>
       ) : (
         <div
           role="list"
           aria-labelledby="featured-listings-heading"
-          className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5 md:mx-0 md:px-0 md:grid md:grid-cols-[repeat(auto-fill,268px)] md:gap-4 md:space-x-0 md:overflow-visible"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start"
         >
           {listings.map((listing, index) => (
             <motion.div
@@ -93,7 +93,7 @@ export default function FeaturedListings({ onSelectListing }: FeaturedListingsPr
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
             >
-              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-[268px] shrink-0 md:w-auto" />
+              <PropertyCardVertical listing={listing} onSelect={onSelectListing} className="w-full" />
             </motion.div>
           ))}
         </div>

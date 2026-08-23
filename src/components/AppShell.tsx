@@ -95,7 +95,7 @@ export default function AppShell({
             (pb-28 clears the bottom nav); on md+ it's part of the normal page
             flow instead, width-capped and centered like DesktopNavbar's row. */}
         <div
-          className="flex-1 overflow-y-auto md:overflow-visible no-scrollbar relative flex flex-col p-6 pb-28 md:p-8 md:pb-10 md:max-w-3xl xl:max-w-7xl md:mx-auto md:w-full xl:px-12"
+          className="flex-1 overflow-y-auto md:overflow-visible no-scrollbar relative flex flex-col px-4 pt-3 pb-28 md:p-8 md:pb-10 md:max-w-3xl xl:max-w-7xl md:mx-auto md:w-full xl:px-12"
           {...pullToRefreshHandlers}
         >
           {pullToRefreshIndicator}

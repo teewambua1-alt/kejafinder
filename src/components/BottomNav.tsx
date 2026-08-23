@@ -40,26 +40,35 @@ export default function BottomNav({ activeTab: propActiveTab, onTabChange }: Bot
     <div className="absolute bottom-0 left-0 right-0 z-[var(--z-nav)] pointer-events-none pb-[env(safe-area-inset-bottom,0px)]">
       {/* Background with animated curve */}
       <div className="absolute inset-x-0 bottom-0 h-[64px] drop-shadow-[0_-4px_16px_rgba(0,0,0,0.06)] dark:drop-shadow-[0_-4px_16px_rgba(0,0,0,0.25)]">
-        <motion.div 
+        {/* Width comes from the real tab count, not a hardcoded 20%.
+          *
+          * The Post tab is role-gated, so signed-out visitors and tenants get
+          * FOUR tabs (25% each) while this wrapper stayed at w-[20%]. The
+          * circle therefore centred at `index*25% + 10%` instead of `+12.5%`
+          * -- a constant 2.5%-of-viewport shift left: 9px at 360px, 11px at
+          * 412px. It looked correct only for the five-tab (poster) case, which
+          * is why it read as a glitch for everyone else. */}
+        <motion.div
           initial={false}
           animate={{ left: `${activeIndex * tabWidth}%` }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="absolute top-0 bottom-0 w-[20%] text-white dark:text-stone-900 flex items-start justify-center"
+          style={{ width: `${tabWidth}%` }}
+          className="absolute top-0 bottom-0 text-white dark:text-stone-900 flex items-start justify-center"
         >
           {/* Left Wing overlay to extend background leftwards infinitely */}
-          <div className="absolute right-[50%] mr-[50px] w-[1000px] h-[64px] bg-current" />
+          <div className="absolute right-1/2 mr-[43px] w-[1000px] h-[64px] bg-current" />
           
           {/* Exact Center Cutout SVG */}
-          <svg width="100" height="64" viewBox="0 0 100 64" fill="currentColor" className="absolute top-0 left-1/2 -ml-[50px] w-[100px]">
+          <svg width="100" height="64" viewBox="0 0 100 64" fill="currentColor" preserveAspectRatio="none" className="absolute top-0 left-1/2 -translate-x-1/2 h-[64px] w-[86px]">
              {/* Smooth U-shape curve matching the 48px floating circle with some padding */}
              <path d="M 0,0 C 15,0 20,5 26,16 C 36,40 64,40 74,16 C 80,5 85,0 100,0 V 64 H 0 Z" />
           </svg>
           
           {/* Right Wing overlay to extend background rightwards infinitely */}
-          <div className="absolute left-[50%] ml-[50px] w-[1000px] h-[64px] bg-current" />
+          <div className="absolute left-1/2 ml-[43px] w-[1000px] h-[64px] bg-current" />
           
           {/* Sliding Active Circle */}
-          <div className="absolute top-[-16px] left-1/2 -ml-[23px] w-[46px] h-[46px] rounded-full bg-emerald-700 dark:bg-emerald-700 shadow-lg shadow-emerald-500/30 flex items-center justify-center pointer-events-none z-20">
+          <div className="absolute top-[-16px] left-1/2 -translate-x-1/2 w-[46px] h-[46px] rounded-full bg-emerald-700 dark:bg-emerald-700 shadow-lg shadow-emerald-500/30 flex items-center justify-center pointer-events-none z-20">
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={activeTab}

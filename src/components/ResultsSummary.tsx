@@ -1,14 +1,11 @@
 import React from 'react';
 import SortDropdown, { SortOption } from './SortDropdown';
-import { List, LayoutGrid } from 'lucide-react';
 
 interface ResultsSummaryProps {
   count?: number;
   searchQuery?: string;
   selectedSort?: SortOption;
   onSortChange?: (option: SortOption) => void;
-  viewMode?: 'list' | 'grid';
-  onViewModeChange?: (mode: 'list' | 'grid') => void;
   rightSlot?: React.ReactNode;
 }
 
@@ -17,8 +14,6 @@ export default function ResultsSummary({
   searchQuery = '',
   selectedSort = 'Most relevant',
   onSortChange,
-  viewMode = 'list',
-  onViewModeChange,
   rightSlot
 }: ResultsSummaryProps) {
   return (
@@ -49,34 +44,9 @@ export default function ResultsSummary({
       </div>
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 ml-auto">
-        {/* View Mode Toggle */}
-        <div className="flex items-center bg-neutral-100 dark:bg-stone-850 p-1 rounded-xl shadow-sm border border-neutral-200/50 dark:border-stone-800">
-          <button
-            onClick={() => onViewModeChange?.('list')}
-            aria-pressed={viewMode === 'list'}
-            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
-              viewMode === 'list'
-                ? 'bg-white dark:bg-stone-700 text-emerald-700 shadow-sm border border-neutral-200/50 dark:border-stone-600'
-                : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
-            }`}
-            aria-label="List view"
-          >
-            <List className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => onViewModeChange?.('grid')}
-            aria-pressed={viewMode === 'grid'}
-            className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
-              viewMode === 'grid'
-                ? 'bg-white dark:bg-stone-700 text-emerald-700 shadow-sm border border-neutral-200/50 dark:border-stone-600'
-                : 'text-neutral-500 dark:text-stone-400 hover:text-neutral-700 dark:hover:text-stone-300'
-            }`}
-            aria-label="Grid view"
-          >
-            <LayoutGrid className="w-4 h-4" />
-          </button>
-        </div>
-
+        {/* The list/grid segmented control is gone: listings are grid-only, so
+          * there is nothing to switch between. Two buttons that both lead to
+          * the same layout are two buttons too many. */}
         {/* Sort selection drop down trigger menu */}
         <div className="shrink-0">
           <SortDropdown selected={selectedSort} onChange={onSortChange} />

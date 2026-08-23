@@ -37,25 +37,24 @@ export default function HeroSearch({ searchQuery, onSearchChange, onSearchSubmit
       initial={m.reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: m.duration.base }}
-      className="w-full flex flex-col gap-6"
+      className="w-full flex flex-col gap-4"
       aria-labelledby="hero-heading"
     >
       <div className="flex flex-col gap-2">
         <h1
           id="hero-heading"
-          className="font-display text-[34px] xs:text-4xl font-extrabold tracking-[-0.02em] leading-[1.08] text-neutral-850 dark:text-stone-50 text-balance"
+          className="font-display text-[25px] xs:text-[28px] sm:text-4xl font-extrabold tracking-[-0.02em] leading-[1.12] text-neutral-850 dark:text-stone-50 text-balance"
         >
-          Find a vacant house
-          <br />
+          Find a vacant house{' '}
           <span className="text-emerald-700 dark:text-emerald-500">near you</span>
         </h1>
-        <p className="text-[13.5px] font-medium text-neutral-550 dark:text-stone-400">
+        <p className="text-xs font-medium text-neutral-550 dark:text-stone-400">
           Search by estate, area, or landmark.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} role="search" className="w-full">
-        <div className="relative flex items-center h-16 rounded-2.5xl bg-white dark:bg-stone-900 border border-neutral-150 dark:border-stone-800 shadow-sm focus-within:border-emerald-500/60 focus-within:ring-4 focus-within:ring-emerald-500/10 transition-[border-color,box-shadow] duration-200">
+        <div className="relative flex items-center h-14 rounded-2.5xl bg-white dark:bg-stone-900 border border-neutral-150 dark:border-stone-800 shadow-sm focus-within:border-emerald-500/60 focus-within:ring-4 focus-within:ring-emerald-500/10 transition-[border-color,box-shadow] duration-200">
           <Search
             className="absolute left-5 w-5 h-5 text-neutral-550 dark:text-stone-400 stroke-[2.2] pointer-events-none"
             aria-hidden="true"

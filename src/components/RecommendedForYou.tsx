@@ -87,25 +87,25 @@ export default function RecommendedForYou({
       </div>
 
       {isLoading ? (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start">
           {Array.from({ length: 4 }).map((_, i) => (
-            <PropertyCardVerticalSkeleton key={i} className="w-[268px] shrink-0 md:w-auto" />
+            <PropertyCardVerticalSkeleton key={i} className="w-full" />
           ))}
         </div>
       ) : (
-        <div className="-mx-6 px-6 flex items-start space-x-4 overflow-x-auto no-scrollbar py-2.5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 items-start">
           {recommendedListings.slice(0, 6).map((listing, index) => (
             <motion.div
               key={listing.id}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 + index * 0.05 }}
-              className="shrink-0"
+              className="min-w-0"
             >
               <PropertyCardVertical
                 listing={listing}
                 onSelect={() => onSelectListing?.(listing.id)}
-                className="w-[268px] md:w-auto"
+                className="w-full"
               />
             </motion.div>
           ))}

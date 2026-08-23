@@ -261,7 +261,7 @@ export default function App() {
          * first screen feel like setup. Typing here still narrows the list
          * live, and submitting opens full Search.
          */
-        <div className="flex-1 flex flex-col py-2 space-y-10 md:space-y-12 animate-fadeIn">
+        <div className="flex-1 flex flex-col space-y-7 md:space-y-12 animate-fadeIn">
 
           {/* Header -- hidden at md+, DesktopNavbar covers that role there */}
           <div className="md:hidden">

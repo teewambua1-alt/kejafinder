@@ -159,10 +159,14 @@ export function CardPrice({ listing, size = 'base' }: { listing: Listing; size?:
  * decision-relevant in this market: the type, the bathroom arrangement, and
  * how far the walk from the road is.
  */
-export function CardStats({ listing }: { listing: Listing }) {
-  const parts = [listing.typeLabel, listing.bathroomType, listing.distanceFromRoad].filter(
+export function CardStats({ listing, max }: { listing: Listing; max?: number }) {
+  const all = [listing.typeLabel, listing.bathroomType, listing.distanceFromRoad].filter(
     (p): p is string => !!p
   );
+  // A 158px grid card wrapped all three onto three lines of 10px text. Two is
+  // enough to tell a bedsitter from a 3-bedroom and a private from a shared
+  // bathroom; the rest is on the listing page.
+  const parts = max ? all.slice(0, max) : all;
   if (parts.length === 0) return null;
   return (
     <div className="flex items-center gap-1.5 flex-wrap text-2xs font-semibold text-neutral-600 dark:text-stone-300">
@@ -316,11 +320,22 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 export function ContactActions({
   listing,
   layout = 'row',
+  compact = false,
   onCall,
   onWhatsApp,
 }: {
   listing: Listing;
   layout?: 'row' | 'column';
+  /**
+   * Drops the text labels, leaving labelled icon buttons.
+   *
+   * The grid card is 158px wide at 360px and 184px at 412px. Two labelled
+   * buttons do not fit that: "WhatsApp" was clipped at the card edge and
+   * rendered as "What." The icons are unambiguous here (a phone and the
+   * WhatsApp glyph) and each button keeps a 40px-tall target with a real
+   * accessible name.
+   */
+  compact?: boolean;
   onCall?: () => void;
   onWhatsApp?: () => void;
 }) {
@@ -341,13 +356,14 @@ export function ContactActions({
           whileTap={m.tap}
           href={`tel:${listing.contactPhone.replace(/\s+/g, '')}`}
           onClick={onCall}
+          aria-label={`Call about ${listing.title}`}
           className={cn(
             base,
             'border border-emerald-700 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 bg-white dark:bg-transparent hover:bg-emerald-50/40 dark:hover:bg-emerald-950/20'
           )}
         >
-          <Phone className="w-3.5 h-3.5 stroke-[2.2]" aria-hidden="true" />
-          Call
+          <Phone className="w-4 h-4 stroke-[2.2]" aria-hidden="true" />
+          {compact ? <span className="sr-only">Call</span> : 'Call'}
         </motion.a>
       ) : (
         <button
@@ -357,8 +373,8 @@ export function ContactActions({
             'border border-neutral-200 dark:border-stone-700 text-neutral-550 dark:text-stone-400 cursor-not-allowed'
           )}
         >
-          <Phone className="w-3.5 h-3.5 stroke-[2.2]" aria-hidden="true" />
-          No phone
+          <Phone className="w-4 h-4 stroke-[2.2]" aria-hidden="true" />
+          {compact ? <span className="sr-only">No phone number</span> : 'No phone'}
         </button>
       )}
 
@@ -371,13 +387,14 @@ export function ContactActions({
           target="_blank"
           rel="noopener noreferrer"
           onClick={onWhatsApp}
+          aria-label={`WhatsApp about ${listing.title}`}
           className={cn(
             base,
             'bg-emerald-700 text-white hover:bg-emerald-800 dark:hover:bg-emerald-800 border-none'
           )}
         >
-          <WhatsAppGlyph className="w-3.5 h-3.5 fill-white" />
-          WhatsApp
+          <WhatsAppGlyph className="w-4 h-4 fill-white" />
+          {compact ? <span className="sr-only">WhatsApp</span> : 'WhatsApp'}
         </motion.a>
       ) : (
         <button
@@ -387,7 +404,8 @@ export function ContactActions({
             'bg-neutral-100 dark:bg-stone-850 text-neutral-700 dark:text-stone-400 cursor-not-allowed border-none'
           )}
         >
-          No WhatsApp
+          <WhatsAppGlyph className="w-4 h-4 fill-current opacity-60" />
+          {compact ? <span className="sr-only">No WhatsApp number</span> : 'No WhatsApp'}
         </button>
       )}
     </div>

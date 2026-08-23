@@ -22,6 +22,10 @@ interface PropertyCardVerticalProps {
   actions?: React.ReactNode;
   /** Extra rows under the metadata, e.g. a saved-on date. */
   meta?: React.ReactNode;
+  /** Overlay inside the photo frame, e.g. a compare checkbox. */
+  photoOverlay?: React.ReactNode;
+  /** Saved page: the heart removes instead of toggling, so the card can animate out. */
+  onUnsave?: (id: string) => void;
   onCall?: () => void;
   onWhatsApp?: () => void;
   className?: string;
@@ -39,6 +43,8 @@ export default function PropertyCardVertical({
   priority,
   actions,
   meta,
+  photoOverlay,
+  onUnsave,
   onCall,
   onWhatsApp,
   className,
@@ -46,7 +52,8 @@ export default function PropertyCardVertical({
   return (
     <CardFrame onClick={() => onSelect?.(listing.id)} className={cn('flex flex-col', className)}>
       <CardPhoto listing={listing} ratio="photo" priority={priority}>
-        <SaveHeart listing={listing} className="absolute top-2.5 right-2.5 z-10" />
+        {photoOverlay}
+        <SaveHeart listing={listing} onUnsave={onUnsave} className="absolute top-2.5 right-2.5 z-10" />
       </CardPhoto>
 
       <div className="flex flex-col gap-2 p-3 flex-1">
@@ -55,14 +62,14 @@ export default function PropertyCardVertical({
           {listing.title}
         </h3>
         <CardLocation listing={listing} />
-        <CardStats listing={listing} />
-        <CardAmenities listing={listing} max={2} />
+        <CardStats listing={listing} max={2} />
+        <CardAmenities listing={listing} max={1} />
         <RecentlyUpdatedTag listing={listing} />
         {meta}
 
         <div className="mt-auto pt-2">
           {actions ?? (
-            <ContactActions listing={listing} onCall={onCall} onWhatsApp={onWhatsApp} />
+            <ContactActions listing={listing} compact onCall={onCall} onWhatsApp={onWhatsApp} />
           )}
         </div>
       </div>
